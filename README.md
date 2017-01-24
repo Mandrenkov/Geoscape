@@ -12,9 +12,9 @@
 | [misc/](misc)                                 |  Miscelleous assets    |
 ---
 ### Screenshots
-Timestamp 3
+Time Point 3
 ![](misc/Timeline_3.png)
-Timestamp 2
+Time Point 2
 ![](misc/Timeline_2.png)
-Timestamp 1
+Time Point 1
 ![](misc/Timeline_1.png)
