@@ -10,78 +10,116 @@ import model.*;
  * @since January 23, 2017
  * @version 1.0
  *
- * <p>Member declarations and definitions for the <b>Render</b> class.</p>
+ * <p>The <i>Render</i> class is responsible for rendering the landscape.</p>
  */ 
 public class Render {
 
+	/**
+	 * Convenience instance of DataManager.
+	 */
 	private static DataManager data;
 
+	/**
+	 * Calls the top-level feature rendering functions.
+	 */
 	public void run() {
-		glDisable(GL_CULL_FACE);
 		Render.data = Top.data;
 
-		//renderAxes();
-		renderBase();
-		for (Terrain terrain : data.landscape) {
-			renderGrid(terrain.getGrid());
+		if (DataManager.DEBUG) {
+			renderAxes();
 		}
-		//renderCube();
-
+		
+		renderPlatform();
+		
+		for (Terrain terrain : data.landscape)
+			renderGrid(terrain.getGrid());
+		
 		rotateAxis('Z', -0.2f);
 	}
 
+	/**
+	 * Adds the given point as a GL vertex.
+	 * 
+	 * @param p Point to be added as a GL vertex.
+	 */
 	private void addVertex(Point p) {
 		glVertex3f(p.getX(), p.getY(), p.getZ());
 	}
 
+	/**
+	 * Renders the X, Y, and Z axes for orientation debug purposes.
+	 */
 	private void renderAxes() {
+		// Length of each axis line
 		float axisDistance = 1.1f;
 
-		glLineWidth(2);
+		// Line setup
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(2);
 
 		glBegin(GL_LINES);
+			// X Axis
 			glColor3f(1.0f, 0.0f, 0.0f);
 			glVertex3f(-0f, 0f, 0f);
 			glVertex3f(axisDistance, 0f, 0f);
 
+			// Y Axis
 			glColor3f(0.0f, 1.0f, 0.0f);
 			glVertex3f(0f, -0f, 0f);
 			glVertex3f(0f, axisDistance, 0f);
 
+			// Z Axis
 			glColor3f(0f, 0f, 1f);
 			glVertex3f(0f, 0f, -0f);
 			glVertex3f(0f, 0f, axisDistance);
-
 		glEnd();
+	}
+	
+	/**
+	 * Renders the triangles of the given Grid.
+	 * 
+	 * @param grid The Grid to be rendered.
+	 */
+	private void renderGrid(Grid grid) {
+		// Polygon setup
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glCullFace(GL_BACK);
 
-		glFlush();
+		// Render triangles
+		glBegin(GL_TRIANGLES);
+			grid.getTriangles().forEach(t -> renderTriangle(t));	
+		glEnd();
 	}
 
-	private void renderBase() {
-		//glDisable(GL_CULL_FACE);
+	/**
+	 * Renders the platform under the landscape.
+	 */
+	private void renderPlatform() {
+		// Front and back faces should be rendered
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		//glCullFace(GL_BACK);
+		
+		// Set platform colour
+		glColor3f(data.colourPlatform[0], data.colourPlatform[1], data.colourPlatform[2]);
 
-		glColor3f(data.colourBase[0], data.colourBase[1], data.colourBase[2]);
-
+		// Points denoting the vertices of the platform cube
 		Point[][][] cube = new Point[2][2][2];
-		int cubeIndex = 0;
 
+		// Generate cube vertices
 		for (int iZ = 0 ; iZ < 2 ; iZ++) {
-			float z = iZ == 0 ? data.BASE_MIN_Z : data.BASE_MAX_Z;
+			float z = iZ == 0 ? DataManager.BASE_MIN_Z : DataManager.BASE_MAX_Z;
 
 			for (int iY = 0 ; iY < 2 ; iY++) {
-				float y = iY == 0 ? data.MIN_Y : data.MAX_Y;
+				float y = iY == 0 ? DataManager.MIN_Y : DataManager.MAX_Y;
 
 				for (int iX = 0 ; iX < 2 ; iX++) {
-					float x = iX == 0 ? data.MIN_X : data.MAX_X;
+					float x = iX == 0 ? DataManager.MIN_X : DataManager.MAX_X;
 
 					cube[iZ][iY][iX] = new Point(x, y, z);
 				}
 			}
 		}
 
+		// Render platform
 		glBegin(GL_QUADS);
 			// Top
 			//addVertex(cube[1][0][0]); addVertex(cube[1][1][0]); addVertex(cube[1][1][1]); addVertex(cube[1][0][1]);
@@ -95,83 +133,34 @@ public class Render {
 			addVertex(cube[0][1][0]); addVertex(cube[0][1][1]); addVertex(cube[1][1][1]); addVertex(cube[1][1][0]);
 
 			// Bottom
-			// addVertex(cube[0][0][0]); addVertex(cube[0][0][1]); addVertex(cube[0][1][1]); addVertex(cube[0][1][0]);
 			addVertex(cube[0][0][0]); addVertex(cube[0][1][0]); addVertex(cube[0][1][1]); addVertex(cube[0][0][1]);
 		glEnd();
-
-		//glEnable(GL_CULL_FACE);
 	}
 
-	private void renderGrid(Grid grid) {
-		glLineWidth(1);
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glCullFace(GL_BACK);
+	/**
+	 * Renders the given Triangle.
+	 * 
+	 * @param t Triangle to be rendered.
+	 */
+	private void renderTriangle(Triangle t) {
+		float[] colour = t.getColour();
+		Point[] points = t.getPoints();
 
+		// Set triangle colour
+		glColor3f(colour[0], colour[1], colour[2]);
 
-		glBegin(GL_TRIANGLES);
-
-		for (Triangle t : grid.getTriangles()) {
-			float[] colour = t.getColour();
-			Point[] points = t.getPoints();
-
-			glColor3f(colour[0], colour[1], colour[2]);
-
-			addVertex(points[0]);
-			addVertex(points[1]);
-			addVertex(points[2]);
-		}
-
-		glEnd();
+		// Add triangle vertices
+		addVertex(points[0]);
+		addVertex(points[1]);
+		addVertex(points[2]);
 	}
 
-	/*void renderCube() {
-        glBegin(GL_QUADS);
-	        glColor3f(   0.0f,  0.0f,  0.2f );
-	        glVertex3f(  0.5f, -0.5f, -0.5f );
-	        glVertex3f( -0.5f, -0.5f, -0.5f );
-	        glVertex3f( -0.5f,  0.5f, -0.5f );
-	        glVertex3f(  0.5f,  0.5f, -0.5f );
-	        glColor3f(   0.0f,  0.0f,  1.0f );
-	        glVertex3f(  0.5f, -0.5f,  0.5f );
-	        glVertex3f(  0.5f,  0.5f,  0.5f );
-	        glVertex3f( -0.5f,  0.5f,  0.5f );
-	        glVertex3f( -0.5f, -0.5f,  0.5f );
-	        glColor3f(   1.0f,  0.0f,  0.0f );
-	        glVertex3f(  0.5f, -0.5f, -0.5f );
-	        glVertex3f(  0.5f,  0.5f, -0.5f );
-	        glVertex3f(  0.5f,  0.5f,  0.5f );
-	        glVertex3f(  0.5f, -0.5f,  0.5f );
-	        glColor3f(   0.2f,  0.0f,  0.0f );
-	        glVertex3f( -0.5f, -0.5f,  0.5f );
-	        glVertex3f( -0.5f,  0.5f,  0.5f );
-	        glVertex3f( -0.5f,  0.5f, -0.5f );
-	        glVertex3f( -0.5f, -0.5f, -0.5f );
-	        glColor3f(   0.0f,  1.0f,  0.0f );
-	        glVertex3f(  0.5f,  0.5f,  0.5f );
-	        glVertex3f(  0.5f,  0.5f, -0.5f );
-	        glVertex3f( -0.5f,  0.5f, -0.5f );
-	        glVertex3f( -0.5f,  0.5f,  0.5f );
-	        glColor3f(   0.0f,  0.2f,  0.0f );
-	        glVertex3f(  0.5f, -0.5f, -0.5f );
-	        glVertex3f(  0.5f, -0.5f,  0.5f );
-	        glVertex3f( -0.5f, -0.5f,  0.5f );
-	        glVertex3f( -0.5f, -0.5f, -0.5f );
-        glEnd();
-    }Z*/
-
-	/*
-	private void renderWater() {
-		glPolygonMode(GL_FRONT, GL_FILL);
-
-		glBegin(GL_QUADS);
-			glColor3f (data.colourWater[0], data.colourWater[1], data.colourWater[2]);
-	        glVertex3f(-1f + data.PADDING_X, -1f + data.PADDING_Y, data.WATER_Z);
-	        glVertex3f(-1f + data.PADDING_X,  1f - data.PADDING_Y, data.WATER_Z);
-	        glVertex3f( 1f - data.PADDING_X,  1f - data.PADDING_Y, data.WATER_Z);
-	        glVertex3f( 1f - data.PADDING_X, -1f + data.PADDING_Y, data.WATER_Z);
-		glEnd();
-	}*/
-
+	/**
+	 * Rotates the view about the specified axis by the given value.
+	 * 
+	 * @param axis Rotation axis.
+	 * @param value Increment value.
+	 */
 	private void rotateAxis(char axis, float value) {
 		float x = 0f, y = 0f, z = 0f;
 
@@ -181,5 +170,40 @@ public class Render {
 
 		glRotatef(value, x, y, z);
 	}
+	
+	/*void renderCube() {
+    glBegin(GL_QUADS);
+        glColor3f(   0.0f,  0.0f,  0.2f );
+        glVertex3f(  0.5f, -0.5f, -0.5f );
+        glVertex3f( -0.5f, -0.5f, -0.5f );
+        glVertex3f( -0.5f,  0.5f, -0.5f );
+        glVertex3f(  0.5f,  0.5f, -0.5f );
+        glColor3f(   0.0f,  0.0f,  1.0f );
+        glVertex3f(  0.5f, -0.5f,  0.5f );
+        glVertex3f(  0.5f,  0.5f,  0.5f );
+        glVertex3f( -0.5f,  0.5f,  0.5f );
+        glVertex3f( -0.5f, -0.5f,  0.5f );
+        glColor3f(   1.0f,  0.0f,  0.0f );
+        glVertex3f(  0.5f, -0.5f, -0.5f );
+        glVertex3f(  0.5f,  0.5f, -0.5f );
+        glVertex3f(  0.5f,  0.5f,  0.5f );
+        glVertex3f(  0.5f, -0.5f,  0.5f );
+        glColor3f(   0.2f,  0.0f,  0.0f );
+        glVertex3f( -0.5f, -0.5f,  0.5f );
+        glVertex3f( -0.5f,  0.5f,  0.5f );
+        glVertex3f( -0.5f,  0.5f, -0.5f );
+        glVertex3f( -0.5f, -0.5f, -0.5f );
+        glColor3f(   0.0f,  1.0f,  0.0f );
+        glVertex3f(  0.5f,  0.5f,  0.5f );
+        glVertex3f(  0.5f,  0.5f, -0.5f );
+        glVertex3f( -0.5f,  0.5f, -0.5f );
+        glVertex3f( -0.5f,  0.5f,  0.5f );
+        glColor3f(   0.0f,  0.2f,  0.0f );
+        glVertex3f(  0.5f, -0.5f, -0.5f );
+        glVertex3f(  0.5f, -0.5f,  0.5f );
+        glVertex3f( -0.5f, -0.5f,  0.5f );
+        glVertex3f( -0.5f, -0.5f, -0.5f );
+    glEnd();
+}*/
 
 }
