@@ -20,8 +20,8 @@ public class Grid {
 	private ArrayList<Triangle> triangles;
 
 	public Grid(float minX, float minY, float maxX, float maxY) {
-		this.ROWS = (int) (DataManager.ROWS*(maxY - minY)/DataManager.RANGE_X);
-		this.COLS = (int) (DataManager.COLS*(maxX - minX)/DataManager.RANGE_Y);
+		this.ROWS = (int) (World.ROWS*(maxY - minY)/World.RANGE_X);
+		this.COLS = (int) (World.COLS*(maxX - minX)/World.RANGE_Y);
 
 		this.MIN_X = minX;
 		this.MIN_Y = minY;

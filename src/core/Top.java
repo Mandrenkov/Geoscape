@@ -1,7 +1,6 @@
 package core;
 
 import model.*;
-import view.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -11,43 +10,31 @@ import static org.lwjgl.glfw.GLFW.*;
  * @since January 23, 2017
  * @version 1.0
  *
- * <p>Member declarations and definitions for the <b>Top</b> class.</p>
+ * <p>The <i>Top</i> class is the execution entry point.</p>
  */ 
 public class Top {
+	
+	// Toggles debug statement display
+	public static final boolean DEBUG = false;
 
-	public static DataManager data;
 
-	public void run() {
-		new InitView().run();
-		new InitModel().run();
-
-		for (Terrain terrain : data.landscape) {
-			System.out.println(terrain);
-
-			new NoiseGen(
-					terrain,
-					terrain.getPerlinRows(),
-					terrain.getPerlinCols(),
-					terrain.getElevationScale()
-			).run();
-
-			terrain.updateColours();
-		}
-	}
-
+	/**
+	 * Execution entry point.
+	 * 
+	 * @param args Command-line arguments.
+	 */
 	public static void main(String[] args) {
-		data = new DataManager();
-		data.generateLandscape();
-
 		System.out.println("Application Active...\n");
+		
+		Window window = new Window();
+		World world = new World();
 
 		try {
-			new Top().run();
-			new Loop().run();
+			Loop.run(window, world);
 
 			// Free the window callbacks and destroy the window
-			glfwFreeCallbacks(data.window);
-			glfwDestroyWindow(data.window);
+			glfwFreeCallbacks(window.getReference());
+			glfwDestroyWindow(window.getReference());
 		} finally {
 			// Terminate GLFW and free the error callback
 			glfwTerminate();

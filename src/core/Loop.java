@@ -16,18 +16,18 @@ import model.*;
  */ 
 public class Loop {
 
-	public void run() {
+	public static void run(Window window, World world) {
 		Render render = new Render();
 
-		System.out.printf("Rendering %d x %d Grid\n", Top.data.ROWS, Top.data.COLS);
+		System.out.printf("Rendering %d x %d Grid\n", World.ROWS, World.COLS);
 
 		double lastTime = glfwGetTime();
 		double target = 1000.0/60.0;
 
-        while (!glfwWindowShouldClose(Top.data.window)) {
+        while (!glfwWindowShouldClose(window.getReference())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            render.run();
+            render.run(world);
 
             double currentTime = glfwGetTime();
             double frameDelta = (currentTime - lastTime)*1000;
@@ -41,7 +41,7 @@ public class Loop {
             	}
             }
 
-			glfwSwapBuffers(Top.data.window);
+			glfwSwapBuffers(window.getReference());
 			glfwPollEvents();
 		}
 	}

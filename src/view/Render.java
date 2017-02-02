@@ -15,26 +15,19 @@ import model.*;
 public class Render {
 
 	/**
-	 * Convenience instance of DataManager.
-	 */
-	private static DataManager data;
-
-	/**
 	 * Calls the top-level feature rendering functions.
 	 */
-	public void run() {
-		Render.data = Top.data;
-
-		if (DataManager.DEBUG) {
+	public void run(World world) {
+		if (Top.DEBUG) {
 			renderAxes();
 		}
 		
 		renderPlatform();
-		
-		for (Terrain terrain : data.landscape)
+
+		for (Terrain terrain : world.getLandscape())
 			renderGrid(terrain.getGrid());
 		
-		rotateAxis('Z', -0.2f);
+		rotateAxis('Z', -0.15f);
 	}
 
 	/**
@@ -99,20 +92,20 @@ public class Render {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		
 		// Set platform colour
-		glColor3f(data.colourPlatform[0], data.colourPlatform[1], data.colourPlatform[2]);
+		Colour.setColour(Colour.PLATFORM);
 
 		// Points denoting the vertices of the platform cube
 		Point[][][] cube = new Point[2][2][2];
 
 		// Generate cube vertices
 		for (int iZ = 0 ; iZ < 2 ; iZ++) {
-			float z = iZ == 0 ? DataManager.BASE_MIN_Z : DataManager.BASE_MAX_Z;
+			float z = iZ == 0 ? World.BASE_MIN_Z : World.BASE_MAX_Z;
 
 			for (int iY = 0 ; iY < 2 ; iY++) {
-				float y = iY == 0 ? DataManager.MIN_Y : DataManager.MAX_Y;
+				float y = iY == 0 ? World.MIN_Y : World.MAX_Y;
 
 				for (int iX = 0 ; iX < 2 ; iX++) {
-					float x = iX == 0 ? DataManager.MIN_X : DataManager.MAX_X;
+					float x = iX == 0 ? World.MIN_X : World.MAX_X;
 
 					cube[iZ][iY][iX] = new Point(x, y, z);
 				}
