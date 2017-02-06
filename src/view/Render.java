@@ -13,6 +13,11 @@ import model.*;
  * <p>The <i>Render</i> class is responsible for rendering the landscape.</p>
  */ 
 public class Render {
+	
+	/**
+	 * Amount to increment z-axis angle every frame.
+	 */
+	private static final float Z_ROTATE_DELTA = -0.30f;
 
 	/**
 	 * Calls the top-level feature rendering functions.
@@ -27,7 +32,7 @@ public class Render {
 		for (Terrain terrain : world.getLandscape())
 			renderGrid(terrain.getGrid());
 		
-		rotateAxis('Z', -0.15f);
+		rotateAxis('Z', Z_ROTATE_DELTA);
 	}
 
 	/**

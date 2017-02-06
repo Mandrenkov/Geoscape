@@ -1,9 +1,5 @@
 package core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-
 import model.*;
 
 /**
@@ -58,8 +54,6 @@ public class NoiseGen {
 		float perlinXSize = PERLIN_X/(grid.MAX_X - grid.MIN_X + EPSILON);
 		float perlinYSize = PERLIN_Y/(grid.MAX_Y - grid.MIN_Y + EPSILON);
 
-		HashSet<Float> zThings = new HashSet<>();
-
 		for (int x = 0 ; x < grid.COLS ; x++) {
 			for (int y = 0 ; y < grid.ROWS ; y++) {
 				Point p = grid.getPoint(y, x);
@@ -94,11 +88,8 @@ public class NoiseGen {
 					float minY = Math.min(p.getY() - grid.MIN_Y, grid.MAX_Y - p.getY());
 					float minScale = Math.min(minX*perlinXSize, minY*perlinYSize);
 
-					//System.out.println((p.getX() - grid.MIN_X) + " " + (grid.MAX_X - p.getX()));
-
 					zScale *= smooth(minScale);
 					zInit *= smooth(minScale);
-					//zThings.add(Math.min(minX*perlinXSize, minY*perlinYSize));
 
 					if (terrain.is("Lake")) {
 						//zInit -= 0.005f;
@@ -108,10 +99,6 @@ public class NoiseGen {
 				p.setZ(zInit + weightAvg(v1, v2, weightY)*zScale);
 			}
 		}
-		/*ArrayList<Float> zThings2 = new ArrayList<>(zThings);
-		Collections.sort(zThings2);
-		for (float f : zThings2)
-			System.out.println(f);*/
 	}
 
 	private float weightAvg(float x, float y, float w) {
@@ -121,73 +108,4 @@ public class NoiseGen {
 	private float smooth(float v) {
 		return 1 - (float) (Math.cos(v*Math.PI) + 1)/2;
 	}
-
-
-
-	/* Old Generator
-
-	private void applyNoise() {
-		for (int row = 0 ; row < ROWS; row++) {
-			for (int col = 0 ; col < COLS ; col++) {
-				Point p = grid.getPoint(row, col);
-
-				ArrayList<Float> nearbyZ = new ArrayList<>();
-
-				for (int row2 = -1 ; row2 < 2 ; row2 ++) {
-					for (int col2 = -1 ; col2 < 2 ; col2 ++) {
-						if ( grid.inBounds(row + row2, col + col2)) {
-							nearbyZ.add(grid.getPoint(row + row2, col + col2).z);
-						}
-					}
-				}
-
-				float averageZ = 0;
-				for (float z : nearbyZ) averageZ += z;
-				averageZ /= nearbyZ.size();
-
-				averageZ = Math.min(1, averageZ);
-				averageZ = Math.max(0, averageZ);
-
-				p.z = averageZ;
-			}
-		}
-	}
-
-	private void finalNoise() {
-		int exp = 3;
-
-		float minZ = 1f;
-		float maxZ = 0f;
-		float avgZ = 0f;
-
-		for (int row = 0 ; row < ROWS; row++) {
-			for (int col = 0 ; col < COLS ; col++) {
-				Point p = grid.getPoint(row, col);
-
-				p.z = (float) Math.pow(p.z, exp);
-
-				minZ = Math.min(minZ, p.z);
-				maxZ = Math.max(maxZ, p.z);
-				avgZ += p.z;
-			}
-		}
-
-		avgZ /= (ROWS * COLS);
-
-		float up = 0.5f - avgZ;
-		float diff = Math.max(maxZ - avgZ, avgZ - minZ);
-
-		for (int row = 0 ; row < ROWS; row++) {
-			for (int col = 0 ; col < COLS ; col++) {
-				Point p = grid.getPoint(row, col);
-
-				p.z += up;
-				p.z -= 0.5f;
-				p.z /= (diff*2);
-				p.z += 1f;
-				p.z /= 2f;
-			}
-		}
-	}*/
-
 }

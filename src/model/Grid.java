@@ -2,8 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-import core.*;
-
 /**
  * @author Mikhail Andrenkov
  * @since January 23, 2017
