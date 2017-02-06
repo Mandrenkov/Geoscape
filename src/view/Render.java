@@ -29,8 +29,8 @@ public class Render {
 		
 		renderPlatform();
 
-		for (Terrain terrain : world.getLandscape())
-			renderGrid(terrain.getGrid());
+		for (Grid grid : world.getLandscape())
+			renderGrid(grid);
 		
 		rotateAxis('Z', Z_ROTATE_DELTA);
 	}

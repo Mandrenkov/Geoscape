@@ -1,5 +1,7 @@
 package core;
 
+import java.util.ArrayList;
+
 import model.*;
 
 /**
@@ -11,35 +13,18 @@ import model.*;
  */ 
 public class NoiseGen {
 
-	private final int PERLIN_X, PERLIN_Y;
-	private final float Z_SCALING;
-
 	private static final float EPSILON = (float) 1E-5;
 
-	private final Terrain terrain;
-	private final Grid grid;
-	private Vector2D[][] gradients;
-
-	public NoiseGen(Terrain terrain, int perlinX, int perlinY, float zScaling) {
-		this.terrain = terrain;
-		this.grid = terrain.getGrid();
-
-		this.PERLIN_X = perlinX;
-		this.PERLIN_Y = perlinY;
-
-		this.Z_SCALING = zScaling;
+	public static void generateNoise(Grid grid) {
+		Vector2D[][] gradients = createGradients(grid);
+		applyNoise(grid, gradients);
 	}
 
-	public void run() {
-		createGradients();
-		applyNoise();
-	}
+	private static Vector2D[][] createGradients(Grid grid) {
+		Vector2D[][] gradients = new Vector2D[grid.getPerlinCols() + 1][grid.getPerlinRows() + 1];
 
-	private void createGradients() {
-		gradients = new Vector2D[PERLIN_X + 1][PERLIN_Y + 1];
-
-		for (int x = 0 ; x < PERLIN_X + 1 ; x++) {
-			for (int y = 0 ; y < PERLIN_Y + 1; y++) {
+		for (int x = 0 ; x < grid.getPerlinCols() + 1 ; x++) {
+			for (int y = 0 ; y < grid.getPerlinRows() + 1; y++) {
 				float angle = (float) (Math.random() * 2 * Math.PI);
 
 				float xComp = (float) Math.cos(angle);
@@ -48,18 +33,20 @@ public class NoiseGen {
 				gradients[x][y] = new Vector2D(xComp, yComp);
 			}
 		}
+		
+		return gradients;
 	}
 
-	private void applyNoise() {
-		float perlinXSize = PERLIN_X/(grid.MAX_X - grid.MIN_X + EPSILON);
-		float perlinYSize = PERLIN_Y/(grid.MAX_Y - grid.MIN_Y + EPSILON);
+	private static void applyNoise(Grid grid, Vector2D[][] gradients) {		
+		float perlinXSize = grid.getPerlinCols()/(grid.getBounds()[2] - grid.getBounds()[0] + EPSILON);
+		float perlinYSize = grid.getPerlinRows()/(grid.getBounds()[3] - grid.getBounds()[1] + EPSILON);
 
-		for (int x = 0 ; x < grid.COLS ; x++) {
-			for (int y = 0 ; y < grid.ROWS ; y++) {
-				Point p = grid.getPoint(y, x);
+		for (int x = 0 ; x < grid.getCols() ; x++) {
+			for (int y = 0 ; y < grid.getRows() ; y++) {
+				TerrainPoint p = grid.getPoint(y, x);
 
-				float xExact = (p.getX() - grid.MIN_X)*perlinXSize;
-				float yExact = (p.getY() - grid.MIN_Y)*perlinYSize;
+				float xExact = (p.getX() - grid.getBounds()[0])*perlinXSize;
+				float yExact = (p.getY() - grid.getBounds()[1])*perlinYSize;
 
 				int xCell = (int) xExact;
 				int yCell = (int) yExact;
@@ -80,20 +67,33 @@ public class NoiseGen {
 				float v1 = weightAvg(dotProducts[0][0], dotProducts[1][0], weightX);
 				float v2 = weightAvg(dotProducts[0][1], dotProducts[1][1], weightX);
 
-				float zScale = Z_SCALING;
+				ArrayList<TerrainPoint> points = new ArrayList<>();
+				int reach = 3;
+				
+				for (int i = 1 ; i <= reach ; i ++) {
+					if (x > i - 1) points.add(grid.getPoint(y, x - i));
+					if (x < grid.getCols() - i) points.add(grid.getPoint(y, x + i));
+					if (y > i - 1) points.add(grid.getPoint(y - i, x));
+					if (y < grid.getRows() - i) points.add(grid.getPoint(y + i, x));
+				}
+				
+				points.add(p);
+				
+				float zScale = 0;
+				for (TerrainPoint point : points) zScale += point.getBiome().getScale();
+				zScale /= points.size();
+				
+				//float zScale = p.getBiome().getScale();
+				p.setColour(Colour.averageColour(points.toArray(new TerrainPoint[points.size()])));
 				float zInit  = p.getZ();
 
-				if (xCell == 0 || xCell == PERLIN_X - 1 || yCell == 0 || yCell == PERLIN_Y - 1) {
-					float minX = Math.min(p.getX() - grid.MIN_X, grid.MAX_X - p.getX());
-					float minY = Math.min(p.getY() - grid.MIN_Y, grid.MAX_Y - p.getY());
+				if (xCell == 0 || xCell == grid.getPerlinCols() - 1 || yCell == 0 || yCell == grid.getPerlinRows() - 1) {
+					float minX = Math.min(p.getX() - grid.getBounds()[0], grid.getBounds()[2] - p.getX());
+					float minY = Math.min(p.getY() - grid.getBounds()[1], grid.getBounds()[3] - p.getY());
 					float minScale = Math.min(minX*perlinXSize, minY*perlinYSize);
 
 					zScale *= smooth(minScale);
 					zInit *= smooth(minScale);
-
-					if (terrain.is("Lake")) {
-						//zInit -= 0.005f;
-					}
 				}
 
 				p.setZ(zInit + weightAvg(v1, v2, weightY)*zScale);
@@ -101,11 +101,11 @@ public class NoiseGen {
 		}
 	}
 
-	private float weightAvg(float x, float y, float w) {
+	private static float weightAvg(float x, float y, float w) {
 		return x + w*(y - x);
 	}
 
-	private float smooth(float v) {
+	private static float smooth(float v) {
 		return 1 - (float) (Math.cos(v*Math.PI) + 1)/2;
 	}
 }

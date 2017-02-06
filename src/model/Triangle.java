@@ -11,15 +11,15 @@ public class Triangle {
 
 	private float[] colour;
 	private final float[] BASE_COLOUR;
-	private final Point[] POINTS;
+	private final TerrainPoint[] POINTS;
 
-	public Triangle(float[] baseColour, Point ... points) {
+	public Triangle(TerrainPoint ... points) {
 		if (points.length != 3) throw new IllegalArgumentException("Triangle must have 3 points.");
 
-		this.BASE_COLOUR = baseColour;
+		this.BASE_COLOUR = Colour.triangleColour(points);
 		this.POINTS = points;
 
-		this.colour = new float[3];
+		this.colour = new float[4];
 
 		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.BASE_COLOUR.length);
 	}
@@ -40,17 +40,19 @@ public class Triangle {
 		this.colour = colour;
 	}
 
-	/*
 	public void updateColours() {
+		this.colour = Colour.triangleColour(POINTS);
+		
 		float averageZ = 0;
 		for (Point p : POINTS) averageZ += p.getZ();
 		averageZ /= 3f;
 
 		for (int c = 0 ; c < colour.length ; c++) {
-			colour[c] = Math.min(1, origColour[c]*averageZ*1.6f);
-			colour[c] = (float) Math.pow(colour[c], 3);
+			//colour[c] = Math.min(1, BASE_COLOUR[c]*averageZ*1.6f);
+			//colour[c] = (float) Math.pow(colour[c], 3);
+			colour[c] *= averageZ*10;
 		}
-	}*/
+	}
 
 	public String toString() {
 		return String.format("%s <--> %s <--> %s - R%.2f G%.2f B%.2f",

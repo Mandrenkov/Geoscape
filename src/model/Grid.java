@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import core.NoiseGen;
+
 /**
  * @author Mikhail Andrenkov
  * @since January 23, 2017
@@ -11,35 +13,76 @@ import java.util.ArrayList;
  */ 
 public class Grid {
 
-	public final int ROWS, COLS;
-	public final float MIN_X, MIN_Y, MAX_X, MAX_Y;
+	private final int ROWS, COLS;
+	private final int PERLIN_ROWS, PERLIN_COLS;
+	private final float[] BOUNDS = new float[4];
 
-	private Point[][]  points;
+	private BiomeMap biomeMap;
+	private TerrainPoint[][]  points;
 	private ArrayList<Triangle> triangles;
 
-	public Grid(float minX, float minY, float maxX, float maxY) {
-		this.ROWS = (int) (World.ROWS*(maxY - minY)/World.RANGE_X);
-		this.COLS = (int) (World.COLS*(maxX - minX)/World.RANGE_Y);
+	public Grid(int rows, int cols, int perlinRows, int perlinCols, float minX, float minY, float maxX, float maxY) {
+		this.ROWS = rows; //(int) (World.ROWS*(maxY - minY)/World.RANGE_X);
+		this.COLS = cols; //(int) (World.COLS*(maxX - minX)/World.RANGE_Y);
+		
+		this.PERLIN_ROWS = perlinRows;
+		this.PERLIN_COLS = perlinCols;
+		
+		BOUNDS[0] = minX;
+		BOUNDS[1] = minY;
+		BOUNDS[2] = maxX;
+		BOUNDS[3] = maxY;
 
-		this.MIN_X = minX;
-		this.MIN_Y = minY;
-		this.MAX_X = maxX;
-		this.MAX_Y = maxY;
-
-		points = new Point[ROWS][COLS];
+		biomeMap = new BiomeMap(ROWS, COLS);
+		points = new TerrainPoint[ROWS][COLS];
 		triangles = new ArrayList<>();
 	}
 
 	public void addTriangle(Triangle t) {
 		triangles.add(t);
 	}
+	
+	public void buildPoints() {
+		this.initPoints();
+		this.initTriangles();
+		
+		NoiseGen.generateNoise(this);
+		
+		for (Triangle t : triangles) {
+			t.updateColours();
+		}
+	}
+	
+	public BiomeMap getBiomeMap() {
+		return biomeMap;
+	}
+	
+	public float[] getBounds() {
+		return BOUNDS;
+	}
+	
+	public int getCols() {
+		return COLS;
+	}
+	
+	public int getPerlinCols() {
+		return PERLIN_COLS;
+	}
+	
+	public int getPerlinRows() {
+		return PERLIN_ROWS;
+	}
 
-	public Point getPoint(int row, int col) {
+	public TerrainPoint getPoint(int row, int col) {
 		return points[row][col];
 	}
 
 	public Point[][] getPoints() {
 		return points;
+	}
+	
+	public int getRows() {
+		return ROWS;
 	}
 
 	public ArrayList<Triangle> getTriangles() {
@@ -50,28 +93,56 @@ public class Grid {
 		return 0 <= row && row < ROWS && 0 <= col && col < COLS;
 	}
 
-	public void setPoint(Point point, int row, int col) {
+	public void setPoint(TerrainPoint point, int row, int col) {
 		points[row][col] = point;
 	}
 
 	public String toString() {
 		StringBuilder gridString = new StringBuilder();
 
-		gridString.append(String.format("Grid from (%.2f, %.2f) to (%.2f, %.2f)", MIN_X, MIN_Y, MAX_X, MAX_Y));
+		gridString.append(String.format("Grid from (%.2f, %.2f) to (%.2f, %.2f)", BOUNDS[0], BOUNDS[1], BOUNDS[2], BOUNDS[3]));
 
 		/*for (int row = 0 ; row < ROWS ; row++) {
 			for (int col = 0 ; col < COLS ; col++) {
-				gridString.append(points[row][col] + " ");
+				gridString.append(poi)nts[row][col] + " ");
 			}
 			gridString.append("\n");
 		}*/
 
 		return gridString.toString();
 	}
-
-	/*public void updateTriangles() {
-		for (Triangle t : triangles) {
-			t.updateColours();
+	
+	private void initPoints() {
+		for (int row = 0 ; row < ROWS; row++) {
+			for (int col = 0 ; col < COLS ; col++) {
+				float x = BOUNDS[0] + col*(BOUNDS[2] - BOUNDS[0])/(COLS - 1);
+				float y = BOUNDS[1] + row*(BOUNDS[3] - BOUNDS[1])/(ROWS - 1);
+				float z = 0.1f;
+				
+				Biome biome = biomeMap.getBiome(row, col);
+				
+				this.setPoint(new TerrainPoint(biome, x, y, z), row, col);
+			}
 		}
-	}*/
+	}
+
+	private void initTriangles() {
+		TerrainPoint[] points = new TerrainPoint[COLS*2];
+
+		for (int row = 0 ; row < ROWS - 1 ; row ++) {
+			int pointIndex = 0;
+
+			for (int col = 0 ; col < COLS ; col++) {
+				points[pointIndex++] = this.getPoint(row    , col);
+				points[pointIndex++] = this.getPoint(row + 1, col);
+			}
+
+			boolean flip = false;
+
+			for (int p = 0 ; p < pointIndex - 2 ; p ++) {
+				if (flip = !flip) this.addTriangle(new Triangle(points[p    ], points[p + 1], points[p + 2]));
+				else              this.addTriangle(new Triangle(points[p + 2], points[p + 1], points[p    ]));
+			}
+		}
+	}
 }
