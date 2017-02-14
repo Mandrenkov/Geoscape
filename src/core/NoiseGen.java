@@ -1,6 +1,6 @@
 package core;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import model.*;
 
@@ -14,6 +14,7 @@ import model.*;
 public class NoiseGen {
 
 	private static final float EPSILON = (float) 1E-5;
+	private static final float TOLERANCE = 5.0f;
 
 	public static void generateNoise(Grid grid) {
 		Vector2D[][] gradients = createGradients(grid);
@@ -67,24 +68,25 @@ public class NoiseGen {
 				float v1 = weightAvg(dotProducts[0][0], dotProducts[1][0], weightX);
 				float v2 = weightAvg(dotProducts[0][1], dotProducts[1][1], weightX);
 
-				ArrayList<TerrainPoint> points = new ArrayList<>();
-				int reach = 3;
+				HashMap<TerrainPoint, Float> nearbyWeightPoints = findNearbyPoints(grid, x, y, TOLERANCE);
+				HashMap<Float, ArrayList<Float>> nearbyWeightScales = new HashMap<>();
+				ArrayList<TerrainPoint> nearbyPoints = new ArrayList<>();
 				
-				for (int i = 1 ; i <= reach ; i ++) {
-					if (x > i - 1) points.add(grid.getPoint(y, x - i));
-					if (x < grid.getCols() - i) points.add(grid.getPoint(y, x + i));
-					if (y > i - 1) points.add(grid.getPoint(y - i, x));
-					if (y < grid.getRows() - i) points.add(grid.getPoint(y + i, x));
+				for (TerrainPoint point : nearbyWeightPoints.keySet()) {
+					nearbyPoints.add(point);
+					
+					float weight = nearbyWeightPoints.get(point);
+					
+					if (!nearbyWeightScales.containsKey(weight)) {
+						nearbyWeightScales.put(weight, new ArrayList<Float>());
+					}
+					nearbyWeightScales.get(weight).add(point.getBiome().getScale());
 				}
 				
-				points.add(p);
-				
-				float zScale = 0;
-				for (TerrainPoint point : points) zScale += point.getBiome().getScale();
-				zScale /= points.size();
+				float zScale = weightMapAverage(nearbyWeightScales);
 				
 				//float zScale = p.getBiome().getScale();
-				p.setColour(Colour.averageColour(points.toArray(new TerrainPoint[points.size()])));
+				p.setColour(Colour.averageColour(nearbyPoints.toArray(new TerrainPoint[nearbyPoints.size()])));
 				float zInit  = p.getZ();
 
 				if (xCell == 0 || xCell == grid.getPerlinCols() - 1 || yCell == 0 || yCell == grid.getPerlinRows() - 1) {
@@ -99,6 +101,44 @@ public class NoiseGen {
 				p.setZ(zInit + weightAvg(v1, v2, weightY)*zScale);
 			}
 		}
+	}
+	
+	private static HashMap<TerrainPoint, Float> findNearbyPoints(Grid grid, int centerX, int centerY, float tolerance) {
+		int maxDim = (int) tolerance;
+		int startX = Math.max(centerX - maxDim, 0);
+		int endX   = Math.min(centerX + maxDim, grid.getCols() - 1);
+		int startY = Math.max(centerY - maxDim, 0);
+		int endY   = Math.min(centerY + maxDim, grid.getRows() - 1);
+		
+		TerrainPoint centerP = grid.getPoint(centerY, centerX);
+		HashMap<TerrainPoint, Float> points = new HashMap<>();
+		
+		for (int x = startX ; x <= endX ; x++) {
+			for (int y = startY ; y <= endY ; y++) {
+				float distance = centerP.distance(grid.getPoint(y, x));
+				
+				if (distance <= tolerance) {
+					//System.out.println(centerX + ", " + centerY + " -> " + x + ", " + y + " : " + distance);
+					points.put(grid.getPoint(y, x), smooth(1 - (float) Math.pow(distance/tolerance, 2)));
+				}
+			}
+		}
+		
+		return points;
+	}
+	
+	private static float weightMapAverage(HashMap<Float, ArrayList<Float>> map) {
+		float average = 0;
+		int elements = 0;
+		
+		for (float weight : map.keySet()) {
+			for (float value : map.get(weight)) {
+				average += weight*value;
+				++elements;
+			}
+		}
+		
+		return average / elements;
 	}
 
 	private static float weightAvg(float x, float y, float w) {

@@ -16,6 +16,10 @@ public class Point {
 		this.y = y;
 		this.z = z;
 	}
+	
+	public float distance(Point point) {
+		return (float) Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2));
+	}
 
 	public float getX() {
 		return x;
