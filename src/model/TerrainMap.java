@@ -2,11 +2,11 @@ package model;
 
 /**
  * @author Mikhail Andrenkov
- * @since January 23, 2017
+ * @since February 18, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>TerrainMap</b> class.</p>
- */ 
+ */
 public class TerrainMap {
 
 	private char[][] landMap;

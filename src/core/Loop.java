@@ -9,13 +9,13 @@ import model.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since January 23, 2017
+ * @since February 18, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Loop</b> class.</p>
- */ 
+ */
 public class Loop {
-		
+
 	/**
 	 * Ideal delay (seconds) between frames to reach target FPS.
 	 */
@@ -23,7 +23,7 @@ public class Loop {
 
 	/**
 	 * Application update loop
-	 * 
+	 *
 	 * @param window Application window
 	 * @param world World to be rendered
 	 */
@@ -45,10 +45,10 @@ public class Loop {
 			glfwPollEvents();
 		}
 	}
-	
+
 	/**
 	 * Synchronizes the current frame rate with respect to TARGET_FRAME_DELAY.
-	 * 
+	 *
 	 * @param targetTime Ideal time of current frame.
 	 * @return The next target frame time.
 	 */
@@ -62,7 +62,7 @@ public class Loop {
         		e.printStackTrace();
         	}
         }
-        
+
         return glfwGetTime() + TARGET_FRAME_DELAY;
 	}
 

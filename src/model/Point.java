@@ -2,11 +2,11 @@ package model;
 
 /**
  * @author Mikhail Andrenkov
- * @since January 23, 2017
+ * @since February 18, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Point</b> class.</p>
- */ 
+ */
 public class Point {
 
 	private float x, y, z;
@@ -16,7 +16,7 @@ public class Point {
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	public float distance(Point point) {
 		return (float) Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2));
 	}

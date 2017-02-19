@@ -7,13 +7,13 @@ import model.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since January 23, 2017
+ * @since February 18, 2017
  * @version 1.0
  *
  * <p>The <i>Render</i> class is responsible for rendering the landscape.</p>
- */ 
+ */
 public class Render {
-	
+
 	/**
 	 * Amount to increment z-axis angle every frame.
 	 */
@@ -26,18 +26,18 @@ public class Render {
 		if (Top.DEBUG) {
 			renderAxes();
 		}
-		
+
 		renderPlatform();
 
 		for (Grid grid : world.getLandscape())
 			renderGrid(grid);
-		
+
 		rotateAxis('Z', Z_ROTATE_DELTA);
 	}
 
 	/**
 	 * Adds the given point as a GL vertex.
-	 * 
+	 *
 	 * @param p Point to be added as a GL vertex.
 	 */
 	private void addVertex(Point p) {
@@ -72,10 +72,10 @@ public class Render {
 			glVertex3f(0f, 0f, axisDistance);
 		glEnd();
 	}
-	
+
 	/**
 	 * Renders the triangles of the given Grid.
-	 * 
+	 *
 	 * @param grid The Grid to be rendered.
 	 */
 	private void renderGrid(Grid grid) {
@@ -85,7 +85,7 @@ public class Render {
 
 		// Render triangles
 		glBegin(GL_TRIANGLES);
-			grid.getTriangles().forEach(t -> renderTriangle(t));	
+			grid.getTriangles().forEach(t -> renderTriangle(t));
 		glEnd();
 	}
 
@@ -95,7 +95,7 @@ public class Render {
 	private void renderPlatform() {
 		// Front and back faces should be rendered
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		
+
 		// Set platform colour
 		Colour.setColour(Colour.PLATFORM);
 
@@ -137,7 +137,7 @@ public class Render {
 
 	/**
 	 * Renders the given Triangle.
-	 * 
+	 *
 	 * @param t Triangle to be rendered.
 	 */
 	private void renderTriangle(Triangle t) {
@@ -155,7 +155,7 @@ public class Render {
 
 	/**
 	 * Rotates the view about the specified axis by the given value.
-	 * 
+	 *
 	 * @param axis Rotation axis.
 	 * @param value Increment value.
 	 */
@@ -168,7 +168,7 @@ public class Render {
 
 		glRotatef(value, x, y, z);
 	}
-	
+
 	/*void renderCube() {
     glBegin(GL_QUADS);
         glColor3f(   0.0f,  0.0f,  0.2f );

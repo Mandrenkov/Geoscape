@@ -9,15 +9,15 @@ import org.lwjgl.opengl.GL;
 
 /**
  * @author Mikhail Andrenkov
- * @since January 23, 2017
+ * @since February 18, 2017
  * @version 1.0
  *
  * <p>The <i>Window</i> class represents the application window.</p>
- */ 
+ */
 public class Window {
-	
+
 		/* Public variables */
-	
+
 		// Physical window attributes
 		public final int INIT_WIDTH = 1400;
 		public final int INIT_HEIGHT = 800;
@@ -36,41 +36,41 @@ public class Window {
 			{GLFW_SAMPLES, 4}
 		};
 		public final int GLFW_VSYNC = 0;
-		
+
 		// View perspective
 		public static final float VIEW_FOV = 70f;
 		public static final float VIEW_ASPECT = 1f;
 		public static final float VIEW_Z_NEAR = 0.01f;
 		public static final float VIEW_Z_FAR = 5f;
-		
+
 		/* Private variables */
 
 		private long window = NULL;
-		
+
 		/* Public methods */
-		
+
 		/**
 		 * Constructor
 		 */
 		public Window() {
 			initWindow();
 			initGL();
-			
+
 			rotateView();
 		}
-		
+
 		/**
 		 * Returns the reference to the GLFW window.
-		 * 
+		 *
 		 * @return The reference to the GLFW window.
 		 */
 		public long getReference() {
 			return window;
 		}
-		
+
 		/**
 		 * Returns the dimensions of the window.
-		 * 
+		 *
 		 * @return The dimensions of the window.
 		 */
 		public int[] getWindowDimensions() {
@@ -84,7 +84,7 @@ public class Window {
 
 		/**
 		 * Returns the height of the window.
-		 * 
+		 *
 		 * @return The height of the window.
 		 */
 		public int getWindowHeight() {
@@ -93,15 +93,15 @@ public class Window {
 
 		/**
 		 * Returns the width of the window.
-		 * 
+		 *
 		 * @return The width of the window.
 		 */
 		public int getWindowWidth() {
 			return getWindowDimensions()[0];
 		}
-		
+
 		/* Private methods */
-		
+
 		/**
 		 * Initializes the GLFW window
 		 */
@@ -120,7 +120,7 @@ public class Window {
 			if (window == NULL) {
 				throw new RuntimeException("Failed to create the GLFW window");
 			}
-				
+
 			glfwSetKeyCallback(window, (localWindow, key, scancode, action, mods) -> {
 				if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 					glfwSetWindowShouldClose(localWindow, true);
@@ -132,7 +132,7 @@ public class Window {
 			glfwMakeContextCurrent(window);		// Make the OpenGL context current
 			glfwSwapInterval(GLFW_VSYNC);		// Set v-sync
 			glfwShowWindow(window);				// Make the window visible
-			
+
 			glfwSetWindowSizeCallback(window, (localWindow, newWidth, newHeight) -> {
 				glViewport(0, 0, newWidth, newHeight);
 			});
@@ -147,7 +147,7 @@ public class Window {
 	        for (int flag : GL_FLAGS) {
 	        	glEnable(flag);
 	        }
-	        
+
 	        Colour.clearColour(Colour.BACKDROP);
 
 			// Matrix Initialization
@@ -162,7 +162,7 @@ public class Window {
 	        glMatrixMode(GL_MODELVIEW);
 	        glLoadIdentity();
 		}
-		
+
 		/**
 		 * Rotates the perspective of the camera to its initial state.
 		 */
@@ -174,5 +174,5 @@ public class Window {
 
 			glRotatef(45f, 0f, 0f, 1f);
 		}
-	
+
 }

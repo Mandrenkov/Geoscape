@@ -6,11 +6,11 @@ import core.NoiseGen;
 
 /**
  * @author Mikhail Andrenkov
- * @since January 23, 2017
+ * @since February 18, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Grid</b> class.</p>
- */ 
+ */
 public class Grid {
 
 	private final int ROWS, COLS;
@@ -24,10 +24,10 @@ public class Grid {
 	public Grid(int rows, int cols, int perlinRows, int perlinCols, float minX, float minY, float maxX, float maxY) {
 		this.ROWS = rows; //(int) (World.ROWS*(maxY - minY)/World.RANGE_X);
 		this.COLS = cols; //(int) (World.COLS*(maxX - minX)/World.RANGE_Y);
-		
+
 		this.PERLIN_ROWS = perlinRows;
 		this.PERLIN_COLS = perlinCols;
-		
+
 		BOUNDS[0] = minX;
 		BOUNDS[1] = minY;
 		BOUNDS[2] = maxX;
@@ -41,34 +41,30 @@ public class Grid {
 	public void addTriangle(Triangle t) {
 		triangles.add(t);
 	}
-	
+
 	public void buildPoints() {
 		this.initPoints();
 		this.initTriangles();
-		
+
 		NoiseGen.generateNoise(this);
-		
-		for (Triangle t : triangles) {
-			t.updateColours();
-		}
 	}
-	
+
 	public BiomeMap getBiomeMap() {
 		return biomeMap;
 	}
-	
+
 	public float[] getBounds() {
 		return BOUNDS;
 	}
-	
+
 	public int getCols() {
 		return COLS;
 	}
-	
+
 	public int getPerlinCols() {
 		return PERLIN_COLS;
 	}
-	
+
 	public int getPerlinRows() {
 		return PERLIN_ROWS;
 	}
@@ -80,7 +76,7 @@ public class Grid {
 	public Point[][] getPoints() {
 		return points;
 	}
-	
+
 	public int getRows() {
 		return ROWS;
 	}
@@ -111,16 +107,16 @@ public class Grid {
 
 		return gridString.toString();
 	}
-	
+
 	private void initPoints() {
 		for (int row = 0 ; row < ROWS; row++) {
 			for (int col = 0 ; col < COLS ; col++) {
 				float x = BOUNDS[0] + col*(BOUNDS[2] - BOUNDS[0])/(COLS - 1);
 				float y = BOUNDS[1] + row*(BOUNDS[3] - BOUNDS[1])/(ROWS - 1);
 				float z = 0.1f;
-				
+
 				Biome biome = biomeMap.getBiome(row, col);
-				
+
 				this.setPoint(new TerrainPoint(biome, x, y, z), row, col);
 			}
 		}
