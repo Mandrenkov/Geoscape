@@ -19,6 +19,6 @@ public class LightSource {
 	}
 
 	public String toString() {
-		return String.format("Light: (%.2f, %.2f, %.2f)", position.getX(), position.getY(), position.getZ());
+		return String.format("%s: (%.2f, %.2f, %.2f)", this.getClass().getName(), position.getX(), position.getY(), position.getZ());
 	}
 }

@@ -2,8 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-import core.NoiseGen;
-
 /**
  * @author Mikhail Andrenkov
  * @since February 22, 2017
@@ -69,11 +67,8 @@ public class Triangle {
 		for (LightSource light : lights) {
 			AlgVector3D lightVector = new AlgVector3D(light.getPosition());
 			float angle = getNormal().angle(lightVector);
-			//float cosAngle = (float) Math.cos(angle);
-			//float brightScale = NoiseGen.smooth((cosAngle + 1f)/2);
-			//float brightScale = (float) Math.sqrt(NoiseGen.smooth((cosAngle + 1f)/2));
-			//float brightScale = angle > Math.PI/2 ? 0.1f : NoiseGen.smooth((float) (2*angle/Math.PI));
-			brightScale += (float) NoiseGen.unitCurve(NoiseGen.unitCurve(angle/(float) Math.PI));
+			
+			brightScale += calculateBrightness(angle);
 			brightScale = Math.min(1f, brightScale);
 		}
 
@@ -89,5 +84,10 @@ public class Triangle {
 			colour[1],
 			colour[2]
 		);
+	}
+	
+	private float calculateBrightness(float angle) {
+		float cosineFactor = (float) (-Math.cos(angle) + 1)/2f;
+		 return (float) Math.pow(cosineFactor, 2);
 	}
 }

@@ -75,11 +75,12 @@ public class AlgVector {
 	}
 
 	public String toString() {
-		StringBuilder vecString = new StringBuilder("(");
+		StringBuilder vecString = new StringBuilder(this.getClass().getName());
+		vecString.append(": (");
 		for (int i = 0 ; i < dimensions - 1 ; ++i) {
-			vecString.append(String.format("%.2f, ", components[i]));
+			vecString.append(String.format("%.6f, ", components[i]));
 		}
-		vecString.append(String.format("%.2f)", components[dimensions - 1]));
+		vecString.append(String.format("%.6f)", components[dimensions - 1]));
 
 		return vecString.toString();
 	}

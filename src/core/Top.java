@@ -14,8 +14,10 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Top {
 
-	// Toggles debug statement display
-	public static final boolean DEBUG = false;
+	/**
+	 * Toggles debug statement display
+	 */
+	public static final boolean DEBUG = true;
 
 
 	/**

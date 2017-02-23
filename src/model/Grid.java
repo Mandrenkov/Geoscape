@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-import core.NoiseGen;
+import core.Noise;
 
 /**
  * @author Mikhail Andrenkov
@@ -46,7 +46,7 @@ public class Grid {
 		this.initPoints();
 		this.initTriangles();
 
-		NoiseGen.generateNoise(this);
+		Noise.generateNoise(this);
 	}
 
 	public BiomeMap getBiomeMap() {

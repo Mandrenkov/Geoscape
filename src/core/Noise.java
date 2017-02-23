@@ -9,9 +9,9 @@ import model.*;
  * @since February 22, 2017
  * @version 1.0
  *
- * <p>Member declarations and definitions for the <b>NoiseGen</b> class.</p>
+ * <p>Member declarations and definitions for the <b>Noise</b> class.</p>
  */
-public class NoiseGen {
+public class Noise {
 
 	/**
 	 * Avoids division by zero when mapping Points to the Perlin grid. 
@@ -20,7 +20,7 @@ public class NoiseGen {
 	/**
 	 * Determines the radius of influence of a Point during scaling and Biome calculations.
 	 */
-	private static final float BIOME_CREEP = 5.0f;
+	private static final float BIOME_CREEP = 0.05f;
 	
 
 	/**
@@ -38,7 +38,7 @@ public class NoiseGen {
 	/**
 	 * Maps the given value to a smooth curve with range [0, 1].
 	 * 
-	 * @param v Value to be mapped to the curve; v should shall within therange [0, 1]
+	 * @param v Value to be mapped to the curve; v should shall within the range [0, 1]
 	 * @return The curved value of v.
 	 */
 	public static float unitCurve(float v) {
@@ -48,7 +48,7 @@ public class NoiseGen {
 	/**
 	 * Applies a Perlin noise filter to the given Grid.
 	 * 
-	 * @param grid Grid to be filtered.
+	 * @param grid Grid to be filtered
 	 */
 	public static void generateNoise(Grid grid) {
 		AlgVector2D[][] gradients = createGradients(grid);
@@ -59,7 +59,7 @@ public class NoiseGen {
 	/**
 	 * Creates a 2D array of normalized vectors according to the given Grid's Perlin dimensions.
 	 * 
-	 * @param grid Grid to be filtered.
+	 * @param grid Grid to be filtered
 	 * @return The 2D array of normalized vectors.
 	 */
 	private static AlgVector2D[][] createGradients(Grid grid) {
@@ -77,6 +77,37 @@ public class NoiseGen {
 		}
 
 		return gradients;
+	}
+	
+	/**
+	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
+	 * 
+	 * @param grid Grid to be aliased.
+	 */
+	private static void applyAliasing(Grid grid) {
+		float[][] pointZ = new float[grid.getRows()][grid.getCols()];
+
+		// Calculate new Point elevations
+		for (int r = 0 ; r < grid.getRows() ; r++) {
+			for (int c = 0 ; c < grid.getCols() ; c++) {
+				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, c, r, 0.01f);
+				
+				float averageZ = 0f;
+				for (TerrainPoint p : nearbyPoints.keySet()) {
+					averageZ += p.getZ();
+				}
+				averageZ /= nearbyPoints.size();
+
+				pointZ[r][c] = averageZ;
+			}
+		}
+
+		// Apply calculated elevations to the Grid Points
+		for (int r = 0 ; r < grid.getRows() ; r++) {
+			for (int c = 0 ; c < grid.getCols() ; c++) {
+				grid.getPoint(r, c).setZ(pointZ[r][c]);;
+			}
+		}
 	}
 
 	/**
@@ -119,37 +150,6 @@ public class NoiseGen {
 	}
 
 	/**
-	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
-	 * 
-	 * @param grid Grid to be aliased.
-	 */
-	private static void applyAliasing(Grid grid) {
-		float[][] pointZ = new float[grid.getRows()][grid.getCols()];
-
-		// Calculate new Point elevations
-		for (int r = 0 ; r < grid.getRows() ; r++) {
-			for (int c = 0 ; c < grid.getCols() ; c++) {
-				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, c, r, 1f);
-				
-				float averageZ = 0f;
-				for (TerrainPoint p : nearbyPoints.keySet()) {
-					averageZ += p.getZ();
-				}
-				averageZ /= nearbyPoints.size();
-
-				pointZ[r][c] = averageZ;
-			}
-		}
-
-		// Apply calculated elevations to the Grid Points
-		for (int r = 0 ; r < grid.getRows() ; r++) {
-			for (int c = 0 ; c < grid.getCols() ; c++) {
-				grid.getPoint(r, c).setZ(pointZ[r][c]);;
-			}
-		}
-	}
-
-	/**
 	 * Maps Points near a center Point to a corresponding distance weight.
 	 * 
 	 * @param grid Grid containing the Points.
@@ -159,6 +159,7 @@ public class NoiseGen {
 	 * @return A mapping between nearby Points and their associated distance weights.
 	 */
 	private static HashMap<TerrainPoint, Float> findNearbyPoints(Grid grid, int centerX, int centerY, float tolerance) {
+		tolerance *= Math.min(grid.getRows(), grid.getCols());
 		int maxDim = (int) tolerance;
 		
 		// Nearby Point index bounds
@@ -173,6 +174,7 @@ public class NoiseGen {
 		// Iterate through each candidate Point and add it to the map if it is sufficiently close to the center Point
 		for (int x = startX ; x <= endX ; x++) {
 			for (int y = startY ; y <= endY ; y++) {
+				if (x == centerX || y == centerY) continue;
 				float distance = centerP.distance(grid.getPoint(y, x));
 
 				if (distance <= tolerance) {

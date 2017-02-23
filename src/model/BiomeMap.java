@@ -13,10 +13,11 @@ public class BiomeMap {
 
 	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f);
 	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f);
+	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.01f);
 	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f);
 
 
-	private static final char DEFAULT_CHAR = 'H';
+	private static final char DEFAULT_CHAR = 'P';
 	private static final float WAVE_FACTOR_AMPLITUDE = 0.10f;
 	private static final float WAVE_FACTOR_PERIOD = 0.08f;
 
@@ -31,6 +32,7 @@ public class BiomeMap {
 	static {
 		biomeMap.put('H', HILL);
 		biomeMap.put('M', MOUNTAIN);
+		biomeMap.put('P', PLAIN);
 		biomeMap.put('T', TUNDRA);
 	}
 

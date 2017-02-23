@@ -17,7 +17,7 @@ public class Render {
 	/**
 	 * Amount to increment z-axis angle every frame.
 	 */
-	private static final float Z_ROTATE_DELTA = -0.30f;
+	private static final float Z_ROTATE_DELTA = -0.30f; // -0.30f
 
 	/**
 	 * Calls the top-level feature rendering functions.
@@ -25,13 +25,18 @@ public class Render {
 	public void run(World world) {
 		if (Top.DEBUG) {
 			renderAxes();
+			
+			for (LightSource light : world.getLights()) {
+				renderLightSource(light);
+			}
 		}
 
 		renderPlatform();
-
-		for (Grid grid : world.getLandscape())
+		
+		for (Grid grid : world.getLandscape()) {
 			renderGrid(grid);
-
+		}
+			
 		rotateAxis('Z', Z_ROTATE_DELTA);
 	}
 
@@ -88,6 +93,49 @@ public class Render {
 			grid.getTriangles().forEach(t -> renderTriangle(t));
 		glEnd();
 	}
+	
+	private void renderLightSource(LightSource light) {
+		glPolygonMode(GL_FRONT, GL_FILL);
+		//boolean enableCull = glIsEnabled(GL_CULL_FACE);
+		//if (enableCull) glDisable(GL_CULL_FACE);
+
+		glColor3f(1.0f,  1.0f,  1.0f);
+		float d = 0.05f;
+		float x = light.getPosition().getX();
+		float y = light.getPosition().getY();
+		float z = light.getPosition().getZ();
+		
+	    glBegin(GL_QUADS);
+	        glVertex3f(x - d, y - d, z - d);
+	        glVertex3f(x - d, y + d, z - d);
+	        glVertex3f(x + d, y + d, z - d);
+	        glVertex3f(x + d, y - d, z - d);
+	        glVertex3f(x - d, y - d, z + d);
+	        glVertex3f(x - d, y + d, z + d);
+	        glVertex3f(x + d, y + d, z + d);
+	        glVertex3f(x + d, y - d, z + d);
+	        
+	        glVertex3f(x - d, y - d, z - d);
+	        glVertex3f(x - d, y - d, z + d);
+	        glVertex3f(x - d, y + d, z + d);
+	        glVertex3f(x - d, y + d, z - d);
+	        glVertex3f(x + d, y - d, z - d);
+	        glVertex3f(x + d, y - d, z + d);
+	        glVertex3f(x + d, y + d, z + d);
+	        glVertex3f(x + d, y + d, z - d);
+
+	        glVertex3f(x - d, y - d, z - d);
+	        glVertex3f(x + d, y - d, z - d);
+	        glVertex3f(x + d, y - d, z + d);
+	        glVertex3f(x - d, y - d, z + d);
+	        glVertex3f(x - d, y + d, z - d);
+	        glVertex3f(x + d, y + d, z - d);
+	        glVertex3f(x + d, y + d, z + d);
+	        glVertex3f(x - d, y + d, z + d);
+        glEnd();
+        
+        //if (enableCull) glEnable(GL_CULL_FACE);
+	}
 
 	/**
 	 * Renders the platform under the landscape.
@@ -104,7 +152,7 @@ public class Render {
 
 		// Generate cube vertices
 		for (int iZ = 0 ; iZ < 2 ; iZ++) {
-			float z = iZ == 0 ? World.BASE_MIN_Z : World.BASE_MAX_Z;
+			float z = iZ == 0 ? World.PLATFORM_MIN_Z : World.PLATFORM_MAX_Z;
 
 			for (int iY = 0 ; iY < 2 ; iY++) {
 				float y = iY == 0 ? World.MIN_Y : World.MAX_Y;
