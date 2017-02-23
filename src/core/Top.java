@@ -7,7 +7,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>The <i>Top</i> class is the execution entry point.</p>

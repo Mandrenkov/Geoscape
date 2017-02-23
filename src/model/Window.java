@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>The <i>Window</i> class represents the application window.</p>

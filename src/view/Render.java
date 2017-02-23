@@ -7,7 +7,7 @@ import model.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>The <i>Render</i> class is responsible for rendering the landscape.</p>

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>BiomeMap</b> class.</p>
@@ -13,7 +13,6 @@ public class BiomeMap {
 
 	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f);
 	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f);
-	//public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.05f);
 	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f);
 
 
@@ -83,8 +82,6 @@ public class BiomeMap {
 		int waveAmplitudeCol = (int) (COLS*WAVE_FACTOR_AMPLITUDE);
 		int wavePeriodRow = (int) (ROWS*WAVE_FACTOR_PERIOD);
 		int wavePeriodCol = (int) (COLS*WAVE_FACTOR_PERIOD);
-
-		System.out.println(waveAmplitudeRow);
 
 		for (int r = startRow + waveAmplitudeRow; r < endRow - waveAmplitudeCol ; r++) {
 			int startColWave = Math.max(0   , startCol - waveAmplitudeCol/2 + (int) (waveAmplitudeCol/2f*Math.cos(r*(Math.PI/wavePeriodRow))));

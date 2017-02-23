@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.glColor3f;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>The <i>Colour</i> class is responsible for storing and manipulating application colours.</p>

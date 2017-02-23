@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>The <i>World</i> class represents the world encapsulating the landscape.</p>
  */
 public class World {
-	public static final int ROWS = 100;
-	public static final int COLS = 100;
+	public static final int ROWS = 200;
+	public static final int COLS = 200;
 
-	public static final int PERLIN_ROWS = 10;
-	public static final int PERLIN_COLS = 10;
+	public static final int PERLIN_ROWS = 8;
+	public static final int PERLIN_COLS = 8;
 
 	public static final float PADDING_X = 0.2f;
 	public static final float PADDING_Y = 0.2f;
@@ -43,7 +43,7 @@ public class World {
 		landMap.setSymbolsWave(0, 0, landMap.getRows()/2, landMap.getCols()/3, 'T');
 		landMap.setSymbolsWave(0, landMap.getCols()/2, landMap.getRows()/2, landMap.getCols(), 'M');
 		landscape.add(land);
-
+		
 		lights.add(new LightSource(new Point(-1f, -1f, 0f)));
 		//lights.add(new LightSource(new Point(-1f, 1f, 1f)));
 

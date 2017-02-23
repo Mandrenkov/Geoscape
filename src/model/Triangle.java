@@ -6,7 +6,7 @@ import core.NoiseGen;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2017
+ * @since February 22, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Triangle</b> class.</p>
@@ -73,7 +73,7 @@ public class Triangle {
 			//float brightScale = NoiseGen.smooth((cosAngle + 1f)/2);
 			//float brightScale = (float) Math.sqrt(NoiseGen.smooth((cosAngle + 1f)/2));
 			//float brightScale = angle > Math.PI/2 ? 0.1f : NoiseGen.smooth((float) (2*angle/Math.PI));
-			brightScale += (float) NoiseGen.smooth(NoiseGen.smooth(angle/(float) Math.PI));
+			brightScale += (float) NoiseGen.unitCurve(NoiseGen.unitCurve(angle/(float) Math.PI));
 			brightScale = Math.min(1f, brightScale);
 		}
 
