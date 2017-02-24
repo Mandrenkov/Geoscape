@@ -67,6 +67,7 @@ public class AlgVector {
 	 * Returns the AlgVector that can be added to this AlgVector to produce the specified AlgVector.
 	 * 
 	 * @param vector Target AlgVector.
+	 * 
 	 * @return The AlgVector that connects this AlgVector to the given AlgVector.
 	 */
 	public AlgVector to(AlgVector vector) {
