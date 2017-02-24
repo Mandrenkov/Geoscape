@@ -12,7 +12,7 @@
 | [misc/](misc)                                 |  Miscelleous assets    |
 ---
 ### Screenshots
-####Time Point 5 - Lighting + Curved Biomes
+####Time Point 5 - Lighting + Curved Biome Boundaries
 ![](misc/Timeline_5.png)
 ####Time Point 4 - Point-Based Biomes
 ![](misc/Timeline_4.png)
