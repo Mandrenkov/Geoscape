@@ -13,7 +13,7 @@ public class World {
 	/**
 	 * Number of Point rows in the World.
 	 */
-	public static final int ROWS = 150;
+	public static final int ROWS = 300;
 	/**
 	 * Number of Point columns in the World.
 	 */
@@ -22,7 +22,7 @@ public class World {
 	/**
 	 * Number of Perlin rows in the World.
 	 */
-	public static final int PERLIN_ROWS = 10;
+	public static final int PERLIN_ROWS = 20;
 	/**
 	 * Number of Perlin columns in the World.
 	 */
@@ -92,6 +92,7 @@ public class World {
 		landscape.add(land);
 		
 		lights.add(new LightSource(new Point(-1f, -1f, 1f)));
+		//lights.add(new LightSource(new Point(0f, 0f, 1f)));
 
 		for (Grid grid : landscape) {
 			grid.buildPoints();
