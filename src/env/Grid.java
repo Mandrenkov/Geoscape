@@ -1,5 +1,14 @@
 package env;
 
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
+
 import java.util.ArrayList;
 
 import geo.Point;
@@ -7,6 +16,7 @@ import geo.TerrainPoint;
 import geo.TerrainTriangle;
 import util.BiomeMap;
 import util.Noise;
+import util.Render;
 
 /**
  * @author Mikhail Andrenkov
@@ -15,7 +25,7 @@ import util.Noise;
  *
  * <p>Member declarations and definitions for the <b>Grid</b> class.</p>
  */
-public class Grid {
+public class Grid implements Drawable {
 
 	private final int ROWS, COLS;
 	private final int PERLIN_ROWS, PERLIN_COLS;
@@ -51,6 +61,17 @@ public class Grid {
 		this.initTriangles();
 
 		Noise.generateNoise(this);
+	}
+	
+	public void draw() {
+		// Polygon setup
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glCullFace(GL_BACK);
+
+		// Render triangles
+		glBegin(GL_TRIANGLES);
+			terrainTriangles.forEach(t -> Render.drawTriangle(t, t.getColour()));
+		glEnd();
 	}
 
 	public BiomeMap getBiomeMap() {

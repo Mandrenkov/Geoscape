@@ -1,7 +1,7 @@
 package env;
 
-import geo.Point;
-import geo.Sphere;
+import geo.*;
+import util.*;
 
 /**
  * @author Mikhail Andrenkov
@@ -10,7 +10,7 @@ import geo.Sphere;
  *
  * <p>Member declarations and definitions for the <b>LightSource</b> class.</p>
  */ 
-public class LightSource {
+public class LightSource implements Drawable {
 	private Point position;
 	private Sphere sphere;
 
@@ -18,6 +18,10 @@ public class LightSource {
 		this.position = position;
 		
 		this.sphere = new Sphere(position, 0.05f);
+	}
+	
+	public void draw() {
+		Render.drawSphere(sphere, new float[]{1f, 1f, 1f});
 	}
 
 	public Point getPosition() {

@@ -3,7 +3,8 @@ package core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import env.World;
+import env.*;
+import util.Render;
 
 /**
  * @author Mikhail Andrenkov
@@ -18,6 +19,11 @@ public class Loop {
 	 * Ideal delay (seconds) between frames to reach target FPS.
 	 */
 	private static final double TARGET_FRAME_DELAY = 1.0/60.0;
+	
+	/**
+	 * Amount to increment z-axis angle every frame.
+	 */
+	private static final float Z_ROTATE_DELTA = -0.30f; // -0.30f
 
 	/**
 	 * Application update loop
@@ -26,8 +32,6 @@ public class Loop {
 	 * @param world World to be rendered
 	 */
 	public static void run(Window window, World world) {
-		Render render = new Render();
-
 		System.out.printf("Rendering %d x %d World.\n", World.ROWS, World.COLS);
 
 		double targetTime = glfwGetTime();
@@ -35,13 +39,19 @@ public class Loop {
         while (!glfwWindowShouldClose(window.getReference())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            render.run(world);
+            render(world);
 
             targetTime = syncFPS(targetTime);
 
 			glfwSwapBuffers(window.getReference());
 			glfwPollEvents();
 		}
+	}
+	
+	private static void render(World world) {
+		if (Top.DEBUG) Render.drawAxes();
+		for (Drawable d : world.getDrawables()) d.draw();	
+		Render.rotateAxis('Z', Z_ROTATE_DELTA);
 	}
 
 	/**

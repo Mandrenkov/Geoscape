@@ -73,6 +73,7 @@ public class World {
 	public static final float PLATFORM_MAX_Z = 0.00f;
 
 	
+	private Platform platform;
 	/**
 	 * List of Grid constituting the landscape of the World.
 	 */
@@ -81,11 +82,16 @@ public class World {
 	 * List of World light sources.
 	 */
 	private ArrayList<LightSource> lights;
+	
+	private ArrayList<Drawable> drawables;
 
 	public World() {
 		landscape = new ArrayList<>();
 		lights = new ArrayList<>();
+		drawables = new ArrayList<>();
 
+		platform = new Platform();
+		
 		Grid land = new Grid(ROWS, COLS, PERLIN_ROWS, PERLIN_COLS, MIN_X, MIN_Y, MAX_X, MAX_Y);
 		BiomeMap landMap = land.getBiomeMap();
 
@@ -106,6 +112,14 @@ public class World {
 				t.updateColours(lights);
 			}
 		}
+		
+		drawables.add(platform);
+		drawables.addAll(landscape);
+		drawables.addAll(lights);
+	}
+	
+	public ArrayList<Drawable> getDrawables() {
+		return drawables;
 	}
 
 	public ArrayList<Grid> getLandscape() {
