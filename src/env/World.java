@@ -1,6 +1,10 @@
-package model;
+package env;
 
 import java.util.ArrayList;
+
+import geo.Point;
+import geo.TerrainTriangle;
+import util.BiomeMap;
 
 /**
  * @author Mikhail Andrenkov

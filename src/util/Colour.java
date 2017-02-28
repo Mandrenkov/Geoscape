@@ -1,7 +1,9 @@
-package model;
+package util;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glColor3f;
+
+import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov

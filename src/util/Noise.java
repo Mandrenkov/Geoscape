@@ -1,8 +1,10 @@
-package core;
+package util;
 
 import java.util.*;
 
-import model.*;
+import env.Grid;
+import geo.GeoVector;
+import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov

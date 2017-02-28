@@ -1,4 +1,4 @@
-package model;
+package geo;
 
 public class Triangle {
 	protected final Point[] POINTS;

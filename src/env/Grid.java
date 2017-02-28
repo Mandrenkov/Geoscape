@@ -1,8 +1,12 @@
-package model;
+package env;
 
 import java.util.ArrayList;
 
-import core.Noise;
+import geo.Point;
+import geo.TerrainPoint;
+import geo.TerrainTriangle;
+import util.BiomeMap;
+import util.Noise;
 
 /**
  * @author Mikhail Andrenkov
@@ -94,18 +98,7 @@ public class Grid {
 	}
 
 	public String toString() {
-		StringBuilder gridString = new StringBuilder();
-
-		gridString.append(String.format("Grid from (%.2f, %.2f) to (%.2f, %.2f)", BOUNDS[0], BOUNDS[1], BOUNDS[2], BOUNDS[3]));
-
-		/*for (int row = 0 ; row < ROWS ; row++) {
-			for (int col = 0 ; col < COLS ; col++) {
-				gridString.append(poi)nts[row][col] + " ");
-			}
-			gridString.append("\n");
-		}*/
-
-		return gridString.toString();
+		return String.format("Grid from (%.2f, %.2f) to (%.2f, %.2f)", BOUNDS[0], BOUNDS[1], BOUNDS[2], BOUNDS[3]);
 	}
 
 	private void initPoints() {

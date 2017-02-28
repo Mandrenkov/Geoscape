@@ -3,9 +3,7 @@ package core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import view.*;
-
-import model.*;
+import env.World;
 
 /**
  * @author Mikhail Andrenkov

@@ -1,9 +1,9 @@
 package core;
 
-import model.*;
-
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+
+import env.World;
 
 /**
  * @author Mikhail Andrenkov

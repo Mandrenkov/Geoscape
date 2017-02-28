@@ -1,4 +1,6 @@
-package model;
+package env;
+
+import util.Colour;
 
 /**
  * @author Mikhail Andrenkov

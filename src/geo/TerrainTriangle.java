@@ -1,6 +1,9 @@
-package model;
+package geo;
 
 import java.util.ArrayList;
+
+import env.LightSource;
+import util.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -9,21 +12,18 @@ import java.util.ArrayList;
  *
  * <p>Member declarations and definitions for the <b>TerrainTriangle</b> class.</p>
  */
-public class TerrainTriangle {
+public class TerrainTriangle extends Triangle {
 
 	private float[] colour;
 	private final float[] BASE_COLOUR;
-	private final TerrainPoint[] POINTS;
 
 	public TerrainTriangle(TerrainPoint ... points) {
-		if (points.length != 3) throw new IllegalArgumentException("TerrainTriangle must have 3 points.");
+		super(points);
 
 		this.BASE_COLOUR = Colour.triangleColour(points);
-		this.POINTS = points;
-
-		this.colour = new float[4];
-
-		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.BASE_COLOUR.length);
+		
+		this.colour = new float[this.BASE_COLOUR.length];
+		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.colour.length);
 	}
 
 	public float[] getBaseColour() {
@@ -43,16 +43,12 @@ public class TerrainTriangle {
 		return vectorA.cross(vectorB);
 	}
 
-	public Point[] getPoints() {
-		return POINTS;
-	}
-
 	public void setColour(float[] colour) {
 		this.colour = colour;
 	}
 
 	public void updateColours(ArrayList<LightSource> lights) {
-		this.colour = Colour.triangleColour(POINTS);
+		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.colour.length);
 
 		float averageZ = 0;
 		for (Point p : POINTS) averageZ += p.getZ();

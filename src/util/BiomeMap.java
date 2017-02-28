@@ -1,6 +1,8 @@
-package model;
+package util;
 
 import java.util.HashMap;
+
+import env.Biome;
 
 /**
  * @author Mikhail Andrenkov

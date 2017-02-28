@@ -1,4 +1,4 @@
-package model;
+package core;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -6,6 +6,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
+
+import util.Colour;
+import util.Pointer;
 
 /**
  * @author Mikhail Andrenkov

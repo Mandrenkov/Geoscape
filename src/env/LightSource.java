@@ -1,4 +1,7 @@
-package model;
+package env;
+
+import geo.Point;
+import geo.Sphere;
 
 /**
  * @author Mikhail Andrenkov

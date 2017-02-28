@@ -1,11 +1,17 @@
-package view;
+package core;
 
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
-import core.*;
-import model.*;
+import env.Grid;
+import env.LightSource;
+import env.World;
+import geo.Point;
+import geo.Sphere;
+import geo.TerrainTriangle;
+import geo.Triangle;
+import util.*;
 
 /**
  * @author Mikhail Andrenkov

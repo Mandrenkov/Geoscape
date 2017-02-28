@@ -1,4 +1,6 @@
-package model;
+package geo;
+
+import env.Biome;
 
 /**
  * @author Mikhail Andrenkov
