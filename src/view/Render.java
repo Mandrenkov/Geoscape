@@ -2,6 +2,8 @@ package view;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayList;
+
 import core.*;
 import model.*;
 
@@ -25,16 +27,16 @@ public class Render {
 	public void run(World world) {
 		if (Top.DEBUG) {
 			renderAxes();
-			
-			for (LightSource light : world.getLights()) {
-				renderLightSource(light);
-			}
 		}
 
 		renderPlatform();
 		
 		for (Grid grid : world.getLandscape()) {
 			renderGrid(grid);
+		}
+		
+		for (LightSource light : world.getLights()) {
+			renderLightSource(light);
 		}
 			
 		rotateAxis('Z', Z_ROTATE_DELTA);
@@ -90,51 +92,29 @@ public class Render {
 
 		// Render triangles
 		glBegin(GL_TRIANGLES);
-			grid.getTriangles().forEach(t -> renderTriangle(t));
+			grid.getTriangles().forEach(t -> renderTerrainTriangle(t));
+		glEnd();
+	}
+	
+	private void renderSphere(Sphere sphere) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		//glDisable(GL_CULL_FACE);
+		
+		// Render triangles
+		glBegin(GL_TRIANGLES);
+			ArrayList<Triangle> triangles = sphere.getTriangles();
+			for (int t = 0 ; t < triangles.size() ; t++) {
+				float clr = (float) (t + 1)/triangles.size();
+				//clr = (float) (Math.random()*0.2 + 0.8);
+				//clr = 1f;
+				//renderTriangle(triangles.get(t).getPoints(), new float[]{1f,1f,0f});
+				renderTriangle(triangles.get(t).getPoints(), new float[]{clr, clr, clr});
+			}
 		glEnd();
 	}
 	
 	private void renderLightSource(LightSource light) {
-		glPolygonMode(GL_FRONT, GL_FILL);
-		//boolean enableCull = glIsEnabled(GL_CULL_FACE);
-		//if (enableCull) glDisable(GL_CULL_FACE);
-
-		glColor3f(1.0f,  1.0f,  1.0f);
-		float d = 0.05f;
-		float x = light.getPosition().getX();
-		float y = light.getPosition().getY();
-		float z = light.getPosition().getZ();
-		
-	    glBegin(GL_QUADS);
-	        glVertex3f(x - d, y - d, z - d);
-	        glVertex3f(x - d, y + d, z - d);
-	        glVertex3f(x + d, y + d, z - d);
-	        glVertex3f(x + d, y - d, z - d);
-	        glVertex3f(x - d, y - d, z + d);
-	        glVertex3f(x - d, y + d, z + d);
-	        glVertex3f(x + d, y + d, z + d);
-	        glVertex3f(x + d, y - d, z + d);
-	        
-	        glVertex3f(x - d, y - d, z - d);
-	        glVertex3f(x - d, y - d, z + d);
-	        glVertex3f(x - d, y + d, z + d);
-	        glVertex3f(x - d, y + d, z - d);
-	        glVertex3f(x + d, y - d, z - d);
-	        glVertex3f(x + d, y - d, z + d);
-	        glVertex3f(x + d, y + d, z + d);
-	        glVertex3f(x + d, y + d, z - d);
-
-	        glVertex3f(x - d, y - d, z - d);
-	        glVertex3f(x + d, y - d, z - d);
-	        glVertex3f(x + d, y - d, z + d);
-	        glVertex3f(x - d, y - d, z + d);
-	        glVertex3f(x - d, y + d, z - d);
-	        glVertex3f(x + d, y + d, z - d);
-	        glVertex3f(x + d, y + d, z + d);
-	        glVertex3f(x - d, y + d, z + d);
-        glEnd();
-        
-        //if (enableCull) glEnable(GL_CULL_FACE);
+		renderSphere(light.getSphere());
 	}
 
 	/**
@@ -184,14 +164,21 @@ public class Render {
 	}
 
 	/**
-	 * Renders the given Triangle.
+	 * Renders the given TerrainTriangle.
 	 *
-	 * @param t Triangle to be rendered.
+	 * @param t TerrainTriangle to be rendered.
 	 */
-	private void renderTriangle(Triangle t) {
-		float[] colour = t.getColour();
-		Point[] points = t.getPoints();
-
+	private void renderTerrainTriangle(TerrainTriangle t) {
+		renderTriangle(t.getPoints(), t.getColour());
+	}
+	
+	/**
+	 * Renders the given Triangle with the specified colour.
+	 *
+	 * @param points Points of the Triangle to be rendered.
+	 * @param colour Colour to be applied to the Triangle.
+	 */
+	private void renderTriangle(Point[] points, float[] colour) {
 		// Set triangle colour
 		glColor3f(colour[0], colour[1], colour[2]);
 

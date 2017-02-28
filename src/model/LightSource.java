@@ -9,13 +9,20 @@ package model;
  */ 
 public class LightSource {
 	private Point position;
+	private Sphere sphere;
 
 	public LightSource(Point position) {
 		this.position = position;
+		
+		this.sphere = new Sphere(position, 0.05f);
 	}
 
 	public Point getPosition() {
 		return position;
+	}
+	
+	public Sphere getSphere() {
+		return sphere;
 	}
 
 	public String toString() {

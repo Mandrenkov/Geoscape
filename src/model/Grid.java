@@ -19,7 +19,7 @@ public class Grid {
 
 	private BiomeMap biomeMap;
 	private TerrainPoint[][]  points;
-	private ArrayList<Triangle> triangles;
+	private ArrayList<TerrainTriangle> terrainTriangles;
 
 	public Grid(int rows, int cols, int perlinRows, int perlinCols, float minX, float minY, float maxX, float maxY) {
 		this.ROWS = rows; //(int) (World.ROWS*(maxY - minY)/World.RANGE_X);
@@ -35,11 +35,11 @@ public class Grid {
 
 		biomeMap = new BiomeMap(ROWS, COLS);
 		points = new TerrainPoint[ROWS][COLS];
-		triangles = new ArrayList<>();
+		terrainTriangles = new ArrayList<>();
 	}
 
-	public void addTriangle(Triangle t) {
-		triangles.add(t);
+	public void addTriangle(TerrainTriangle t) {
+		terrainTriangles.add(t);
 	}
 
 	public void buildPoints() {
@@ -81,8 +81,8 @@ public class Grid {
 		return ROWS;
 	}
 
-	public ArrayList<Triangle> getTriangles() {
-		return triangles;
+	public ArrayList<TerrainTriangle> getTriangles() {
+		return terrainTriangles;
 	}
 
 	public boolean inBounds(int row, int col) {
@@ -136,8 +136,8 @@ public class Grid {
 			boolean flip = false;
 
 			for (int p = 0 ; p < pointIndex - 2 ; p ++) {
-				if (flip = !flip) this.addTriangle(new Triangle(points[p    ], points[p + 1], points[p + 2]));
-				else              this.addTriangle(new Triangle(points[p + 2], points[p + 1], points[p    ]));
+				if (flip = !flip) this.addTriangle(new TerrainTriangle(points[p    ], points[p + 1], points[p + 2]));
+				else              this.addTriangle(new TerrainTriangle(points[p + 2], points[p + 1], points[p    ]));
 			}
 		}
 	}

@@ -51,7 +51,7 @@ public class Noise {
 	 * @param grid Grid to be filtered
 	 */
 	public static void generateNoise(Grid grid) {
-		AlgVector2D[][] gradients = createGradients(grid);
+		GeoVector[][] gradients = createGradients(grid);
 		applyNoise(grid, gradients);
 		applyAliasing(grid);
 	}
@@ -62,8 +62,8 @@ public class Noise {
 	 * @param grid Grid to be filtered
 	 * @return The 2D array of normalized vectors.
 	 */
-	private static AlgVector2D[][] createGradients(Grid grid) {
-		AlgVector2D[][] gradients = new AlgVector2D[grid.getPerlinCols() + 1][grid.getPerlinRows() + 1];
+	private static GeoVector[][] createGradients(Grid grid) {
+		GeoVector[][] gradients = new GeoVector[grid.getPerlinCols() + 1][grid.getPerlinRows() + 1];
 
 		for (int x = 0 ; x < grid.getPerlinCols() + 1 ; x++) {
 			for (int y = 0 ; y < grid.getPerlinRows() + 1; y++) {
@@ -72,7 +72,7 @@ public class Noise {
 				float xComp = (float) Math.cos(angle);
 				float yComp = (float) Math.sin(angle);
 
-				gradients[x][y] = new AlgVector2D(xComp, yComp);
+				gradients[x][y] = new GeoVector(xComp, yComp);
 			}
 		}
 
@@ -116,7 +116,7 @@ public class Noise {
 	 * @param grid Grid to be filtered.
 	 * @param gradients Array of gradient vectors.
 	 */
-	private static void applyNoise(Grid grid, AlgVector2D[][] gradients) {
+	private static void applyNoise(Grid grid, GeoVector[][] gradients) {
 		// Conversion ratios from Grid dimensions to Perlin grid dimensions
 		float perlinXSize = grid.getPerlinCols()/(grid.getBounds()[2] - grid.getBounds()[0] + PERLIN_EPSILON);
 		float perlinYSize = grid.getPerlinRows()/(grid.getBounds()[3] - grid.getBounds()[1] + PERLIN_EPSILON);
@@ -198,7 +198,7 @@ public class Noise {
 	 * @param perlinYSize Number of Perlin rows per unit distance along the Grid's Y dimension.
 	 * @return The change in elevation of the given Point.
 	 */
-	private static float generatePerlinDelta(Grid grid, AlgVector2D[][] gradients, int x, int y, float perlinXSize, float perlinYSize) {
+	private static float generatePerlinDelta(Grid grid, GeoVector[][] gradients, int x, int y, float perlinXSize, float perlinYSize) {
 		TerrainPoint p = grid.getPoint(y, x);
 
 		// Transform Grid coordinate system to Perlin coordinate system
@@ -216,10 +216,10 @@ public class Noise {
 
 		// Compute the dot products from each corner of the corresponding Perlin cell to the Point
 		float[][] dotProducts = new float[2][2];
-		dotProducts[0][0] = gradients[xCell    ][yCell    ].dot(new AlgVector2D(xDiff    , yDiff    ));
-		dotProducts[0][1] = gradients[xCell    ][yCell + 1].dot(new AlgVector2D(xDiff    , yDiff - 1));
-		dotProducts[1][1] = gradients[xCell + 1][yCell + 1].dot(new AlgVector2D(xDiff - 1, yDiff - 1));
-		dotProducts[1][0] = gradients[xCell + 1][yCell    ].dot(new AlgVector2D(xDiff - 1, yDiff    ));
+		dotProducts[0][0] = gradients[xCell    ][yCell    ].dot(new GeoVector(xDiff    , yDiff    ));
+		dotProducts[0][1] = gradients[xCell    ][yCell + 1].dot(new GeoVector(xDiff    , yDiff - 1));
+		dotProducts[1][1] = gradients[xCell + 1][yCell + 1].dot(new GeoVector(xDiff - 1, yDiff - 1));
+		dotProducts[1][0] = gradients[xCell + 1][yCell    ].dot(new GeoVector(xDiff - 1, yDiff    ));
 
 		// Average each dot product along the X dimension
 		float v1 = weightAvg(dotProducts[0][0], dotProducts[1][0], weightX);

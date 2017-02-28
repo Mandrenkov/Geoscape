@@ -13,7 +13,7 @@ public class World {
 	/**
 	 * Number of Point rows in the World.
 	 */
-	public static final int ROWS = 300;
+	public static final int ROWS = 150;
 	/**
 	 * Number of Point columns in the World.
 	 */
@@ -92,12 +92,13 @@ public class World {
 		landscape.add(land);
 		
 		lights.add(new LightSource(new Point(-1f, -1f, 1f)));
+		//lights.add(new LightSource(new Point(-1f, 0f, 1f)));
 		//lights.add(new LightSource(new Point(0f, 0f, 1f)));
 
 		for (Grid grid : landscape) {
 			grid.buildPoints();
 
-			for (Triangle t : grid.getTriangles()) {
+			for (TerrainTriangle t : grid.getTriangles()) {
 				t.updateColours(lights);
 			}
 		}
