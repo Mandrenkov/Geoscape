@@ -53,7 +53,7 @@ public class Noise {
 	 * @param grid Grid to be filtered
 	 */
 	public static void generateNoise(Grid grid) {
-		GeoVector[][] gradients = createGradients(grid);
+		GeoVector[][] gradients = createGradients(grid.getPerlinRows(), grid.getPerlinCols());
 		applyNoise(grid, gradients);
 		applyAliasing(grid);
 	}
@@ -64,11 +64,11 @@ public class Noise {
 	 * @param grid Grid to be filtered
 	 * @return The 2D array of normalized vectors.
 	 */
-	private static GeoVector[][] createGradients(Grid grid) {
-		GeoVector[][] gradients = new GeoVector[grid.getPerlinCols() + 1][grid.getPerlinRows() + 1];
+	private static GeoVector[][] createGradients(int perlinRows, int perlinCols) {
+		GeoVector[][] gradients = new GeoVector[perlinRows][perlinCols];
 
-		for (int x = 0 ; x < grid.getPerlinCols() + 1 ; x++) {
-			for (int y = 0 ; y < grid.getPerlinRows() + 1; y++) {
+		for (int x = 0 ; x < perlinRows ; x++) {
+			for (int y = 0 ; y < perlinCols ; y++) {
 				float angle = (float) (Math.random() * 2 * Math.PI);
 
 				float xComp = (float) Math.cos(angle);
@@ -128,7 +128,7 @@ public class Noise {
 				TerrainPoint p = grid.getPoint(y, x);
 				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, x, y, BIOME_CREEP);
 				
-				int xCell = (int) ((p.getX() - grid.getBounds()[0])*perlinXSize);
+				int xCell = (int) ((p.getX() - grid.getBounds()[0])*perlinXSize );
 				int yCell = (int) ((p.getY() - grid.getBounds()[1])*perlinYSize);
 				
 				float zInit  = p.getZ();
@@ -180,7 +180,7 @@ public class Noise {
 				float distance = centerP.distance(grid.getPoint(y, x));
 
 				if (distance <= tolerance) {
-					float weight = (float) (1f - unitCurve(distance/tolerance));
+					float weight = (float) Math.pow(1f - unitCurve(distance/tolerance), 0.8);
 					points.put(grid.getPoint(y, x), weight);
 				}
 			}

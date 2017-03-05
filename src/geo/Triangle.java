@@ -4,7 +4,7 @@ public class Triangle {
 	protected final Point[] POINTS;
 
 	public Triangle(Point ... points) {
-		if (points.length != 3) throw new IllegalArgumentException("TerrainTriangle must have 3 points.");
+		if (points.length != 3) throw new IllegalArgumentException("Triangle must have 3 points.");
 
 		this.POINTS = points;
 	}

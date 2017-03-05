@@ -14,12 +14,15 @@ import util.Colour;
  */
 public class TerrainTriangle extends Triangle {
 
+	private final TerrainPoint[] POINTS;
+	
 	private float[] colour;
 	private final float[] BASE_COLOUR;
 
 	public TerrainTriangle(TerrainPoint ... points) {
 		super(points);
-
+	
+		this.POINTS = points;
 		this.BASE_COLOUR = Colour.triangleColour(points);
 		
 		this.colour = new float[this.BASE_COLOUR.length];
@@ -48,8 +51,8 @@ public class TerrainTriangle extends Triangle {
 	}
 
 	public void updateColours(ArrayList<LightSource> lights) {
-		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.colour.length);
-
+		colour = Colour.triangleColour(POINTS);
+		
 		float averageZ = 0;
 		for (Point p : POINTS) averageZ += p.getZ();
 		averageZ /= 3f;

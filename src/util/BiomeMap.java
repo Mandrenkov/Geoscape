@@ -13,6 +13,7 @@ import env.Biome;
  */
 public class BiomeMap {
 
+	public static final Biome DESERT = new Biome("Desert", Colour.TERRAIN_DESERT, 0.05f);
 	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f);
 	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f);
 	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.01f);
@@ -32,6 +33,7 @@ public class BiomeMap {
 	private final int COLS;
 
 	static {
+		biomeMap.put('D', DESERT);
 		biomeMap.put('H', HILL);
 		biomeMap.put('M', MOUNTAIN);
 		biomeMap.put('P', PLAIN);

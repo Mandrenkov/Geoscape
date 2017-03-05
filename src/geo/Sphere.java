@@ -75,7 +75,6 @@ public class Sphere {
 					midVector.normalize();
 					
 					midPoint = new Point(midVector.getX(), midVector.getY(), midVector.getZ());
-					System.out.println(midVector);
 					midPoints[i] = midPoint;
 					points.add(midPoint);
 				}

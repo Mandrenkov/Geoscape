@@ -2,6 +2,7 @@ package env;
 
 import java.util.ArrayList;
 
+import core.Top;
 import geo.Point;
 import geo.TerrainTriangle;
 import util.BiomeMap;
@@ -17,7 +18,7 @@ public class World {
 	/**
 	 * Number of Point rows in the World.
 	 */
-	public static final int ROWS = 150;
+	public static final int ROWS = Top.DEBUG ? 100 : 300;
 	/**
 	 * Number of Point columns in the World.
 	 */
@@ -97,6 +98,7 @@ public class World {
 
 		landMap.setSymbols(0, 0, landMap.getRows(), landMap.getCols(), 'H');
 		landMap.setSymbolsWave(landMap.getRows()/2, 0, landMap.getRows(), landMap.getCols()/3, 'P');
+		//landMap.setSymbolsWave(landMap.getRows()/2, landMap.getCols()*2/3, landMap.getRows(), landMap.getCols(), 'D');
 		landMap.setSymbolsWave(0, 0, landMap.getRows()/2, landMap.getCols()/4, 'T');
 		landMap.setSymbolsWave(0, landMap.getCols()/2, landMap.getRows()/2, landMap.getCols(), 'M');
 		landscape.add(land);
