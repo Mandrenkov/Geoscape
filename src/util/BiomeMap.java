@@ -3,6 +3,7 @@ package util;
 import java.util.HashMap;
 
 import env.Biome;
+import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov
@@ -13,14 +14,37 @@ import env.Biome;
  */
 public class BiomeMap {
 
-	public static final Biome DESERT = new Biome("Desert", Colour.TERRAIN_DESERT, 0.05f);
-	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f);
-	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f);
-	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.01f);
+	public static final Biome DESERT = new Biome("Desert", Colour.TERRAIN_DESERT, 0.05f) {
+		public void texturize(TerrainPoint point, float dominance) {
+			float z = point.getZ();
+			
+			float refFreq = 10f;		// Frequency of lines waves
+			float refGain = 0.05f;		// Amplitude of line waves
+			float scaleFreq = 300f;		// Density of line waves
+			float scaleGain = 0.001f;	// Height of line waves
+
+			float deltaZ = (float) (scaleGain*Math.cos(scaleFreq*Math.abs(point.getX() - refGain*Math.cos(point.getY()*refFreq))));
+			deltaZ *= dominance;
+			
+			point.setZ(z + deltaZ);
+			System.out.println(point.getBiomeMix());
+		}
+	};
+	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f) {
+		public void texturize(TerrainPoint point, float dominance) {
+			point.bump(0.001f * dominance);
+		}
+	};;
+	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f) {
+		public void texturize(TerrainPoint point, float dominance) {
+			point.bump(0.01f * dominance);
+		}
+	};
+	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.02f);
 	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f);
 
 
-	private static final char DEFAULT_CHAR = 'P';
+	private static final char DEFAULT_CHAR = 'H';
 	private static final float WAVE_FACTOR_AMPLITUDE = 0.10f;
 	private static final float WAVE_FACTOR_PERIOD = 0.08f;
 

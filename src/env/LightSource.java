@@ -11,13 +11,16 @@ import util.*;
  * <p>Member declarations and definitions for the <b>LightSource</b> class.</p>
  */ 
 public class LightSource implements Drawable {
+	
+	private final float RADIUS = 0.10f;
+	
 	private Point position;
 	private Sphere sphere;
 
 	public LightSource(Point position) {
 		this.position = position;
 		
-		this.sphere = new Sphere(position, 0.05f);
+		this.sphere = new Sphere(position, RADIUS);
 	}
 	
 	public void draw() {

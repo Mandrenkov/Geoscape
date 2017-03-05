@@ -35,7 +35,7 @@ public class Loop {
 		System.out.printf("Rendering %d x %d World.\n", World.ROWS, World.COLS);
 
 		double targetTime = glfwGetTime();
-
+		Render.rotateAxis('Z', -100f);
         while (!glfwWindowShouldClose(window.getReference())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

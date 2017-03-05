@@ -14,12 +14,12 @@ import geo.TerrainPoint;
  */
 public class Colour {
 
-	public static final float[] BACKDROP = new float[] {0.05f, 0.0f, 0.0f, 1.0f};
+	public static final float[] BACKDROP = new float[] {0.05f, 0.05f, 0.05f, 1.0f};
 	public static final float[] PLATFORM = new float[] {0.1f, 0.1f, 0.1f, 1.0f};
 
-	public static final float[] TERRAIN_DESERT    = new float[] {0.3f, 0.15f, 0.0f, 1.0f};
+	public static final float[] TERRAIN_DESERT    = new float[] {0.6f, 0.3f, 0.0f, 1.0f};
 	public static final float[] TERRAIN_HILLS     = new float[] {0.2f, 0.4f, 0.0f, 1.0f}; // {0.3f, 0.6f, 0.0f, 1.0f};
-	public static final float[] TERRAIN_MOUNTAINS = new float[] {0.2f, 0.1f, 0.0f, 1.0f};
+	public static final float[] TERRAIN_MOUNTAINS = new float[] {0.15f, 0.1f, 0.0f, 1.0f};
 	public static final float[] TERRAIN_PLAINS    = new float[] {0.8f, 1.0f, 0.0f, 1.0f};
 	public static final float[] TERRAIN_TUNDRA    = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
 

@@ -1,5 +1,7 @@
 package env;
 
+import geo.Point;
+import geo.TerrainPoint;
 import util.Colour;
 
 /**
@@ -32,6 +34,10 @@ public class Biome {
 
 	public float getScale() {
 		return Z_SCALE;
+	}
+	
+	public void texturize(TerrainPoint point, float dominance) {
+		System.out.println("Warning: texturize() not implemented.");
 	}
 
 	public String toString() {

@@ -2,9 +2,8 @@ package util;
 
 import java.util.*;
 
-import env.Grid;
-import geo.GeoVector;
-import geo.TerrainPoint;
+import env.*;
+import geo.*;
 
 /**
  * @author Mikhail Andrenkov
@@ -56,6 +55,7 @@ public class Noise {
 		GeoVector[][] gradients = createGradients(grid.getPerlinRows(), grid.getPerlinCols());
 		applyNoise(grid, gradients);
 		applyAliasing(grid);
+		applyTexturing(grid);
 	}
 
 	/**
@@ -65,6 +65,8 @@ public class Noise {
 	 * @return The 2D array of normalized vectors.
 	 */
 	private static GeoVector[][] createGradients(int perlinRows, int perlinCols) {
+		perlinRows++;
+		perlinCols++;
 		GeoVector[][] gradients = new GeoVector[perlinRows][perlinCols];
 
 		for (int x = 0 ; x < perlinRows ; x++) {
@@ -145,8 +147,31 @@ public class Noise {
 					zInit *= unitCurve(minScale);
 				}
 
-				p.setColour(Colour.averageColour(nearbyPoints.keySet().toArray(new TerrainPoint[nearbyPoints.size()])));
+				float[] colour = Colour.averageColour(nearbyPoints.keySet().toArray(new TerrainPoint[nearbyPoints.size()]));
+				HashMap<Biome, Float> biomeMix = generateBiomeMix(nearbyPoints);
+				
+				p.setBiomeMix(biomeMix);
+				p.setColour(colour);
 				p.setZ(zInit + zDelta*zScale);
+			}
+		}
+	}
+	
+	/**
+	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
+	 * 
+	 * @param grid Grid to be aliased.
+	 */
+	private static void applyTexturing(Grid grid) {
+		for (int r = 0 ; r < grid.getRows() ; r++) {
+			for (int c = 0 ; c < grid.getCols() ; c++) {
+				TerrainPoint point = grid.getPoint(r, c);
+				
+				HashMap<Biome, Float> biomeMix = point.getBiomeMix();
+				
+				for (Biome biome : biomeMix.keySet()) {
+					biome.texturize(point, biomeMix.get(biome));
+				}
 			}
 		}
 	}
@@ -187,6 +212,28 @@ public class Noise {
 		}
 
 		return points;
+	}
+	
+	private static HashMap<Biome, Float> generateBiomeMix(HashMap<TerrainPoint, Float> nearbyPoints) {
+		HashMap<Biome, Float> biomeMix = new HashMap<>();
+		
+		float weightSum = 0f;
+		
+		for (TerrainPoint point : nearbyPoints.keySet()) {
+			Biome biome = point.getBiome();
+			float weight = nearbyPoints.get(point);
+			
+			biomeMix.putIfAbsent(biome, 0f);
+			biomeMix.put(biome, biomeMix.get(biome) + weight);
+			
+			weightSum += weight;
+		}
+		
+		for (Biome biome : biomeMix.keySet()) {
+			biomeMix.replace(biome, biomeMix.get(biome)/weightSum);
+		}
+		
+		return biomeMix;
 	}
 	
 	/**

@@ -27,7 +27,7 @@ public class World {
 	/**
 	 * Number of Perlin rows in the World.
 	 */
-	public static final int PERLIN_ROWS = 20;
+	public static final int PERLIN_ROWS = 10;
 	/**
 	 * Number of Perlin columns in the World.
 	 */
@@ -97,13 +97,13 @@ public class World {
 		BiomeMap landMap = land.getBiomeMap();
 
 		landMap.setSymbols(0, 0, landMap.getRows(), landMap.getCols(), 'H');
-		landMap.setSymbolsWave(landMap.getRows()/2, 0, landMap.getRows(), landMap.getCols()/3, 'P');
-		//landMap.setSymbolsWave(landMap.getRows()/2, landMap.getCols()*2/3, landMap.getRows(), landMap.getCols(), 'D');
-		landMap.setSymbolsWave(0, 0, landMap.getRows()/2, landMap.getCols()/4, 'T');
+		landMap.setSymbolsWave(landMap.getRows()*2/3, 0, landMap.getRows(), landMap.getCols()/3, 'P');
+		landMap.setSymbolsWave(landMap.getRows()/2, landMap.getCols()*2/3, landMap.getRows(), landMap.getCols(), 'D');
+		landMap.setSymbolsWave(0, 0, landMap.getRows()/3, landMap.getCols()/4, 'T');
 		landMap.setSymbolsWave(0, landMap.getCols()/2, landMap.getRows()/2, landMap.getCols(), 'M');
 		landscape.add(land);
 		
-		lights.add(new LightSource(new Point(-1f, -1f, 1f)));
+		lights.add(new LightSource(new Point(-3f, -3f, 3f)));
 		//lights.add(new LightSource(new Point(-1f, 0f, 1f)));
 		//lights.add(new LightSource(new Point(0f, 0f, 1f)));
 

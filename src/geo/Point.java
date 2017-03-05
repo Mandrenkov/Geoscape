@@ -20,6 +20,10 @@ public class Point {
 	public Point average(Point point) {
 		return new Point((this.x + point.x)/2, (this.y + point.y)/2, (this.z + point.z)/2);
 	}
+	
+	public void bump(float range) {
+		z += (float) (Math.random()*2*range - range);
+	}
 
 	public float distance(Point point) {
 		return (float) Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2));

@@ -22,8 +22,8 @@ public class Window {
 		/* Public variables */
 
 		// Physical window attributes
-		public final int INIT_WIDTH = 1400;
-		public final int INIT_HEIGHT = 800;
+		public final int INIT_WIDTH = 1600;
+		public final int INIT_HEIGHT = 900;
 		public final String WINDOW_TITLE = "Randomized Geoscape";
 
 		// OpenGL flags to enable
@@ -43,7 +43,7 @@ public class Window {
 		// View perspective
 		public static final float VIEW_FOV = 70f;
 		public static final float VIEW_ASPECT = 1f;
-		public static final float VIEW_Z_NEAR = 0.01f;
+		public static final float VIEW_Z_NEAR = 0.03f;
 		public static final float VIEW_Z_FAR = 5f;
 
 		/* Private variables */

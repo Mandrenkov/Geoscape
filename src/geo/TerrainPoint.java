@@ -1,5 +1,7 @@
 package geo;
 
+import java.util.HashMap;
+
 import env.Biome;
 
 /**
@@ -12,6 +14,7 @@ import env.Biome;
 public class TerrainPoint extends Point {
 
 	private Biome biome;
+	private HashMap<Biome, Float> biomeMix;
 	private float[] colour;
 
 	public TerrainPoint(float x, float y, float z) {
@@ -22,10 +25,17 @@ public class TerrainPoint extends Point {
 		this(x, y, z);
 		this.biome = biome;
 		this.colour = biome.getColour();
+		this.biomeMix = new HashMap<>();
+		
+		this.biomeMix.put(biome, 1f);
 	}
 
 	public Biome getBiome() {
 		return biome;
+	}
+	
+	public HashMap<Biome, Float> getBiomeMix() {
+		return biomeMix;
 	}
 
 	public float[] getColour() {
@@ -35,6 +45,10 @@ public class TerrainPoint extends Point {
 	public void setBiome(Biome biome) {
 		this.biome = biome;
 		this.colour = biome.getColour();
+	}
+	
+	public void setBiomeMix(HashMap<Biome, Float> biomeMix) {
+		this.biomeMix = biomeMix;
 	}
 
 	public void setColour(float[] colour) {
