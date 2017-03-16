@@ -1,6 +1,6 @@
 # Geoscape
 
-##### **Author:** Mikhail Andrenkov
+### Author: Mikhail Andrenkov
 
 ---
 
