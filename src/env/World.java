@@ -91,7 +91,7 @@ public class World {
 		lights = new ArrayList<>();
 		drawables = new ArrayList<>();
 
-		platform = new Platform();
+		platform = new Platform(MIN_X, MAX_X, MIN_Y, MAX_Y, PLATFORM_MIN_Z, PLATFORM_MAX_Z);
 
 		Grid land = new Grid(ROWS, COLS, PERLIN_ROWS, PERLIN_COLS, MIN_X, MIN_Y, MAX_X, MAX_Y);
 		BiomeMap landMap = land.getBiomeMap();

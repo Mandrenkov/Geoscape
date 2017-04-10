@@ -17,7 +17,7 @@ public class Top {
 	/**
 	 * Toggles debug statement display
 	 */
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 
 	/**

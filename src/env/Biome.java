@@ -1,6 +1,5 @@
 package env;
 
-import geo.Point;
 import geo.TerrainPoint;
 import util.Colour;
 
