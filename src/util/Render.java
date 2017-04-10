@@ -8,7 +8,7 @@ import geo.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>The <i>Render</i> class is responsible for providing utilities to render Drawable entities.</p>
@@ -51,16 +51,16 @@ public class Render {
 			glVertex3f(0f, 0f, axisDistance);
 		glEnd();
 	}
-	
+
 	public static void drawSphere(Sphere sphere, float[] colour) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		
+
 		// Render triangles
 		glBegin(GL_TRIANGLES);
 			ArrayList<Triangle> triangles = sphere.getTriangles();
 			for (int t = 0 ; t < triangles.size() ; t++) {
 				float[] triColour = colour;
-				
+
 				if (colour == null) {
 					float lum = (float) (t + 1)/triangles.size();
 					triColour = new float[]{lum, lum, lum};
@@ -70,7 +70,7 @@ public class Render {
 			}
 		glEnd();
 	}
-	
+
 	/**
 	 * Renders the given Triangle with the specified colour.
 	 *
@@ -79,7 +79,7 @@ public class Render {
 	 */
 	public static void drawTriangle(Triangle triangle, float[] colour) {
 		Point[] points = triangle.getPoints();
-		
+
 		// Set triangle colour
 		glColor3f(colour[0], colour[1], colour[2]);
 

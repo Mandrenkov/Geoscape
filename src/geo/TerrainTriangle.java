@@ -7,7 +7,7 @@ import util.Colour;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>TerrainTriangle</b> class.</p>
@@ -15,16 +15,16 @@ import util.Colour;
 public class TerrainTriangle extends Triangle {
 
 	private final TerrainPoint[] POINTS;
-	
+
 	private float[] colour;
 	private final float[] BASE_COLOUR;
 
 	public TerrainTriangle(TerrainPoint ... points) {
 		super(points);
-	
+
 		this.POINTS = points;
 		this.BASE_COLOUR = Colour.triangleColour(points);
-		
+
 		this.colour = new float[this.BASE_COLOUR.length];
 		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.colour.length);
 	}
@@ -52,7 +52,7 @@ public class TerrainTriangle extends Triangle {
 
 	public void updateColours(ArrayList<LightSource> lights) {
 		colour = Colour.triangleColour(POINTS);
-		
+
 		float averageZ = 0;
 		for (Point p : POINTS) averageZ += p.getZ();
 		averageZ /= 3f;
@@ -66,7 +66,7 @@ public class TerrainTriangle extends Triangle {
 		for (LightSource light : lights) {
 			GeoVector lightVector = new GeoVector(light.getPosition());
 			float angle = getNormal().angle(lightVector);
-			
+
 			brightScale += calculateBrightness(angle);
 			brightScale = Math.min(1f, brightScale);
 		}
@@ -85,7 +85,7 @@ public class TerrainTriangle extends Triangle {
 			colour[2]
 		);
 	}
-	
+
 	private float calculateBrightness(float angle) {
 		float cosineFactor = (float) (-Math.cos(angle) + 1)/2f;
 		 return (float) Math.pow(cosineFactor, 2);

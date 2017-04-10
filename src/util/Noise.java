@@ -7,7 +7,7 @@ import geo.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Noise</b> class.</p>
@@ -15,18 +15,18 @@ import geo.*;
 public class Noise {
 
 	/**
-	 * Avoids division by zero when mapping Points to the Perlin grid. 
+	 * Avoids division by zero when mapping Points to the Perlin grid.
 	 */
 	private static final float PERLIN_EPSILON = (float) 1E-5;
 	/**
 	 * Determines the radius of influence of a Point during scaling and Biome calculations.
 	 */
 	private static final float BIOME_CREEP = 0.05f;
-	
+
 
 	/**
 	 * Returns the weighted average corresponding to the given parameters.
-	 * 
+	 *
 	 * @param x Value X
 	 * @param y Value Y
 	 * @param w Weight corresponding to Y; w should fall within the range [0, 1]
@@ -35,10 +35,10 @@ public class Noise {
 	public static float weightAvg(float x, float y, float w) {
 		return x + w*(y - x);
 	}
-	
+
 	/**
 	 * Maps the given value to a smooth curve with range [0, 1].
-	 * 
+	 *
 	 * @param v Value to be mapped to the curve; v should shall within the range [0, 1]
 	 * @return The curved value of v.
 	 */
@@ -48,7 +48,7 @@ public class Noise {
 
 	/**
 	 * Applies a Perlin noise filter to the given Grid.
-	 * 
+	 *
 	 * @param grid Grid to be filtered
 	 */
 	public static void generateNoise(Grid grid) {
@@ -60,7 +60,7 @@ public class Noise {
 
 	/**
 	 * Creates a 2D array of normalized vectors according to the given Grid's Perlin dimensions.
-	 * 
+	 *
 	 * @param grid Grid to be filtered
 	 * @return The 2D array of normalized vectors.
 	 */
@@ -82,10 +82,10 @@ public class Noise {
 
 		return gradients;
 	}
-	
+
 	/**
 	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
-	 * 
+	 *
 	 * @param grid Grid to be aliased.
 	 */
 	private static void applyAliasing(Grid grid) {
@@ -95,7 +95,7 @@ public class Noise {
 		for (int r = 0 ; r < grid.getRows() ; r++) {
 			for (int c = 0 ; c < grid.getCols() ; c++) {
 				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, c, r, 0.01f);
-				
+
 				float averageZ = 0f;
 				for (TerrainPoint p : nearbyPoints.keySet()) {
 					averageZ += p.getZ();
@@ -116,7 +116,7 @@ public class Noise {
 
 	/**
 	 * Applies Perlin noise to the given Grid with respect to the gradients array and the Biome characteristics of the Points.
-	 * 
+	 *
 	 * @param grid Grid to be filtered.
 	 * @param gradients Array of gradient vectors.
 	 */
@@ -129,14 +129,14 @@ public class Noise {
 			for (int y = 0 ; y < grid.getRows() ; y++) {
 				TerrainPoint p = grid.getPoint(y, x);
 				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, x, y, BIOME_CREEP);
-				
+
 				int xCell = (int) ((p.getX() - grid.getBounds()[0])*perlinXSize );
 				int yCell = (int) ((p.getY() - grid.getBounds()[1])*perlinYSize);
-				
+
 				float zInit  = p.getZ();
 				float zDelta = generatePerlinDelta(grid, gradients, x, y, perlinXSize, perlinYSize);
 				float zScale = generatePerlinScale(nearbyPoints);
-				
+
 				// Tie points near grid boundaries to ground elevation
 				if (xCell == 0 || xCell == grid.getPerlinCols() - 1 || yCell == 0 || yCell == grid.getPerlinRows() - 1) {
 					float minX = Math.min(p.getX() - grid.getBounds()[0], grid.getBounds()[2] - p.getX());
@@ -149,26 +149,26 @@ public class Noise {
 
 				float[] colour = Colour.averageColour(nearbyPoints.keySet().toArray(new TerrainPoint[nearbyPoints.size()]));
 				HashMap<Biome, Float> biomeMix = generateBiomeMix(nearbyPoints);
-				
+
 				p.setBiomeMix(biomeMix);
 				p.setColour(colour);
 				p.setZ(zInit + zDelta*zScale);
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
-	 * 
+	 *
 	 * @param grid Grid to be aliased.
 	 */
 	private static void applyTexturing(Grid grid) {
 		for (int r = 0 ; r < grid.getRows() ; r++) {
 			for (int c = 0 ; c < grid.getCols() ; c++) {
 				TerrainPoint point = grid.getPoint(r, c);
-				
+
 				HashMap<Biome, Float> biomeMix = point.getBiomeMix();
-				
+
 				for (Biome biome : biomeMix.keySet()) {
 					biome.texturize(point, biomeMix.get(biome));
 				}
@@ -178,7 +178,7 @@ public class Noise {
 
 	/**
 	 * Maps Points near a center Point to a corresponding distance weight.
-	 * 
+	 *
 	 * @param grid Grid containing the Points.
 	 * @param centerX X coordinate of the center Point.
 	 * @param centerY Y coordinate of the center Point.
@@ -188,7 +188,7 @@ public class Noise {
 	private static HashMap<TerrainPoint, Float> findNearbyPoints(Grid grid, int centerX, int centerY, float tolerance) {
 		tolerance *= Math.min(grid.getRows(), grid.getCols());
 		int maxDim = (int) tolerance;
-		
+
 		// Nearby Point index bounds
 		int startX = Math.max(centerX - maxDim, 0);
 		int endX   = Math.min(centerX + maxDim, grid.getCols() - 1);
@@ -213,32 +213,32 @@ public class Noise {
 
 		return points;
 	}
-	
+
 	private static HashMap<Biome, Float> generateBiomeMix(HashMap<TerrainPoint, Float> nearbyPoints) {
 		HashMap<Biome, Float> biomeMix = new HashMap<>();
-		
+
 		float weightSum = 0f;
-		
+
 		for (TerrainPoint point : nearbyPoints.keySet()) {
 			Biome biome = point.getBiome();
 			float weight = nearbyPoints.get(point);
-			
+
 			biomeMix.putIfAbsent(biome, 0f);
 			biomeMix.put(biome, biomeMix.get(biome) + weight);
-			
+
 			weightSum += weight;
 		}
-		
+
 		for (Biome biome : biomeMix.keySet()) {
 			biomeMix.replace(biome, biomeMix.get(biome)/weightSum);
 		}
-		
+
 		return biomeMix;
 	}
-	
+
 	/**
 	 * Returns the change in elevation of the given Point with respect to the Perlin gradient array.
-	 * 
+	 *
 	 * @param grid Grid containing the Point.
 	 * @param gradients Array of normalized vectors.
 	 * @param x X coordinate of the Point.
@@ -277,16 +277,16 @@ public class Noise {
 		// Average the weighted averages along the Y dimension
 		return weightAvg(v1, v2, weightY);
 	}
-	
+
 	/**
 	 * Compute the elevation scaling factor from the given Points.
-	 * 
+	 *
 	 * @param nearbyPoints Mapping of Points to distance weights.
 	 * @return The elevation scaling factor.
 	 */
 	private static float generatePerlinScale(HashMap<TerrainPoint, Float> nearbyPoints) {
 		float average = 0;
-		
+
 		for (TerrainPoint point : nearbyPoints.keySet()) {
 			average += point.getBiome().getScale() * nearbyPoints.get(point);
 		}

@@ -5,8 +5,15 @@ import static org.lwjgl.opengl.GL11.*;
 import geo.Point;
 import util.*;
 
+/**
+ * @author Mikhail Andrenkov
+ * @since April 10, 2017
+ * @version 1.0
+ *
+ * <p>Member declarations and definitions for the <b>Platform</b> class.</p>
+ */ 
 public class Platform implements Drawable {
-	
+
 	public void draw() {
 		// Front and back faces should be rendered
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

@@ -9,7 +9,7 @@ import util.BiomeMap;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>The <i>World</i> class represents the world encapsulating the landscape.</p>
@@ -73,7 +73,7 @@ public class World {
 	 */
 	public static final float PLATFORM_MAX_Z = 0.00f;
 
-	
+
 	private Platform platform;
 	/**
 	 * List of Grid constituting the landscape of the World.
@@ -83,7 +83,7 @@ public class World {
 	 * List of World light sources.
 	 */
 	private ArrayList<LightSource> lights;
-	
+
 	private ArrayList<Drawable> drawables;
 
 	public World() {
@@ -92,7 +92,7 @@ public class World {
 		drawables = new ArrayList<>();
 
 		platform = new Platform();
-		
+
 		Grid land = new Grid(ROWS, COLS, PERLIN_ROWS, PERLIN_COLS, MIN_X, MIN_Y, MAX_X, MAX_Y);
 		BiomeMap landMap = land.getBiomeMap();
 
@@ -102,7 +102,7 @@ public class World {
 		landMap.setSymbolsWave(0, 0, landMap.getRows()/3, landMap.getCols()/4, 'T');
 		landMap.setSymbolsWave(0, landMap.getCols()/2, landMap.getRows()/2, landMap.getCols(), 'M');
 		landscape.add(land);
-		
+
 		lights.add(new LightSource(new Point(-3f, -3f, 3f)));
 		//lights.add(new LightSource(new Point(-1f, 0f, 1f)));
 		//lights.add(new LightSource(new Point(0f, 0f, 1f)));
@@ -114,12 +114,12 @@ public class World {
 				t.updateColours(lights);
 			}
 		}
-		
+
 		drawables.add(platform);
 		drawables.addAll(landscape);
 		drawables.addAll(lights);
 	}
-	
+
 	public ArrayList<Drawable> getDrawables() {
 		return drawables;
 	}

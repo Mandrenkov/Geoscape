@@ -2,11 +2,11 @@ package geo;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>The <i>GeoVector</i> class represents a geometric vector.</p>
- */ 
+ */
 public class GeoVector {
 
 	/**
@@ -20,17 +20,17 @@ public class GeoVector {
 
 	/**
 	 * Constructs a GeoVector with the specified component values.
-	 * 
+	 *
 	 * @param components Components of the GeoVector.
 	 */
 	public GeoVector(float ... components) {
 		this.components = components;
 		this.dimensions = components.length;
 	}
-	
+
 	/**
 	 * Constructs a GeoVector that starts at the origin and ends at the specified Point.
-	 * 
+	 *
 	 * @param p Point that denotes the end coordinates of the GeoVector.
 	 */
 	public GeoVector(Point p) {
@@ -40,9 +40,9 @@ public class GeoVector {
 
 	/**
 	 * Returns the angle between this GeoVector and the specified GeoVector.
-	 * 
+	 *
 	 * @param vector GeoVector that forms the desired angle.
-	 * 
+	 *
 	 * @return Angle between the GeoVectors.
 	 */
 	public float angle(GeoVector vector) {
@@ -52,19 +52,19 @@ public class GeoVector {
 
 		return (float) Math.acos(this.dot(vector)/(this.magnitude()*vector.magnitude()));
 	}
-	
+
 	/**
 	 * Returns the cross product between this GeoVector and the specified GeoVector.
-	 * 
+	 *
 	 * @param vector Second operand of the cross product operation.
-	 * 
+	 *
 	 * @return The cross product.
 	 */
 	public GeoVector cross(GeoVector vector) {
 		if (dimensions != 3 || vector.dimensions != 3) {
 			throw new IllegalArgumentException("Vectors must have a dimensionality of 3");
 		}
-		
+
 		float x, y, z;
 
 		x = this.getY()*vector.getZ() - this.getZ()*vector.getY();
@@ -76,9 +76,9 @@ public class GeoVector {
 
 	/**
 	 * Returns the dot product between this GeoVector and the specified GeoVector.
-	 * 
-	 * @param vector Second operand of the dot product operation. 
-	 * 
+	 *
+	 * @param vector Second operand of the dot product operation.
+	 *
 	 * @return The dot product.
 	 */
 	public float dot(GeoVector vector) {
@@ -93,10 +93,10 @@ public class GeoVector {
 
 		return product;
 	}
-	
+
 	/**
 	 * Returns the value of the X component of this GeoVector.
-	 * 
+	 *
 	 * @return The value of the X component of this GeoVector.
 	 */
 	public float getX() {
@@ -106,7 +106,7 @@ public class GeoVector {
 
 	/**
 	 * Returns the value of the Y component of this GeoVector.
-	 * 
+	 *
 	 * @return The value of the Y component of this GeoVector.
 	 */
 	public float getY() {
@@ -116,25 +116,25 @@ public class GeoVector {
 
 	/**
 	 * Returns the value of the Z component of this GeoVector.
-	 * 
+	 *
 	 * @return The value of the Z component of this GeoVector.
 	 */
 	public float getZ() {
 		if (dimensions < 3) throw new IllegalArgumentException("Vector does not have a Z component");
 		return components[2];
 	}
-	
+
 	public void normalize() {
 		float magnitude = this.magnitude();
-		
+
 		for (int i = 0 ; i < this.dimensions ; ++i) {
 			components[i] /= magnitude;
 		}
 	}
-	
+
 	/**
 	 * Sets the magnitude of this GeoVector along the X dimension to the specified value.
-	 * 
+	 *
 	 * @param x The desired magnitude along the X dimension.
 	 */
 	public void setX(int x) {
@@ -144,7 +144,7 @@ public class GeoVector {
 
 	/**
 	 * Sets the magnitude of this GeoVector along the Y dimension to the specified value.
-	 * 
+	 *
 	 * @param x The desired magnitude along the Y dimension.
 	 */
 	public void setY(int y) {
@@ -154,19 +154,19 @@ public class GeoVector {
 
 	/**
 	 * Sets the magnitude of this GeoVector along the Y dimension to the specified value.
-	 * 
+	 *
 	 * @param x The desired magnitude along the Y dimension.
 	 */
 	public void setZ(int z) {
 		if (dimensions < 3) throw new IllegalArgumentException("Vector does not have a Z component");
 		components[2] = z;
 	}
-	
+
 	/**
 	 * Returns the GeoVector that can be added to this GeoVector to produce the specified AlgVector.
-	 * 
+	 *
 	 * @param vector Target GeoVector.
-	 * 
+	 *
 	 * @return The AlgVector that connects this GeoVector to the given AlgVector.
 	 */
 	public GeoVector to(GeoVector vector) {
@@ -185,9 +185,9 @@ public class GeoVector {
 
 	/**
 	 * Returns the value of the component along the specified dimension.
-	 * 
+	 *
 	 * @param dimension The dimension index of the desired component.
-	 * 
+	 *
 	 * @return The value of the component along the specified dimension.
 	 */
 	public float get(int dimension) {
@@ -196,7 +196,7 @@ public class GeoVector {
 
 	/**
 	 * Returns all the components of this GeoVector.
-	 * 
+	 *
 	 * @return The components of this GeoVector.
 	 */
 	public float[] getAll() {
@@ -205,7 +205,7 @@ public class GeoVector {
 
 	/**
 	 * Returns the algebraic magnitude of this GeoVector.
-	 * 
+	 *
 	 * @return The magnitude of this GeoVector.
 	 */
 	public float magnitude() {
@@ -220,7 +220,7 @@ public class GeoVector {
 
 	/**
 	 * Sets the component of the specified dimension to the given value.
-	 * 
+	 *
 	 * @param dimension Dimension of the component.
 	 * @param value Desired value of the component.
 	 */

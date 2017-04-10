@@ -7,7 +7,7 @@ import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>BiomeMap</b> class.</p>
@@ -17,7 +17,7 @@ public class BiomeMap {
 	public static final Biome DESERT = new Biome("Desert", Colour.TERRAIN_DESERT, 0.05f) {
 		public void texturize(TerrainPoint point, float dominance) {
 			float z = point.getZ();
-			
+
 			float refFreq = 10f;		// Frequency of lines waves
 			float refGain = 0.05f;		// Amplitude of line waves
 			float scaleFreq = 300f;		// Density of line waves
@@ -25,7 +25,7 @@ public class BiomeMap {
 
 			float deltaZ = (float) (scaleGain*Math.cos(scaleFreq*Math.abs(point.getX() - refGain*Math.cos(point.getY()*refFreq))));
 			deltaZ *= dominance;
-			
+
 			point.setZ(z + deltaZ);
 			System.out.println(point.getBiomeMix());
 		}

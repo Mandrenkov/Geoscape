@@ -20,7 +20,7 @@ import util.Render;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Grid</b> class.</p>
@@ -62,7 +62,7 @@ public class Grid implements Drawable {
 
 		Noise.generateNoise(this);
 	}
-	
+
 	public void draw() {
 		// Polygon setup
 		glPolygonMode(GL_FRONT, GL_FILL);

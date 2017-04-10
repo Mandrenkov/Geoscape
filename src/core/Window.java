@@ -12,7 +12,7 @@ import util.Pointer;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>The <i>Window</i> class represents the application window.</p>

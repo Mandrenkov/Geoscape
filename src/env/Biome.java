@@ -6,11 +6,11 @@ import util.Colour;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Biome</b> class.</p>
- */ 
+ */
 public class Biome {
 
 	private final float[] COLOUR;
@@ -35,7 +35,7 @@ public class Biome {
 	public float getScale() {
 		return Z_SCALE;
 	}
-	
+
 	public void texturize(TerrainPoint point, float dominance) {
 		System.out.println("Warning: texturize() not implemented.");
 	}

@@ -1,5 +1,12 @@
 package geo;
 
+/**
+ * @author Mikhail Andrenkov
+ * @since April 10, 2017
+ * @version 1.0
+ *
+ * <p>Member declarations and definitions for the <b>Triangle</b> class.</p>
+ */ 
 public class Triangle {
 	protected final Point[] POINTS;
 
@@ -8,7 +15,7 @@ public class Triangle {
 
 		this.POINTS = points;
 	}
-	
+
 	public GeoVector getNormal() {
 		GeoVector vectorA, vectorB;
 

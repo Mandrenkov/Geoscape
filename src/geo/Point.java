@@ -2,7 +2,7 @@ package geo;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Point</b> class.</p>
@@ -16,11 +16,11 @@ public class Point {
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	public Point average(Point point) {
 		return new Point((this.x + point.x)/2, (this.y + point.y)/2, (this.z + point.z)/2);
 	}
-	
+
 	public void bump(float range) {
 		z += (float) (Math.random()*2*range - range);
 	}

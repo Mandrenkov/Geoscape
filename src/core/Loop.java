@@ -8,7 +8,7 @@ import util.Render;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>Loop</b> class.</p>
@@ -19,7 +19,7 @@ public class Loop {
 	 * Ideal delay (seconds) between frames to reach target FPS.
 	 */
 	private static final double TARGET_FRAME_DELAY = 1.0/60.0;
-	
+
 	/**
 	 * Amount to increment z-axis angle every frame.
 	 */
@@ -47,10 +47,10 @@ public class Loop {
 			glfwPollEvents();
 		}
 	}
-	
+
 	private static void render(World world) {
 		if (Top.DEBUG) Render.drawAxes();
-		for (Drawable d : world.getDrawables()) d.draw();	
+		for (Drawable d : world.getDrawables()) d.draw();
 		Render.rotateAxis('Z', Z_ROTATE_DELTA);
 	}
 

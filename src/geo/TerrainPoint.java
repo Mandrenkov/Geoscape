@@ -6,11 +6,11 @@ import env.Biome;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 22, 2017
+ * @since April 10, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>TerrainPoint</b> class.</p>
- */ 
+ */
 public class TerrainPoint extends Point {
 
 	private Biome biome;
@@ -26,14 +26,14 @@ public class TerrainPoint extends Point {
 		this.biome = biome;
 		this.colour = biome.getColour();
 		this.biomeMix = new HashMap<>();
-		
+
 		this.biomeMix.put(biome, 1f);
 	}
 
 	public Biome getBiome() {
 		return biome;
 	}
-	
+
 	public HashMap<Biome, Float> getBiomeMix() {
 		return biomeMix;
 	}
@@ -46,7 +46,7 @@ public class TerrainPoint extends Point {
 		this.biome = biome;
 		this.colour = biome.getColour();
 	}
-	
+
 	public void setBiomeMix(HashMap<Biome, Float> biomeMix) {
 		this.biomeMix = biomeMix;
 	}
