@@ -5,7 +5,7 @@ import util.Colour;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>The <b>Biome</b> class represents a landscape region with points that share common characteristics.</p>
@@ -26,7 +26,7 @@ public class Biome {
 
 	/**
 	 * Constructs a Biome object with the specified name, colour, and scaling factor.
-	 * 
+	 *
 	 * @param name Name of this Biome
 	 * @param colour Colour of this Biome
 	 * @param zScale Elevation scaling factor of this Biome
@@ -39,7 +39,7 @@ public class Biome {
 
 	/**
 	 * Returns the colour of this Biome.
-	 * 
+	 *
 	 * @return The colour of this Biome.
 	 */
 	public float[] getColour() {
@@ -48,7 +48,7 @@ public class Biome {
 
 	/**
 	 * Returns the name of this Biome.
-	 * 
+	 *
 	 * @return The name of this Biome.
 	 */
 	public String getName() {
@@ -57,16 +57,16 @@ public class Biome {
 
 	/**
 	 * Returns the elevation scaling of this Biome.
-	 * 
+	 *
 	 * @return The elevation scaling of this Biome.
-	 */	
+	 */
 	public float getScale() {
 		return Z_SCALE;
 	}
 
 	/**
 	 * Applies a texturing to the given point with respect to the provided degree of dominance.
-	 * 
+	 *
 	 * @param point Point to be textured.
 	 * @param dominance Intensity of the texturizing process.  Typically within the range of [0, 1].
 	 */

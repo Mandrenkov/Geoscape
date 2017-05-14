@@ -7,7 +7,7 @@ import env.World;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>The <i>Top</i> class is the execution entry point.</p>

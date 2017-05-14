@@ -7,7 +7,7 @@ import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>BiomeMap</b> class.</p>

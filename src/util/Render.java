@@ -8,7 +8,7 @@ import geo.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>The <i>Render</i> class is responsible for providing utilities to render Drawable entities.</p>

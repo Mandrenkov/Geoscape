@@ -2,7 +2,7 @@ package geo;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>The <i>GeoVector</i> class represents a geometric vector.</p>

@@ -7,25 +7,25 @@ import util.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>The <b>Platform</b> class represents the platform beneath the landscape.</p>
- */ 
+ */
 public class Platform implements Drawable {
 	/**
 	 * Vertices of the rectangular prism that bounds the platform.
 	 */
 	Point[][][] pointPrism;
-	
+
 	/**
 	 * Constructs a Platform object with the given geometric constraints.
-	 * 
+	 *
 	 * @param MIN_X Minimum X constraint
 	 * @param MAX_X Maximum X constraint
 	 * @param MIN_Y Minimum Y constraint
 	 * @param MAX_Y Maximum Y constraint
-	 * @param MIN_Z Minimum Z constraint 
+	 * @param MIN_Z Minimum Z constraint
 	 * @param MAX_Z Maximum Z constraint
 	 */
 	public Platform(final float MIN_X, final float MAX_X, final float MIN_Y, final float MAX_Y, final float MIN_Z, final float MAX_Z) {

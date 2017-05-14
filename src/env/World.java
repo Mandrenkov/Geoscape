@@ -9,7 +9,7 @@ import util.BiomeMap;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>The <i>World</i> class represents the world encapsulating the landscape.</p>

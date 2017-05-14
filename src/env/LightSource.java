@@ -5,7 +5,7 @@ import util.*;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>Member declarations and definitions for the <b>LightSource</b> class.</p>
@@ -27,7 +27,7 @@ public class LightSource implements Drawable {
 
 	/**
 	 * Constructs a LightSource object using the specified position.
-	 * 
+	 *
 	 * @param position Position of this LightSource.
 	 */
 	public LightSource(Point position) {
@@ -44,7 +44,7 @@ public class LightSource implements Drawable {
 
 	/**
 	 * Returns the position of this LightSource.
-	 * 
+	 *
 	 * @return The position of this LightSource.
 	 */
 	public Point getPosition() {
@@ -53,7 +53,7 @@ public class LightSource implements Drawable {
 
 	/**
 	 * Returns the Sphere associated with this LightSource.
-	 * 
+	 *
 	 * @return The Sphere associated with this LightSource.
 	 */
 	public Sphere getSphere() {

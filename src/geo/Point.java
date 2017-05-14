@@ -2,7 +2,7 @@ package geo;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <pThe <b>Point</b> class represents a 3D point.</p>
@@ -15,7 +15,7 @@ public class Point {
 
 	/**
 	 * Constructs a Point object with the given 3D coordinate.
-	 * 
+	 *
 	 * @param x X-coordinate of this Point.
 	 * @param y Y-coordinate of this Point.
 	 * @param z Z-coordinate of this Point.
@@ -28,7 +28,7 @@ public class Point {
 
 	/**
 	 * Returns a new Point denoting the midpoint between this Point and the given Point.
-	 * 
+	 *
 	 * @param point The second Point.
 	 * @return The midpoint of the two Points.
 	 */
@@ -38,7 +38,7 @@ public class Point {
 
 	/**
 	 * Changes the elevation (Z) of this Point by a random value within the given range.
-	 * 
+	 *
 	 * @param range The maximum magnitude of the elevation change.
 	 */
 	public void bump(float range) {
@@ -47,7 +47,7 @@ public class Point {
 
 	/**
 	 * Returns the distance between this Point and the given Point.
-	 * 
+	 *
 	 * @param point The second Point.
 	 * @return The distance between the points.
 	 */
@@ -57,7 +57,7 @@ public class Point {
 
 	/**
 	 * Returns the X-coordinate of this Point.
-	 * 
+	 *
 	 * @return The X-coordinate of this Point.
 	 */
 	public float getX() {
@@ -66,7 +66,7 @@ public class Point {
 
 	/**
 	 * Returns the Y-coordinate of this Point.
-	 * 
+	 *
 	 * @return The Y-coordinate of this Point.
 	 */
 	public float getY() {
@@ -75,7 +75,7 @@ public class Point {
 
 	/**
 	 * Returns the Z-coordinate of this Point.
-	 * 
+	 *
 	 * @return The Z-coordinate of this Point.
 	 */
 	public float getZ() {
@@ -84,7 +84,7 @@ public class Point {
 
 	/**
 	 * Sets the X-coordinate of this Point to the specified value.
-	 * 
+	 *
 	 * @param x The new X-coordinate
 	 */
 	public void setX(float x) {
@@ -93,7 +93,7 @@ public class Point {
 
 	/**
 	 * Sets the Y-coordinate of this Point to the specified value.
-	 * 
+	 *
 	 * @param y The new Y-coordinate
 	 */
 	public void setY(float y) {
@@ -102,7 +102,7 @@ public class Point {
 
 	/**
 	 * Sets the Z-coordinate of this Point to the specified value.
-	 * 
+	 *
 	 * @param z The new Z-coordinate
 	 */
 	public void setZ(float z) {

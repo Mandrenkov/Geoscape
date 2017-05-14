@@ -2,11 +2,11 @@ package env;
 
 /**
  * @author Mikhail Andrenkov
- * @since April 10, 2017
+ * @since May 14, 2017
  * @version 1.0
  *
  * <p>Classes that implement the <b>Drawable</b> interface may be rendered to the screen.</p>
- */ 
+ */
 public interface Drawable {
 
 	/**
