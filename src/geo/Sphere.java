@@ -11,13 +11,34 @@ import java.util.ArrayList;
  */
 public class Sphere {
 
+	/**
+	 * Number of iterations performed over the shape-refinement process.
+	 */
 	private static final int REFINE_STEPS = 5;
 
+	/**
+	 * List of Sphere vertices.
+	 */
 	private ArrayList<Point> points;
+	/**
+	 * List of Triangles that constitute (approximate) the Sphere contour.
+	 */
 	private ArrayList<Triangle> triangles;
+	/**
+	 * Origin Point of the Sphere.
+	 */
 	private Point origin;
+	/**
+	 * Radius of the Sphere.
+	 */
 	private float radius;
 
+	/**
+	 * Constructs a new Sphere with the given origin and radius.
+	 * 
+	 * @param origin Origin of the Sphere.
+	 * @param radius Radius of the Sphere.
+	 */
 	public Sphere(Point origin, float radius) {
 		this.origin = origin;
 		this.radius = radius;
@@ -25,6 +46,9 @@ public class Sphere {
 		generateTriangles();
 	}
 
+	/**
+	 * Generates a list of Triangles that define the Sphere exterior.
+	 */
 	public void generateTriangles() {
 		points = new ArrayList<>();
 		triangles = new ArrayList<>();
@@ -35,10 +59,18 @@ public class Sphere {
 		genTranslate();
 	}
 
+	/**
+	 * Returns the list of Triangles corresponding to this Sphere.
+	 * 
+	 * @return The list of Triangles corresponding to this Sphere.
+	 */
 	public ArrayList<Triangle> getTriangles() {
 		return triangles;
 	}
 
+	/**
+	 * Generates a diamond that serves as the initial form approximation of this Sphere.
+	 */
 	private void genDiamond() {
 		Point u = new Point(0f, 0f,  1);
 		Point d = new Point(0f, 0f, -1f);
@@ -64,10 +96,16 @@ public class Sphere {
 		triangles.add(new Triangle(d, b, l));
 	}
 
+	/**
+	 * Refines the Sphere form approximation to approach a round object.
+	 */
 	private void genRefine() {
+		// Perform REFINE_STEPS iterations of the refinement process.
 		for (int a = 0 ; a < REFINE_STEPS ; a++) {
 			ArrayList<Triangle> newTriangles = new ArrayList<>();
 
+			// Replace each Triangle on the Sphere with 4 new Triangles
+			// that better approximate the round nature of the Sphere.
 			for (Triangle t : triangles) {
 				Point[] triPoints = t.getPoints();
 				Point[] midPoints = new Point[3];
@@ -75,6 +113,7 @@ public class Sphere {
 				Point midPoint;
 				GeoVector midVector;
 
+				// Find the midpoint coordinates of each line of the Triangle.
 				for (int i = 0 ; i < 3 ; ++i) {
 					midPoint = triPoints[i].average(triPoints[(i + 1) % 3]);
 
@@ -86,6 +125,7 @@ public class Sphere {
 					points.add(midPoint);
 				}
 
+				// Construct the new Triangles out of the original Triangle's midpoints.
 				newTriangles.add(new Triangle(midPoints[0], triPoints[0], midPoints[2]));
 				newTriangles.add(new Triangle(midPoints[1], triPoints[1], midPoints[0]));
 				newTriangles.add(new Triangle(midPoints[2], triPoints[2], midPoints[1]));
@@ -96,6 +136,9 @@ public class Sphere {
 		}
 	}
 
+	/**
+	 * Scales each point of this Sphere to this Sphere's radius.
+	 */
 	private void genScale() {
 		for (Point p : points) {
 			p.setX(p.getX()*radius);
@@ -104,6 +147,9 @@ public class Sphere {
 		}
 	}
 
+	/**
+	 * Translates each point of this Sphere such that the Sphere is centered about its origin.
+	 */
 	private void genTranslate() {
 		for (Point p : points) {
 			p.setX(p.getX() + origin.getX());
