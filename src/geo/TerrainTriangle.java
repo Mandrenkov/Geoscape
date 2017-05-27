@@ -14,9 +14,17 @@ import util.Colour;
  */
 public class TerrainTriangle extends Triangle {
 
+	/**
+	 * List of Points that constitute the TerrainTriangle.
+	 */
 	private final TerrainPoint[] POINTS;
-
+	/**
+	 * Colour of this TerrainTriangle.
+	 */
 	private float[] colour;
+	/**
+	 * Colour of the base Biome of this TerrainTriangle.
+	 */
 	private final float[] BASE_COLOUR;
 
 	public TerrainTriangle(TerrainPoint ... points) {
@@ -28,28 +36,43 @@ public class TerrainTriangle extends Triangle {
 		this.colour = new float[this.BASE_COLOUR.length];
 		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.colour.length);
 	}
+	
+	
+	/*** Public Methods ***/
+	
 
+	/**
+	 * Returns the base colour of this TerrainTriangle.
+	 * 
+	 * @return The base colour of this TerrainTriangle.
+	 */
 	public float[] getBaseColour() {
 		return BASE_COLOUR;
 	}
-
+	
+	/**
+	 * Returns the colour of this TerrainTriangle.
+	 * 
+	 * @return The colour of this TerrainTriangle.
+	 */
 	public float[] getColour() {
 		return colour;
 	}
 
-	public GeoVector getNormal() {
-		GeoVector vectorA, vectorB;
-
-		vectorA = new GeoVector(POINTS[0]).to(new GeoVector(POINTS[1]));
-		vectorB = new GeoVector(POINTS[0]).to(new GeoVector(POINTS[2]));
-
-		return vectorA.cross(vectorB);
-	}
-
+	/**
+	 * Sets the colour of this TerrainTriangle to the given colour.
+	 * 
+	 * @param colour The new colour of this TerainTriangle.
+	 */
 	public void setColour(float[] colour) {
 		this.colour = colour;
 	}
 
+	/**
+	 * Updates the colour of this TerrainTriangle with respect to the given LightSources.
+	 * 
+	 * @param lights The list of LightSources that may affect this TerrainTriangle.
+	 */
 	public void updateColours(ArrayList<LightSource> lights) {
 		colour = Colour.triangleColour(POINTS);
 
@@ -74,6 +97,9 @@ public class TerrainTriangle extends Triangle {
 		this.setColour(Colour.scaleColour(brightScale, colour));
 	}
 
+	/**
+	 * Returns a String representation of this TerrainTriangle.
+	 */
 	public String toString() {
 		return String.format("%s: %s <--> %s <--> %s - R%.2f G%.2f B%.2f",
 			this.getClass().getName(),
@@ -85,7 +111,19 @@ public class TerrainTriangle extends Triangle {
 			colour[2]
 		);
 	}
+	
+	
+	/*** Private Methods ***/
 
+	
+	/**
+	 * Returns the brightness scaling factor associated with the given angle.
+	 * An angle approaching pi/2 radians achieves a maximum brightness factor.
+	 * An angle approaching a multiple of pi radians achieves a minimum brightness factor.
+	 * 
+	 * @param angle The angle of the LightSource makes with the Triangle face.
+	 * @return The brightness scaling factor.
+	 */
 	private float calculateBrightness(float angle) {
 		float cosineFactor = (float) (-Math.cos(angle) + 1)/2f;
 		 return (float) Math.pow(cosineFactor, 2);
