@@ -80,7 +80,7 @@ public class Window {
 			Pointer widthPtr = new Pointer();
 			Pointer heightPtr = new Pointer();
 
-			glfwGetWindowSize(window, widthPtr.array(), heightPtr.array());
+			glfwGetWindowSize(window, widthPtr.getBuffer(), heightPtr.getBuffer());
 
 			return new int[] {widthPtr.get(), heightPtr.get()};
 		}

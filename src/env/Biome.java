@@ -71,7 +71,7 @@ public class Biome {
 	 * @param dominance Intensity of the texturizing process.  Typically within the range of [0, 1].
 	 */
 	public void texturize(TerrainPoint point, float dominance) {
-		System.out.println("Warning: texturize() not implemented.");
+		System.out.printf("Warning: texturize() not implemented for Biome \"%s\".\n", NAME);
 	}
 
 	/**

@@ -27,7 +27,6 @@ public class BiomeMap {
 			deltaZ *= dominance;
 
 			point.setZ(z + deltaZ);
-			System.out.println(point.getBiomeMix());
 		}
 	};
 	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f) {

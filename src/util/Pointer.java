@@ -1,37 +1,40 @@
 package util;
 
+import java.nio.IntBuffer;
+
 /**
  * @author Mikhail Andrenkov
  * @since May 14, 2017
  * @version 1.0
  *
- * <p>Member declarations and definitions for the <b>Pointer</b> class.</p>
+ * <p>The <b>Pointer</b> class is an implementation of an integer pointer.</p>
  */
 public class Pointer {
 
-	public static final int NULL_VALUE = -1;
-
-	private int [] value = new int [1];
+	/**
+	 * Buffer to hold
+	 */
+	private IntBuffer buffer;
 
 	public Pointer() {
-		this.value[0] = NULL_VALUE;
-	}
-
-	public int[] array() {
-		return value;
+		this.buffer = IntBuffer.allocate(1);
 	}
 
 	public int get() {
-		return value[0];
+		return (int) buffer.get(0);
 	}
 
+	public IntBuffer getBuffer() {
+		return buffer;
+	}
+	
 	public void set(int newValue) {
-		value[0] = newValue;
+		buffer.put(newValue, 0);
 	}
 
 	@Override
 	public String toString() {
-		return String.valueOf(value[0]);
+		return String.valueOf(buffer.get(0));
 	}
 
 }
