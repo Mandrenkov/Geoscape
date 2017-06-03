@@ -83,9 +83,14 @@ public class World {
 	 * List of World light sources.
 	 */
 	private ArrayList<LightSource> lights;
-
+	/**
+	 * List of Drawable entities to render.
+	 */
 	private ArrayList<Drawable> drawables;
 
+	/**
+	 * Constructs a World object that is parameterized by the global static members of this class.
+	 */
 	public World() {
 		landscape = new ArrayList<>();
 		lights = new ArrayList<>();
@@ -96,6 +101,7 @@ public class World {
 		Grid land = new Grid(ROWS, COLS, PERLIN_ROWS, PERLIN_COLS, MIN_X, MIN_Y, MAX_X, MAX_Y);
 		BiomeMap landMap = land.getBiomeMap();
 
+		// Populate the World surface with various Biome regions
 		landMap.setSymbols(0, 0, landMap.getRows(), landMap.getCols(), 'H');
 		landMap.setSymbolsWave(landMap.getRows()*2/3, 0, landMap.getRows(), landMap.getCols()/3, 'P');
 		landMap.setSymbolsWave(landMap.getRows()/2, landMap.getCols()*2/3, landMap.getRows(), landMap.getCols(), 'D');
@@ -104,9 +110,8 @@ public class World {
 		landscape.add(land);
 
 		lights.add(new LightSource(new Point(-3f, -3f, 3f)));
-		//lights.add(new LightSource(new Point(-1f, 0f, 1f)));
-		//lights.add(new LightSource(new Point(0f, 0f, 1f)));
 
+		// Generate the Points of each World surface and adjust the terrain lighting
 		for (Grid grid : landscape) {
 			grid.buildPoints();
 
@@ -120,14 +125,29 @@ public class World {
 		drawables.addAll(lights);
 	}
 
+	/**
+	 * Returns a list of Drawable entities in this World.
+	 * 
+	 * @return a list of Drawable entities in this World.
+	 */
 	public ArrayList<Drawable> getDrawables() {
 		return drawables;
 	}
 
+	/**
+	 * Returns a list of Grids that constitute this World.
+	 * 
+	 * @return A list of Grids that constitute this World.
+	 */
 	public ArrayList<Grid> getLandscape() {
 		return landscape;
 	}
 
+	/**
+	 * Returns a list of LightSources that are present in this World.
+	 * 
+	 * @return A list of LightSources that are present in this World.
+	 */
 	public ArrayList<LightSource> getLights() {
 		return lights;
 	}
