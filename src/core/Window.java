@@ -151,7 +151,7 @@ public class Window {
 	        	glEnable(flag);
 	        }
 
-	        Colour.clearColour(Colour.BACKDROP);
+	        glClearColor(Colour.BACKDROP[0], Colour.BACKDROP[1], Colour.BACKDROP[2], Colour.BACKDROP[3]);
 
 			// Matrix Initialization
 	        glMatrixMode(GL_PROJECTION);

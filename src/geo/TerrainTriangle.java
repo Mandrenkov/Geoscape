@@ -31,7 +31,7 @@ public class TerrainTriangle extends Triangle {
 		super(points);
 
 		this.POINTS = points;
-		this.BASE_COLOUR = Colour.triangleColour(points);
+		this.BASE_COLOUR = Colour.averageColour(points);
 
 		this.colour = new float[this.BASE_COLOUR.length];
 		System.arraycopy(this.BASE_COLOUR, 0, this.colour, 0, this.colour.length);
@@ -74,7 +74,7 @@ public class TerrainTriangle extends Triangle {
 	 * @param lights The list of LightSources that may affect this TerrainTriangle.
 	 */
 	public void updateColours(ArrayList<LightSource> lights) {
-		colour = Colour.triangleColour(POINTS);
+		colour = Colour.averageColour(POINTS);
 
 		float averageZ = 0;
 		for (Point p : POINTS) averageZ += p.getZ();
