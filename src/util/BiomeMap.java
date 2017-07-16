@@ -3,67 +3,61 @@ package util;
 import java.util.HashMap;
 
 import env.Biome;
-import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov
  * @since May 14, 2017
  * @version 1.0
  *
- * <p>Member declarations and definitions for the <b>BiomeMap</b> class.</p>
+ * <p>The <b>BiomeMap</b> class stores and manipulates the 2D distribution of Biomes.</p>
  */
 public class BiomeMap {
-
-	public static final Biome DESERT = new Biome("Desert", Colour.TERRAIN_DESERT, 0.05f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			float z = point.getZ();
-
-			float refFreq = 10f;		// Frequency of lines waves
-			float refGain = 0.05f;		// Amplitude of line waves
-			float scaleFreq = 300f;		// Density of line waves
-			float scaleGain = 0.001f;	// Height of line waves
-
-			float deltaZ = (float) (scaleGain*Math.cos(scaleFreq*Math.abs(point.getX() - refGain*Math.cos(point.getY()*refFreq))));
-			deltaZ *= dominance;
-
-			point.setZ(z + deltaZ);
-		}
-	};
-	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			point.bump(0.001f * dominance);
-		}
-	};;
-	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			point.bump(0.01f * dominance);
-		}
-	};
-	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.02f);
-	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f);
-
-
+	/**
+	 * The default Biome entry in the BiomeMap.
+	 */
 	private static final char DEFAULT_CHAR = 'H';
+	/**
+	 * Amplitude multiplier of the wave generator function.
+	 */
 	private static final float WAVE_FACTOR_AMPLITUDE = 0.10f;
+	/**
+	 * Period multiplier of the wave generator function.
+	 */
 	private static final float WAVE_FACTOR_PERIOD = 0.08f;
 
+	/**
+	 * Mapping that associates characters with Biomes.
+	 */
 	private static final HashMap<Character, Biome> biomeMap = new HashMap<>();
 
-
+	/**
+	 * 2D array that represents the Biome distribution.
+	 */
 	private char[][] biomeGrid;
 
+	/**
+	 * Number of rows in the BiomeMap.
+	 */
 	private final int ROWS;
+	/**
+	 * Number of columns in the BiomeMap.
+	 */
 	private final int COLS;
 
 	static {
-		biomeMap.put('D', DESERT);
-		biomeMap.put('H', HILL);
-		biomeMap.put('M', MOUNTAIN);
-		biomeMap.put('P', PLAIN);
-		biomeMap.put('T', TUNDRA);
+		biomeMap.put('D', Biome.DESERT);
+		biomeMap.put('H', Biome.HILL);
+		biomeMap.put('M', Biome.MOUNTAIN);
+		biomeMap.put('P', Biome.PLAIN);
+		biomeMap.put('T', Biome.TUNDRA);
 	}
 
-
+	/**
+	 * Constructs a new BiomeMap with the given row and column dimensions.
+	 * 
+	 * @param rows The number of rows in the BiomeMap.
+	 * @param cols The number of columns in the BiomeMap.
+	 */
 	public BiomeMap(int rows, int cols) {
 		this.ROWS = rows;
 		this.COLS = cols;
@@ -76,26 +70,66 @@ public class BiomeMap {
 		}
 	}
 
+	/**
+	 * Returns the Biome at the given row and column coordinate.
+	 * 
+	 * @param row The row component of the coordinate.
+	 * @param col The column component of the coordinate.
+	 * @return The Biome at the given coordinate.
+	 */
 	public Biome getBiome(int row, int col) {
 		return biomeMap.get(biomeGrid[row][col]);
 	}
 
+	/**
+	 * Returns the number of columns in the BiomeMap.
+	 * 
+	 * @return The number of columns.
+	 */
 	public int getCols() {
 		return COLS;
 	}
 
+	/**
+	 * Returns the number of rows in the BiomeMap.
+	 * 
+	 * @return The number of rows.
+	 */
 	public int getRows() {
 		return ROWS;
 	}
 
+	/**
+	 * Returns the character representing the biome at the given coordinate.
+	 * 
+	 * @param row The row component of the coordinate.
+	 * @param col The column component of the coordinate.
+	 * @return The representative character.
+	 */
 	public char getSymbol(int row, int col) {
 		return biomeGrid[row][col];
 	}
 
+	/**
+	 * Sets the BiomeMap symbol at the given coordinate to the specified character.
+	 * 
+	 * @param row The row component of the coordinate.
+	 * @param col The column component of the coordinate.
+	 * @param symbol The new symbol at the coordinate.
+	 */
 	public void setSymbol(int row, int col, char symbol) {
 		biomeGrid[row][col] = symbol;
 	}
 
+	/**
+	 * Sets all the symbols in the given rectangle to the specified character.
+	 * 
+	 * @param startRow The starting row of the rectangle.
+	 * @param startCol The starting column of the rectangle.
+	 * @param endRow The final row of the rectangle.
+	 * @param endCol The final column of the rectangle.
+	 * @param symbol The new symbol of the BiomeMap entries in the rectangle.
+	 */
 	public void setSymbols(int startRow, int startCol, int endRow, int endCol, char symbol) {
 		for (int r = startRow ; r < endRow ; r++) {
 			for (int c = startCol ; c < endCol ; c++) {
@@ -104,6 +138,17 @@ public class BiomeMap {
 		}
 	}
 
+	/**
+	 * Sets all the symbols in the given rectangle to the specified character.
+	 * Each side of the rectangle is superimposed with a wave function to generate
+	 * a wave-like rectangle.
+	 * 
+	 * @param startRow The starting row of the rectangle.
+	 * @param startCol The starting column of the rectangle.
+	 * @param endRow The final row of the rectangle.
+	 * @param endCol The final column of the rectangle.
+	 * @param symbol The new symbol of the BiomeMap entries in the rectangle.
+	 */
 	public void setSymbolsWave(int startRow, int startCol, int endRow, int endCol, char symbol) {
 		setSymbols(startRow, startCol, endRow, endCol, symbol);
 
@@ -131,6 +176,9 @@ public class BiomeMap {
 		}
 	}
 
+	/**
+	 * Returns a String representation of the given BiomeMap.
+	 */
 	public String toString() {
 		StringBuilder mapString = new StringBuilder(String.format("BiomeMap (%d x %d):\n", ROWS, COLS));
 		for (int r = 0 ; r < ROWS ; r++) {
