@@ -48,11 +48,21 @@ public class Biome {
 	/**
 	 * The "Plain" Biome.
 	 */
-	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.02f);
+	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.02f) {
+		public void texturize(TerrainPoint point, float dominance) {
+			point.bump(0.0001f * dominance);
+			point.colourDip(dominance/8f);
+		}
+	};
 	/**
 	 * The "Tundra" Biome.
 	 */
-	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f);
+	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f) {
+		public void texturize(TerrainPoint point, float dominance) {
+			point.bump(0.0001f * dominance);
+			point.colourDip(dominance/10f);
+		}
+	};
 	
 	/**
 	 * Base colour of this Biome.

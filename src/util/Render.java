@@ -52,6 +52,12 @@ public class Render {
 		glEnd();
 	}
 
+	/**
+	 * Renders the given Sphere in the specified colour.
+	 * 
+	 * @param sphere The sphere to be drawn.
+	 * @param colour Colour to be applied to the Sphere.
+	 */
 	public static void drawSphere(Sphere sphere, float[] colour) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -72,7 +78,7 @@ public class Render {
 	}
 
 	/**
-	 * Renders the given Triangle with the specified colour.
+	 * Renders the given Triangle in the specified colour.
 	 *
 	 * @param points Points of the Triangle to be rendered.
 	 * @param colour Colour to be applied to the Triangle.

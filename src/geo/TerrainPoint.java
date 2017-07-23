@@ -3,6 +3,7 @@ package geo;
 import java.util.HashMap;
 
 import env.Biome;
+import util.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -63,6 +64,17 @@ public class TerrainPoint extends Point {
 	 */
 	public Biome getBiome() {
 		return biome;
+	}
+	
+	/**
+	 * Scales the colour of this TerrainPoint by a random value within the given range.
+	 * The applied scaling will always decrease the luminosity of the TerrainPoint.
+	 * 
+	 * @param range The maximum possible scaling factor.  This value should fall within the range [0, 1]. 
+	 */
+	public void colourDip(float range) {
+		float clrScale = 1f - (float) Math.random()*range;
+		colour = Colour.scaleColour(clrScale, colour);
 	}
 
 	/**
