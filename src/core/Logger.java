@@ -12,6 +12,10 @@ import java.util.Date;
  * <p>The <i>Logger</i> class logs application messages.</p>
  */
 public class Logger {
+
+    // Public members
+    // -------------------------------------------------------------------------
+    
     /**
      * Logs an information message to stdout.
      * 
@@ -52,6 +56,9 @@ public class Logger {
         error(msg, args);
         System.exit(1);
     }
+
+    // Private members
+	// -------------------------------------------------------------------------
 
     /**
      * Substitutes the given arguments into the provided message to generate a

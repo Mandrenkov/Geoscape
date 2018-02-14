@@ -48,18 +48,22 @@ public class Window {
 
 		/* Private variables */
 
-		private long window = NULL;
+		private long winref = NULL;
+
+		private static Window singleton = null;
 
 		/* Public methods */
 
 		/**
-		 * Constructor
+		 * Returns the singleton Window instance.
+		 * 
+		 * @return The singleton Window.
 		 */
-		public Window() {
-			initWindow();
-			initGL();
-
-			rotateView();
+		public static Window getInstance() {
+			if (singleton == null) {
+				singleton = new Window();
+			}
+			return singleton;
 		}
 
 		/**
@@ -68,7 +72,7 @@ public class Window {
 		 * @return The reference to the GLFW window.
 		 */
 		public long getReference() {
-			return window;
+			return winref;
 		}
 
 		/**
@@ -80,7 +84,7 @@ public class Window {
 			Pointer widthPtr = new Pointer();
 			Pointer heightPtr = new Pointer();
 
-			glfwGetWindowSize(window, widthPtr.getBuffer(), heightPtr.getBuffer());
+			glfwGetWindowSize(winref, widthPtr.getBuffer(), heightPtr.getBuffer());
 
 			return new int[] {widthPtr.get(), heightPtr.get()};
 		}
@@ -106,6 +110,16 @@ public class Window {
 		/* Private methods */
 
 		/**
+		 * Constructs a Window object.
+		 */
+		private Window() {
+			initWindow();
+			initGL();
+
+			rotateView();
+		}
+
+		/**
 		 * Initializes the GLFW window
 		 */
 		private void initWindow() {
@@ -118,25 +132,25 @@ public class Window {
 				glfwWindowHint(hintPair[0], hintPair[1]);
 			}
 
-			window = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, WINDOW_TITLE, NULL, NULL);
+			winref = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, WINDOW_TITLE, NULL, NULL);
 
-			if (window == NULL) {
+			if (winref == NULL) {
 				throw new RuntimeException("Failed to create the GLFW window");
 			}
 
-			glfwSetKeyCallback(window, (localWindow, key, scancode, action, mods) -> {
+			glfwSetKeyCallback(winref, (localWindow, key, scancode, action, mods) -> {
 				if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 					glfwSetWindowShouldClose(localWindow, true);
 			});
 
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-			glfwSetWindowPos(window, (vidmode.width() - INIT_WIDTH)/2, (vidmode.height() - INIT_HEIGHT)/2);
+			glfwSetWindowPos(winref, (vidmode.width() - INIT_WIDTH)/2, (vidmode.height() - INIT_HEIGHT)/2);
 
-			glfwMakeContextCurrent(window);		// Make the OpenGL context current
+			glfwMakeContextCurrent(winref);		// Make the OpenGL context current
 			glfwSwapInterval(GLFW_VSYNC);		// Set v-sync
-			glfwShowWindow(window);				// Make the window visible
+			glfwShowWindow(winref);				// Make the window visible
 
-			glfwSetWindowSizeCallback(window, (localWindow, newWidth, newHeight) -> {
+			glfwSetWindowSizeCallback(winref, (localWindow, newWidth, newHeight) -> {
 				glViewport(0, 0, newWidth, newHeight);
 			});
 		}

@@ -6,6 +6,7 @@ import core.Top;
 import geo.Point;
 import geo.TerrainTriangle;
 import util.BiomeMap;
+import util.Render;
 
 /**
  * @author Mikhail Andrenkov
@@ -150,5 +151,15 @@ public class World {
 	 */
 	public ArrayList<LightSource> getLights() {
 		return lights;
+	}
+
+	public void render() {
+		if (Top.DEBUG) {
+			Render.drawAxes();
+		}
+
+		for (Drawable d : drawables) {
+			d.draw();
+		}
 	}
 }
