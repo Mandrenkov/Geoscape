@@ -19,14 +19,13 @@ public class Top {
 	 */
 	public static final boolean DEBUG = true;
 
-
 	/**
 	 * Execution entry point.
 	 *
 	 * @param args Command-line arguments.
 	 */
 	public static void main(String[] args) {
-		System.out.println("Application Active...\n");
+		Logger.info("Application starting...");
 
 		Window window = new Window();
 		World world = new World();
@@ -43,7 +42,7 @@ public class Top {
 			glfwSetErrorCallback(null).free();
 		}
 
-		System.out.println("\nApplication Terminated.");
+		Logger.info("Application terminated.");
 	}
 
 }

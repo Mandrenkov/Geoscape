@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.glColor3f;
 
 import java.util.StringJoiner;
 
+import core.Logger;
 import geo.TerrainPoint;
 
 /**
@@ -84,7 +85,7 @@ public class Colour {
 		if (colour.length == 3 || colour.length == 4) {
 			glColor3f(colour[0], colour[1], colour[2]);
 		} else {
-			System.err.println("Error: Called setColour() with an array of length " + colour.length + ".");
+			Logger.error("Error: Called setColour() with an array of length " + colour.length + ".");
 		}
 	}
 

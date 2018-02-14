@@ -32,7 +32,7 @@ public class Loop {
 	 * @param world World to be rendered
 	 */
 	public static void run(Window window, World world) {
-		System.out.printf("Rendering %d x %d World.\n", World.ROWS, World.COLS);
+		Logger.info("Rendering %d x %d World.", World.ROWS, World.COLS);
 
 		double targetTime = glfwGetTime();
 		Render.rotateAxis('Z', -100f);
@@ -49,8 +49,10 @@ public class Loop {
 	}
 
 	private static void render(World world) {
-		if (Top.DEBUG) Render.drawAxes();
-		for (Drawable d : world.getDrawables()) d.draw();
+		if (Top.DEBUG) {
+			Render.drawAxes();
+		}
+		world.getDrawables().forEach(d -> d.draw());
 		Render.rotateAxis('Z', Z_ROTATE_DELTA);
 	}
 
