@@ -41,8 +41,14 @@ public class Simulation {
 		// Initialize the Window singleton.
 		Window.getInstance();
 
+		// Setup the previous loop time.
 		syncTime = glfwGetTime();
-		glEnable(GL_DEPTH_TEST);
+		
+		// Orient the camera into its initial position.
+		glRotatef(-50f, 1f, 0f, 0f);
+		glTranslatef(0f, 0f, -1.5f);
+		glTranslatef(0f, 1.6f, 0f);
+		glRotatef(45f, 0f, 0f, 1f);
 		Render.rotateAxis('Z', -100f);
 		
 		loop();
@@ -53,14 +59,9 @@ public class Simulation {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Target delay (seconds) between frames to reach the target FPS.
+	 * Target degree of rotation along the z-axis every second.
 	 */
-	private static final double TARGET_FRAME_DELAY = 1.0/60.0;
-
-	/**
-	 * Amount to increment z-axis angle every frame.
-	 */
-	private static final float Z_ROTATE_DELTA = -0.30f; // -0.30f
+	private static final float Z_ROTATE_DELTA = -30.00f;
 
 	/**
 	 * The singleton Simulation instance.
@@ -90,35 +91,42 @@ public class Simulation {
 	 * render Window.
 	 */
 	private void loop() {
-		long winref = Window.getInstance().getReference();
-        while (!glfwWindowShouldClose(winref)) {
+		long handle = Window.getInstance().getHandle();
+        while (!glfwWindowShouldClose(handle)) {
 			// Clear the GL buffers.
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Render the World.
 			world.render();
-			Render.rotateAxis('Z', Z_ROTATE_DELTA);
+
+			// Update the framerate synchronizer and rotate the viewport by a
+			// factor that is proportional to the current frame period.
+			double now = glfwGetTime();
+			double period = now - syncTime;
+			syncTime = now;
+
+			double rotation = Z_ROTATE_DELTA*period;
+			Render.rotateAxis('Z', (float) rotation);
 
 			// Prepare for the next frame.
-			glfwSwapBuffers(winref);
+			glfwSwapBuffers(handle);
 			glfwPollEvents();
-			syncFPS();
+			//syncFPS();
 		}	
 	}
 
 	/**
 	 * Synchronizes the current frame rate with respect to |TARGET_FRAME_DELAY|.
 	 */
-	private void syncFPS() {
-		double target = syncTime + TARGET_FRAME_DELAY;
-		double syncTime = glfwGetTime();
-        double delta = target - syncTime;
+	/*private void syncFPS() {
+		
         if (delta > 0) {
         	try {
+				Logger.info("Sleeping for %.3f seconds.", delta);
         		Thread.sleep((long) (1000*delta));
         	} catch (InterruptedException e) {
         		e.printStackTrace();
         	}
         }
-	}
+	}*/
 }

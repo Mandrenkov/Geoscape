@@ -8,188 +8,185 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
 import util.Colour;
-import util.Pointer;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since February 14, 2018
+ * @version 1.1
  *
- * <p>The <i>Window</i> class represents the application window.</p>
+ * <p>The <i>Window</i> class represents the application GLFW window.</p>
  */
 public class Window {
 
-		/* Public variables */
+	// Public members
+	// -------------------------------------------------------------------------
 
-		// Physical window attributes
-		public final int INIT_WIDTH = 1600;
-		public final int INIT_HEIGHT = 900;
-		public final String WINDOW_TITLE = "Randomized Geoscape";
+	/**
+	 * Returns the singleton Window instance.
+	 * 
+	 * @return The singleton instance.
+	 */
+	public static Window getInstance() {
+		if (singleton == null) {
+			singleton = new Window();
+		}
+		return singleton;
+	}
 
-		// OpenGL flags to enable
-		public final int[] GL_FLAGS = new int[] {
-			GL_DEPTH_TEST,
-			GL_CULL_FACE,
-			GL_MULT
-		};
-		// GLFW window hints
-		public final int[][] GLFW_HINTS = new int[][] {
-			{GLFW_VISIBLE, GLFW_FALSE},
-			{GLFW_RESIZABLE, GLFW_TRUE},
-			{GLFW_SAMPLES, 4}
-		};
-		public final int GLFW_VSYNC = 0;
+	/**
+	 * Returns the GLFW handle to the window.
+	 *
+	 * @return The GLFW handle.
+	 */
+	public long getHandle() {
+		return handle;
+	}
 
-		// View perspective
-		public static final float VIEW_FOV = 70f;
-		public static final float VIEW_ASPECT = 1f;
-		public static final float VIEW_Z_NEAR = 0.03f;
-		public static final float VIEW_Z_FAR = 5f;
 
-		/* Private variables */
+	// Private members
+	// -------------------------------------------------------------------------
 
-		private long winref = NULL;
+	/**
+	 * The reference to the Window singleton.
+	 */
+	private static Window singleton = null;
 
-		private static Window singleton = null;
+	/**
+	 * The initial width of the window.
+	 */
+	private final int INIT_WIDTH = 1600;
 
-		/* Public methods */
+	/**
+	 * The initial height of the window.
+	 */
+	private final int INIT_HEIGHT = 900;
 
-		/**
-		 * Returns the singleton Window instance.
-		 * 
-		 * @return The singleton Window.
-		 */
-		public static Window getInstance() {
-			if (singleton == null) {
-				singleton = new Window();
-			}
-			return singleton;
+	/**
+	 * The title of the window.
+	 */
+	private final String TITLE = "Geoscape";
+
+	/**
+	 * List of OpenGL flags to enable.
+	 */
+	private final int[] GL_FLAGS = new int[] {
+		GL_DEPTH_TEST,
+		GL_CULL_FACE,
+		GL_MULT
+	};
+
+	/**
+	 * List of GLFW window hints.
+	 */
+	private final int[][] GLFW_HINTS = new int[][] {
+		{GLFW_VISIBLE,      0},
+		{GLFW_RESIZABLE,    1},
+		{GLFW_FOCUSED,      1},
+		{GLFW_REFRESH_RATE, 144},
+		{GLFW_SAMPLES,      4}
+	};
+
+	/**
+	 * Flag that determines whether VSYNC is enabled.
+	 */
+	private final int VSYNC = 0;
+
+	/**
+	 * Internal reference to the GLFW window.
+	 */
+	private long handle = NULL;
+
+	/**
+	 * The field of view (FOV) of the Window viewport.
+	 */
+	private final float VIEW_FOV = 70f;
+
+	/**
+	 * The aspect ratio of the Window viewport.
+	 */
+	private final float VIEW_ASPECT = 1f;
+
+	/**
+	 * The distance to the nearest frustrum plane of the Window.
+	 */
+	private final float VIEW_Z_NEAR = 0.03f;
+
+	/**
+	 * The distance to the furthest frustrum plane of the Window.
+	 */
+	private final float VIEW_Z_FAR = 5f;
+
+	/**
+	 * Constructs a Window object.
+	 */
+	private Window() {
+		initGLFW();
+		initCallbacks();
+		initGL();
+	}
+
+	/**
+	 * Initializes the GLFW parameters of this Window.
+	 */
+	private void initGLFW() {
+		GLFWErrorCallback.createPrint(System.err).set();
+
+		if (!glfwInit()) {
+			throw new IllegalStateException("Failed to initialize GLFW.");
 		}
 
-		/**
-		 * Returns the reference to the GLFW window.
-		 *
-		 * @return The reference to the GLFW window.
-		 */
-		public long getReference() {
-			return winref;
+		for (int[] hint : GLFW_HINTS) {
+			glfwWindowHint(hint[0], hint[1]);
 		}
 
-		/**
-		 * Returns the dimensions of the window.
-		 *
-		 * @return The dimensions of the window.
-		 */
-		public int[] getWindowDimensions() {
-			Pointer widthPtr = new Pointer();
-			Pointer heightPtr = new Pointer();
+		handle = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, TITLE, NULL, NULL);
+		if (handle == NULL) {
+			throw new IllegalStateException("Failed to create GLFW window.");
+		}
+	
+		glfwMakeContextCurrent(handle);
+		glfwShowWindow(handle);
+		glfwSwapInterval(VSYNC);
+	}
 
-			glfwGetWindowSize(winref, widthPtr.getBuffer(), heightPtr.getBuffer());
+	/**
+	 * Initializes the callbacks of this Window.
+	 */
+	private void initCallbacks() {
+		// Ensure the OpenGL viewport matches the Window dimensions.
+		glfwSetWindowSizeCallback(handle, (localWindow, newWidth, newHeight) -> {
+			glViewport(0, 0, newWidth, newHeight);
+		});
 
-			return new int[] {widthPtr.get(), heightPtr.get()};
+		//glfwSetKeyCallback(handle, (localWindow, key, scancode, action, mods) -> {
+		//	if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+		//		glfwSetWindowShouldClose(localWindow, true);
+		//});
+	}
+
+	/**
+	 * Initializes the OpenGL parameters of this Window.
+	 */
+	private void initGL() {
+		// TODO: Streamline this function
+		GL.createCapabilities();
+
+		for (int flag : GL_FLAGS) {
+			glEnable(flag);
 		}
 
-		/**
-		 * Returns the height of the window.
-		 *
-		 * @return The height of the window.
-		 */
-		public int getWindowHeight() {
-			return getWindowDimensions()[1];
-		}
+		glClearColor(Colour.BACKDROP[0], Colour.BACKDROP[1], Colour.BACKDROP[2], Colour.BACKDROP[3]);
 
-		/**
-		 * Returns the width of the window.
-		 *
-		 * @return The width of the window.
-		 */
-		public int getWindowWidth() {
-			return getWindowDimensions()[0];
-		}
+		// Matrix Initialization
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 
-		/* Private methods */
+		// Define frustum
+		float yTop  = (float) (VIEW_Z_NEAR*Math.tan(Math.toRadians(VIEW_FOV/2)));
+		float xLeft = yTop * VIEW_ASPECT;
+		glFrustum(xLeft, -xLeft, -yTop, yTop, VIEW_Z_NEAR, VIEW_Z_FAR);
 
-		/**
-		 * Constructs a Window object.
-		 */
-		private Window() {
-			initWindow();
-			initGL();
-
-			rotateView();
-		}
-
-		/**
-		 * Initializes the GLFW window
-		 */
-		private void initWindow() {
-			GLFWErrorCallback.createPrint(System.err).set();
-
-			if (!glfwInit())
-				throw new IllegalStateException("Unable to initialize GLFW");
-
-			for (int[] hintPair : GLFW_HINTS) {
-				glfwWindowHint(hintPair[0], hintPair[1]);
-			}
-
-			winref = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, WINDOW_TITLE, NULL, NULL);
-
-			if (winref == NULL) {
-				throw new RuntimeException("Failed to create the GLFW window");
-			}
-
-			glfwSetKeyCallback(winref, (localWindow, key, scancode, action, mods) -> {
-				if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-					glfwSetWindowShouldClose(localWindow, true);
-			});
-
-			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-			glfwSetWindowPos(winref, (vidmode.width() - INIT_WIDTH)/2, (vidmode.height() - INIT_HEIGHT)/2);
-
-			glfwMakeContextCurrent(winref);		// Make the OpenGL context current
-			glfwSwapInterval(GLFW_VSYNC);		// Set v-sync
-			glfwShowWindow(winref);				// Make the window visible
-
-			glfwSetWindowSizeCallback(winref, (localWindow, newWidth, newHeight) -> {
-				glViewport(0, 0, newWidth, newHeight);
-			});
-		}
-
-		/**
-		 * Initializes the GL parameters
-		 */
-		private void initGL() {
-			GL.createCapabilities();
-
-	        for (int flag : GL_FLAGS) {
-	        	glEnable(flag);
-	        }
-
-	        glClearColor(Colour.BACKDROP[0], Colour.BACKDROP[1], Colour.BACKDROP[2], Colour.BACKDROP[3]);
-
-			// Matrix Initialization
-	        glMatrixMode(GL_PROJECTION);
-	        glLoadIdentity();
-
-	        // Define frustum
-	        float yTop  = (float) (VIEW_Z_NEAR * Math.tan(Math.toRadians(VIEW_FOV / 2)));
-		    float xLeft = yTop * VIEW_ASPECT;
-		    glFrustum(xLeft, -xLeft, -yTop, yTop, VIEW_Z_NEAR, VIEW_Z_FAR);
-
-	        glMatrixMode(GL_MODELVIEW);
-	        glLoadIdentity();
-		}
-
-		/**
-		 * Rotates the perspective of the camera to its initial state.
-		 */
-		private void rotateView() {
-			glRotatef(-50f, 1f, 0f, 0f);
-
-			glTranslatef(0f, 0f, -1.5f);
-			glTranslatef(0f, 1.6f, 0f);
-
-			glRotatef(45f, 0f, 0f, 1f);
-		}
-
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
 }
