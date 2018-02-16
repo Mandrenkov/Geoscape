@@ -2,7 +2,7 @@ package env;
 
 import core.Logger;
 import geo.TerrainPoint;
-import util.Colour;
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov

@@ -19,15 +19,15 @@ public class Sphere {
 	/**
 	 * List of Sphere vertices.
 	 */
-	private ArrayList<Point> points;
+	private ArrayList<Vertex> points;
 	/**
 	 * List of Triangles that constitute (approximate) the Sphere contour.
 	 */
 	private ArrayList<Triangle> triangles;
 	/**
-	 * Origin Point of the Sphere.
+	 * Origin Vertex of the Sphere.
 	 */
-	private Point origin;
+	private Vertex origin;
 	/**
 	 * Radius of the Sphere.
 	 */
@@ -39,7 +39,7 @@ public class Sphere {
 	 * @param origin Origin of the Sphere.
 	 * @param radius Radius of the Sphere.
 	 */
-	public Sphere(Point origin, float radius) {
+	public Sphere(Vertex origin, float radius) {
 		this.origin = origin;
 		this.radius = radius;
 
@@ -72,12 +72,12 @@ public class Sphere {
 	 * Generates a diamond that serves as the initial form approximation of this Sphere.
 	 */
 	private void genDiamond() {
-		Point u = new Point(0f, 0f,  1);
-		Point d = new Point(0f, 0f, -1f);
-		Point l = new Point(-1f, 0f, 0f);
-		Point r = new Point( 1f, 0f, 0f);
-		Point b = new Point(0f, -1f, 0f);
-		Point f = new Point(0f,  1f, 0f);
+		Vertex u = new Vertex(0f, 0f,  1);
+		Vertex d = new Vertex(0f, 0f, -1f);
+		Vertex l = new Vertex(-1f, 0f, 0f);
+		Vertex r = new Vertex( 1f, 0f, 0f);
+		Vertex b = new Vertex(0f, -1f, 0f);
+		Vertex f = new Vertex(0f,  1f, 0f);
 
 		points.add(u);
 		points.add(d);
@@ -107,10 +107,10 @@ public class Sphere {
 			// Replace each Triangle on the Sphere with 4 new Triangles
 			// that better approximate the round nature of the Sphere.
 			for (Triangle t : triangles) {
-				Point[] triPoints = t.getPoints();
-				Point[] midPoints = new Point[3];
+				Vertex[] triPoints = t.getPoints();
+				Vertex[] midPoints = new Vertex[3];
 
-				Point midPoint;
+				Vertex midPoint;
 				GeoVector midVector;
 
 				// Find the midpoint coordinates of each line of the Triangle.
@@ -120,7 +120,7 @@ public class Sphere {
 					midVector = new GeoVector(midPoint);
 					midVector.normalize();
 
-					midPoint = new Point(midVector.getX(), midVector.getY(), midVector.getZ());
+					midPoint = new Vertex(midVector.getX(), midVector.getY(), midVector.getZ());
 					midPoints[i] = midPoint;
 					points.add(midPoint);
 				}
@@ -137,10 +137,10 @@ public class Sphere {
 	}
 
 	/**
-	 * Scales each point of this Sphere to this Sphere's radius.
+	 * Scales each Vertex of this Sphere to this Sphere's radius.
 	 */
 	private void genScale() {
-		for (Point p : points) {
+		for (Vertex p : points) {
 			p.setX(p.getX()*radius);
 			p.setY(p.getY()*radius);
 			p.setZ(p.getZ()*radius);
@@ -148,10 +148,10 @@ public class Sphere {
 	}
 
 	/**
-	 * Translates each point of this Sphere such that the Sphere is centered about its origin.
+	 * Translates each Vertex of this Sphere such that the Sphere is centered about its origin.
 	 */
 	private void genTranslate() {
-		for (Point p : points) {
+		for (Vertex p : points) {
 			p.setX(p.getX() + origin.getX());
 			p.setY(p.getY() + origin.getY());
 			p.setZ(p.getZ() + origin.getZ());;

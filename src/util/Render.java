@@ -19,7 +19,7 @@ public class Render {
 	 *
 	 * @param p Point to be added as a GL vertex.
 	 */
-	public static void addVertex(Point p) {
+	public static void addVertex(Vertex p) {
 		glVertex3f(p.getX(), p.getY(), p.getZ());
 	}
 
@@ -84,7 +84,7 @@ public class Render {
 	 * @param colour Colour to be applied to the Triangle.
 	 */
 	public static void drawTriangle(Triangle triangle, float[] colour) {
-		Point[] points = triangle.getPoints();
+		Vertex[] points = triangle.getPoints();
 
 		// Set triangle colour
 		glColor3f(colour[0], colour[1], colour[2]);

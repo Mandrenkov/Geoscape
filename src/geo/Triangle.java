@@ -11,14 +11,14 @@ public class Triangle {
 	/**
 	 * List of Points that constitute the Triangle.
 	 */
-	protected final Point[] POINTS;
+	protected final Vertex[] POINTS;
 
 	/**
 	 * Constructs a Triangle object with the given set of Points.
 	 * 
 	 * @param points Set of Points that define the Triangle.
 	 */
-	public Triangle(Point ... points) {
+	public Triangle(Vertex ... points) {
 		if (points.length != 3) throw new IllegalArgumentException("Triangle must have 3 points.");
 
 		this.POINTS = points;
@@ -43,7 +43,7 @@ public class Triangle {
 	 * 
 	 * @return The Points of this Triangle.
 	 */
-	public Point[] getPoints() {
+	public Vertex[] getPoints() {
 		return POINTS;
 	}
 

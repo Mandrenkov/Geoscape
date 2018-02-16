@@ -3,7 +3,7 @@ package geo;
 import java.util.HashMap;
 
 import env.Biome;
-import util.Colour;
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -12,7 +12,7 @@ import util.Colour;
  *
  * <p>The TerrainPoint class represents a Point in a Terrain context.</p>
  */
-public class TerrainPoint extends Point {
+public class TerrainPoint extends Vertex {
 
 	/**
 	 * Geographic biome of this TerrainPoint.

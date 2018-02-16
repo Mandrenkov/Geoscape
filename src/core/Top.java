@@ -25,7 +25,9 @@ public class Top {
 		Logger.info("Application starting...");
 
 		try {
-			Simulation.getInstance().start();
+			// Start a new Simulation.
+			Simulation simulation = new Simulation();
+			simulation.start();
 
 			// Free the window callbacks and destroy the window.
 			long handle = Window.getInstance().getHandle();

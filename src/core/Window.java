@@ -7,7 +7,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
-import util.Colour;
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -83,6 +83,7 @@ public class Window {
 		{GLFW_RESIZABLE,    1},
 		{GLFW_FOCUSED,      1},
 		{GLFW_REFRESH_RATE, 144},
+		{GLFW_FLOATING,     1},
 		{GLFW_SAMPLES,      4}
 	};
 
@@ -155,7 +156,7 @@ public class Window {
 	private void initCallbacks() {
 		// Ensure the OpenGL viewport matches the Window dimensions.
 		glfwSetWindowSizeCallback(handle, (localWindow, newWidth, newHeight) -> {
-			glViewport(0, 0, newWidth, newHeight);
+			//glViewport(0, 0, newWidth, newHeight);
 		});
 
 		//glfwSetKeyCallback(handle, (localWindow, key, scancode, action, mods) -> {

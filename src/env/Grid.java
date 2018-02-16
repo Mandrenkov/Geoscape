@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.glPolygonMode;
 
 import java.util.ArrayList;
 
-import geo.Point;
+import geo.Vertex;
 import geo.TerrainPoint;
 import geo.TerrainTriangle;
 import util.BiomeMap;
@@ -184,7 +184,7 @@ public class Grid implements Drawable {
 	 * 
 	 * @return The Points in this Grid.
 	 */
-	public Point[][] getPoints() {
+	public Vertex[][] getPoints() {
 		return points;
 	}
 

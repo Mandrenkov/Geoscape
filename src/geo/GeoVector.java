@@ -33,7 +33,7 @@ public class GeoVector {
 	 *
 	 * @param p Point that denotes the end coordinates of the GeoVector.
 	 */
-	public GeoVector(Point p) {
+	public GeoVector(Vertex p) {
 		this.components = new float[]{p.getX(), p.getY(), p.getZ()};
 		this.dimensions = 3;
 	}

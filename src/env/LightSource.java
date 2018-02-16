@@ -19,7 +19,7 @@ public class LightSource implements Drawable {
 	/**
 	 * Origin of this LightSource.
 	 */
-	private Point position;
+	private Vertex position;
 	/**
 	 * Spherical representation of this LightSource.
 	 */
@@ -30,7 +30,7 @@ public class LightSource implements Drawable {
 	 *
 	 * @param position Position of this LightSource.
 	 */
-	public LightSource(Point position) {
+	public LightSource(Vertex position) {
 		this.position = position;
 		this.sphere = new Sphere(position, RADIUS);
 	}
@@ -47,7 +47,7 @@ public class LightSource implements Drawable {
 	 *
 	 * @return The position of this LightSource.
 	 */
-	public Point getPosition() {
+	public Vertex getPosition() {
 		return position;
 	}
 

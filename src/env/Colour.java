@@ -1,4 +1,4 @@
-package util;
+package env;
 
 import static org.lwjgl.opengl.GL11.glColor3f;
 

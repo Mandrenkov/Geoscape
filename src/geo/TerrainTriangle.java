@@ -3,7 +3,7 @@ package geo;
 import java.util.ArrayList;
 
 import env.LightSource;
-import util.Colour;
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -77,7 +77,7 @@ public class TerrainTriangle extends Triangle {
 		colour = Colour.averageColour(POINTS);
 
 		float averageZ = 0;
-		for (Point p : POINTS) averageZ += p.getZ();
+		for (Vertex p : POINTS) averageZ += p.getZ();
 		averageZ /= 3f;
 
 		for (int c = 0 ; c < colour.length ; c++) {

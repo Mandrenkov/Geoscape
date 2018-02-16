@@ -2,7 +2,7 @@ package env;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import geo.Point;
+import geo.Vertex;
 import util.*;
 
 /**
@@ -16,7 +16,7 @@ public class Platform implements Drawable {
 	/**
 	 * Vertices of the rectangular prism that bounds the platform.
 	 */
-	Point[][][] pointPrism;
+	Vertex[][][] pointPrism;
 
 	/**
 	 * Constructs a Platform object with the given geometric constraints.
@@ -30,7 +30,7 @@ public class Platform implements Drawable {
 	 */
 	public Platform(final float MIN_X, final float MAX_X, final float MIN_Y, final float MAX_Y, final float MIN_Z, final float MAX_Z) {
 		// Points denoting the vertices of the platform cube
-		pointPrism = new Point[2][2][2];
+		pointPrism = new Vertex[2][2][2];
 
 		// Generate cube vertices
 		for (int iZ = 0 ; iZ < 2 ; iZ++) {
@@ -42,7 +42,7 @@ public class Platform implements Drawable {
 				for (int iX = 0 ; iX < 2 ; iX++) {
 					float x = iX == 0 ? MIN_X : MAX_X;
 
-					pointPrism[iZ][iY][iX] = new Point(x, y, z);
+					pointPrism[iZ][iY][iX] = new Vertex(x, y, z);
 				}
 			}
 		}

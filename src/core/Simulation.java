@@ -19,15 +19,10 @@ public class Simulation {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Returns the singleton Simulation instance.
-	 * 
-	 * @return The Simulation singleton.
+	 * Constructs a Simulation object.
 	 */
-	public static Simulation getInstance() {
-		if (instance == null) {
-			instance = new Simulation();
-		}
-		return instance;
+	public Simulation() {
+		world = new World();
 	}
 
 	/**
@@ -64,11 +59,6 @@ public class Simulation {
 	private static final float Z_ROTATE_DELTA = -30.00f;
 
 	/**
-	 * The singleton Simulation instance.
-	 */
-	private static Simulation instance;
-
-	/**
 	 * The World associated with this Simulation.
 	 */
 	private World world;
@@ -77,13 +67,6 @@ public class Simulation {
 	 * The time used to synchronize the framerate during each loop iteration.
 	 */
 	private double syncTime;
-
-	/**
-	 * Constructs a Simulation object.
-	 */
-	private Simulation() {
-		world = new World();
-	}
 
 	/**
 	 * Continuously renders the World of this Simulation by controlling the
@@ -114,19 +97,4 @@ public class Simulation {
 			//syncFPS();
 		}	
 	}
-
-	/**
-	 * Synchronizes the current frame rate with respect to |TARGET_FRAME_DELAY|.
-	 */
-	/*private void syncFPS() {
-		
-        if (delta > 0) {
-        	try {
-				Logger.info("Sleeping for %.3f seconds.", delta);
-        		Thread.sleep((long) (1000*delta));
-        	} catch (InterruptedException e) {
-        		e.printStackTrace();
-        	}
-        }
-	}*/
 }

@@ -3,7 +3,7 @@ package env;
 import java.util.ArrayList;
 
 import core.Top;
-import geo.Point;
+import geo.Vertex;
 import geo.TerrainTriangle;
 import util.BiomeMap;
 import util.Render;
@@ -17,11 +17,11 @@ import util.Render;
  */
 public class World {
 	/**
-	 * Number of Point rows in the World.
+	 * Number of Vertex rows in the World.
 	 */
 	public static final int ROWS = Top.DEBUG ? 100 : 300;
 	/**
-	 * Number of Point columns in the World.
+	 * Number of Vertex columns in the World.
 	 */
 	public static final int COLS = ROWS;
 
@@ -110,7 +110,7 @@ public class World {
 		landMap.setSymbolsWave(0, landMap.getCols()/2, landMap.getRows()/2, landMap.getCols(), 'M');
 		landscape.add(land);
 
-		lights.add(new LightSource(new Point(-3f, -3f, 3f)));
+		lights.add(new LightSource(new Vertex(-3f, -3f, 3f)));
 
 		// Generate the Points of each World surface and adjust the terrain lighting
 		for (Grid grid : landscape) {
