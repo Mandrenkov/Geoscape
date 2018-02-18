@@ -1,6 +1,10 @@
 package geo;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Mikhail Andrenkov
@@ -9,152 +13,134 @@ import java.util.ArrayList;
  *
  * <p>Member declarations and definitions for the <b>Sphere</b> class.</p>
  */
-public class Sphere {
+public class Sphere extends Composite {
 
-	/**
-	 * Number of iterations performed over the shape-refinement process.
-	 */
-	private static final int REFINE_STEPS = 5;
-
-	/**
-	 * List of Sphere vertices.
-	 */
-	private ArrayList<Vertex> points;
-	/**
-	 * List of Triangles that constitute (approximate) the Sphere contour.
-	 */
-	private ArrayList<Triangle> triangles;
-	/**
-	 * Origin Vertex of the Sphere.
-	 */
-	private Vertex origin;
-	/**
-	 * Radius of the Sphere.
-	 */
-	private float radius;
+	// Public members
+	// -------------------------------------------------------------------------
 
 	/**
 	 * Constructs a new Sphere with the given origin and radius.
 	 * 
-	 * @param origin Origin of the Sphere.
-	 * @param radius Radius of the Sphere.
+	 * @param origin The origin of the Sphere.
+	 * @param radius The radius of the Sphere.
 	 */
 	public Sphere(Vertex origin, float radius) {
 		this.origin = origin;
 		this.radius = radius;
 
-		generateTriangles();
+		// Create the Triangular faces of the Sphere.
+		ArrayList<Triangle> faces = approximate();
+		for (int i = 0; i < REFINE_STEPS; ++i) {
+			faces = refine(faces);
+		}
+
+		// Derive the set of unique Vertices that.
+		Set<Vertex> vertices = new HashSet<>();
+		for (Triangle face : faces) {
+			for (Vertex vertex : face.getVertices()) {
+				vertices.add(vertex);
+			}
+		}
+
+		// Scale and translate each Vertex according to the origin and radius
+		// of this Sphere.
+		for (Vertex vertex : vertices) {
+			vertex.scale(radius);
+			vertex.translate(origin.getX(), origin.getY(), origin.getZ());
+		}
 	}
 
 	/**
-	 * Generates a list of Triangles that define the Sphere exterior.
+	 * Draws this Sphere.
 	 */
-	public void generateTriangles() {
-		points = new ArrayList<>();
-		triangles = new ArrayList<>();
-
-		genDiamond();
-		genRefine();
-		genScale();
-		genTranslate();
+	public void draw() {
+		glBegin(GL_TRIANGLES);
+		for (Shape shape : shapes) {
+			shape.draw();
+		}
+		glEnd();
 	}
 
 	/**
-	 * Returns the list of Triangles corresponding to this Sphere.
+	 * Returns a String representation of this Sphere.
 	 * 
-	 * @return The list of Triangles corresponding to this Sphere.
+	 * @return The String representation.
 	 */
-	public ArrayList<Triangle> getTriangles() {
-		return triangles;
+	public String toString() {
+		return String.format("%s with %.2f", origin, radius);
+	}
+
+
+	// Private members
+	// -------------------------------------------------------------------------
+	
+	/**
+	 * The number of refinement iterations to be performed.
+	 */
+	private static final int REFINE_STEPS = 5;
+
+	/**
+	 * The origin of this Sphere.
+	 */
+	private Vertex origin;
+
+	/**
+	 * The radius of this Sphere.
+	 */
+	private float radius;
+
+	/**
+	 * Creates a first-order approximation of this Sphere (i.e., an octohedron).
+	 * 
+	 * @return The list of Triangles representing the initial faces of the Sphere.
+	 */
+	private ArrayList<Triangle> approximate() {
+		ArrayList<Triangle> faces = new ArrayList<>();
+
+		// Declare the Vertices representing the corners of the octahedron.
+		Vertex u = new Vertex( 0,  0,  1);
+		Vertex d = new Vertex( 0,  0, -1);
+		Vertex l = new Vertex(-1,  0,  0);
+		Vertex r = new Vertex( 1,  0,  0);
+		Vertex b = new Vertex( 0, -1,  0);
+		Vertex f = new Vertex( 0,  1,  0);
+		
+		// Create the Triangles representing the faces of the octahedron.
+		for (Vertex z : new Vertex[]{u, d}) {
+			faces.add(new Triangle(z, f, l));
+			faces.add(new Triangle(z, l, b));
+			faces.add(new Triangle(z, b, r));
+			faces.add(new Triangle(z, r, f));
+		}
+		return faces;
 	}
 
 	/**
-	 * Generates a diamond that serves as the initial form approximation of this Sphere.
+	 * Refines the faces of the Sphere to better approximate a round object.
+	 * 
+	 * @return The new list of Triangles representing the faces of the Sphere.
 	 */
-	private void genDiamond() {
-		Vertex u = new Vertex(0f, 0f,  1);
-		Vertex d = new Vertex(0f, 0f, -1f);
-		Vertex l = new Vertex(-1f, 0f, 0f);
-		Vertex r = new Vertex( 1f, 0f, 0f);
-		Vertex b = new Vertex(0f, -1f, 0f);
-		Vertex f = new Vertex(0f,  1f, 0f);
+	private ArrayList<Triangle> refine(ArrayList<Triangle> faces) {
+		ArrayList<Triangle> newTriangles = new ArrayList<>();
 
-		points.add(u);
-		points.add(d);
-		points.add(l);
-		points.add(r);
-		points.add(b);
-		points.add(f);
+		// Replace each Triangle face on the Sphere with 4 new Triangles that
+		// better represent the round nature of the Sphere.
+		for (Triangle face : faces) {
+			Vertex[] corners = face.getVertices();
+			Vertex[] midpoints = new Vertex[3];
 
-		triangles.add(new Triangle(u, f, l));
-		triangles.add(new Triangle(u, l, b));
-		triangles.add(new Triangle(u, b, r));
-		triangles.add(new Triangle(u, r, f));
-		triangles.add(new Triangle(d, l, f));
-		triangles.add(new Triangle(d, f, r));
-		triangles.add(new Triangle(d, r, b));
-		triangles.add(new Triangle(d, b, l));
-	}
-
-	/**
-	 * Refines the Sphere form approximation to approach a round object.
-	 */
-	private void genRefine() {
-		// Perform REFINE_STEPS iterations of the refinement process.
-		for (int a = 0 ; a < REFINE_STEPS ; a++) {
-			ArrayList<Triangle> newTriangles = new ArrayList<>();
-
-			// Replace each Triangle on the Sphere with 4 new Triangles
-			// that better approximate the round nature of the Sphere.
-			for (Triangle t : triangles) {
-				Vertex[] triPoints = t.getPoints();
-				Vertex[] midPoints = new Vertex[3];
-
-				Vertex midPoint;
-				GeoVector midVector;
-
-				// Find the midpoint coordinates of each line of the Triangle.
-				for (int i = 0 ; i < 3 ; ++i) {
-					midPoint = triPoints[i].average(triPoints[(i + 1) % 3]);
-
-					midVector = new GeoVector(midPoint);
-					midVector.normalize();
-
-					midPoint = new Vertex(midVector.getX(), midVector.getY(), midVector.getZ());
-					midPoints[i] = midPoint;
-					points.add(midPoint);
-				}
-
-				// Construct the new Triangles out of the original Triangle's midpoints.
-				newTriangles.add(new Triangle(midPoints[0], triPoints[0], midPoints[2]));
-				newTriangles.add(new Triangle(midPoints[1], triPoints[1], midPoints[0]));
-				newTriangles.add(new Triangle(midPoints[2], triPoints[2], midPoints[1]));
-				newTriangles.add(new Triangle(midPoints[2], midPoints[1], midPoints[0]));
+			// Find the normalized midpoint coordinates of each edge in the Triangle.
+			for (int i = 0; i < 3; ++i) {
+				midpoints[i] = new Vertex(corners[i], corners[(i + 1) % 3]);
+				midpoints[i].normalize();
 			}
 
-			triangles = newTriangles;
+			// Construct 4 new faces using the original Triangle's corners and midpoints.
+			newTriangles.add(new Triangle(midpoints[0], corners[0],   midpoints[2]));
+			newTriangles.add(new Triangle(midpoints[1], corners[1],   midpoints[0]));
+			newTriangles.add(new Triangle(midpoints[2], corners[2],   midpoints[1]));
+			newTriangles.add(new Triangle(midpoints[2], midpoints[1], midpoints[0]));
 		}
-	}
-
-	/**
-	 * Scales each Vertex of this Sphere to this Sphere's radius.
-	 */
-	private void genScale() {
-		for (Vertex p : points) {
-			p.setX(p.getX()*radius);
-			p.setY(p.getY()*radius);
-			p.setZ(p.getZ()*radius);
-		}
-	}
-
-	/**
-	 * Translates each Vertex of this Sphere such that the Sphere is centered about its origin.
-	 */
-	private void genTranslate() {
-		for (Vertex p : points) {
-			p.setX(p.getX() + origin.getX());
-			p.setY(p.getY() + origin.getY());
-			p.setZ(p.getZ() + origin.getZ());;
-		}
+		return newTriangles;
 	}
 }
