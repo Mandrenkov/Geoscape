@@ -8,10 +8,10 @@ import java.util.Set;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since February 18, 2018
+ * @version 1.1
  *
- * <p>Member declarations and definitions for the <b>Sphere</b> class.</p>
+ * <p>The <b>Sphere</b> class represents a sphere.</p>
  */
 public class Sphere extends Composite {
 
@@ -34,7 +34,7 @@ public class Sphere extends Composite {
 			faces = refine(faces);
 		}
 
-		// Derive the set of unique Vertices that.
+		// Derive the set of unique Vertices that constitute the face Triangles.
 		Set<Vertex> vertices = new HashSet<>();
 		for (Triangle face : faces) {
 			for (Vertex vertex : face.getVertices()) {
@@ -42,12 +42,13 @@ public class Sphere extends Composite {
 			}
 		}
 
-		// Scale and translate each Vertex according to the origin and radius
-		// of this Sphere.
+		// Scale and translate each Vertex to match the origin and radius of this Sphere.
 		for (Vertex vertex : vertices) {
 			vertex.scale(radius);
 			vertex.translate(origin.getX(), origin.getY(), origin.getZ());
 		}
+
+		setShapes(faces.stream().toArray(Shape[]::new));
 	}
 
 	/**
