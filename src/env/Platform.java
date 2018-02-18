@@ -1,9 +1,7 @@
 package env;
 
-import static org.lwjgl.opengl.GL11.*;
-
+import geo.Prism;
 import geo.Vertex;
-import util.*;
 
 /**
  * @author Mikhail Andrenkov
@@ -13,63 +11,90 @@ import util.*;
  * <p>The <b>Platform</b> class represents the platform beneath the landscape.</p>
  */
 public class Platform implements Drawable {
+
+	// Public members
+	// -------------------------------------------------------------------------
+
 	/**
 	 * Vertices of the rectangular prism that bounds the platform.
 	 */
 	Vertex[][][] pointPrism;
 
 	/**
-	 * Constructs a Platform object with the given geometric constraints.
+	 * Constructs a Platform with the given geometric constraints.
 	 *
-	 * @param MIN_X Minimum X constraint
-	 * @param MAX_X Maximum X constraint
-	 * @param MIN_Y Minimum Y constraint
-	 * @param MAX_Y Maximum Y constraint
-	 * @param MIN_Z Minimum Z constraint
-	 * @param MAX_Z Maximum Z constraint
+	 * @param minX The minimum X constraint.
+	 * @param maxX The maximum X constraint.
+	 * @param minY The minimum Y constraint.
+	 * @param maxY The maximum Y constraint.
+	 * @param minZ The minimum Z constraint.
+	 * @param maxZ The maximum Z constraint.
 	 */
-	public Platform(final float MIN_X, final float MAX_X, final float MIN_Y, final float MAX_Y, final float MIN_Z, final float MAX_Z) {
-		// Points denoting the vertices of the platform cube
-		pointPrism = new Vertex[2][2][2];
+	public Platform(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
+		this.minX = minX;
+		this.minY = minY;
+		this.minZ = minZ;
+		this.maxX = maxX;
+		this.maxY = maxY;
+		this.maxZ = maxZ;
 
-		// Generate cube vertices
-		for (int iZ = 0 ; iZ < 2 ; iZ++) {
-			float z = iZ == 0 ? MIN_Z : MAX_Z;
-
-			for (int iY = 0 ; iY < 2 ; iY++) {
-				float y = iY == 0 ? MIN_Y : MAX_Y;
-
-				for (int iX = 0 ; iX < 2 ; iX++) {
-					float x = iX == 0 ? MIN_X : MAX_X;
-
-					pointPrism[iZ][iY][iX] = new Vertex(x, y, z);
-				}
-			}
-		}
+		Vertex low = new Vertex(minX, minY, minZ);
+		Vertex high = new Vertex(maxX, maxY, maxZ);
+		Colour clr = new Colour(0.1f, 0.1f, 0.1f, 1.0f);
+		this.prism = new Prism(clr, low, high);
 	}
 
 	/**
-	 * Draws this Platform to the screen.
+	 * Draws this Platform.
 	 */
 	public void draw() {
-		// Front and back faces should be rendered
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		// Set platform colour
-		Colour.setColour(Colour.PLATFORM);
-
-		// Render platform
-		glBegin(GL_QUADS);
-			// X Constant
-			Render.addVertex(pointPrism[0][0][0]); Render.addVertex(pointPrism[0][1][0]); Render.addVertex(pointPrism[1][1][0]); Render.addVertex(pointPrism[1][0][0]);
-			Render.addVertex(pointPrism[0][0][1]); Render.addVertex(pointPrism[1][0][1]); Render.addVertex(pointPrism[1][1][1]); Render.addVertex(pointPrism[0][1][1]);
-
-			// Y Constant
-			Render.addVertex(pointPrism[0][0][0]); Render.addVertex(pointPrism[1][0][0]); Render.addVertex(pointPrism[1][0][1]); Render.addVertex(pointPrism[0][0][1]);
-			Render.addVertex(pointPrism[0][1][0]); Render.addVertex(pointPrism[0][1][1]); Render.addVertex(pointPrism[1][1][1]); Render.addVertex(pointPrism[1][1][0]);
-
-			// Z Constant
-			Render.addVertex(pointPrism[0][0][0]); Render.addVertex(pointPrism[0][1][0]); Render.addVertex(pointPrism[0][1][1]); Render.addVertex(pointPrism[0][0][1]);
-		glEnd();
+		prism.draw();
 	}
+
+	/**
+	 * Returns the String representation of this Platform.
+	 * 
+	 * @return The String representation.
+	 */
+	public String toString() {
+		return String.format("(%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f)", this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
+	}
+
+	// Private members
+	// -------------------------------------------------------------------------
+
+	/**
+	 * The minimum X-coordinate of this Platform.
+	 */
+	private float minX;
+
+	/**
+	 * The minimum Y-coordinate of this Platform.
+	 */
+	private float minY;
+
+	/**
+	 * The minimum Z-coordinate of this Platform.
+	 */
+	private float minZ;
+
+	/**
+	 * The minimum X-coordinate of this Platform.
+	 */
+	private float maxX;
+
+	/**
+	 * The minimum Y-coordinate of this Platform.
+	 */
+	private float maxY;
+
+	/**
+	 * The minimum Z-coordinate of this Platform.
+	 */
+	private float maxZ;
+
+	/**
+	 * The Prism representing the Platform.
+	 */
+	private Prism prism;
 }
