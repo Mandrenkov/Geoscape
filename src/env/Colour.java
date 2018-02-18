@@ -1,20 +1,22 @@
 package env;
 
-import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.util.StringJoiner;
-
+import java.util.Arrays;
+import java.util.function.Function;
 import core.Logger;
-import geo.TerrainPoint;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since February 18, 2018
+ * @version 1.1
  *
- * <p>The <i>Colour</i> class is responsible for storing and manipulating application colours.</p>
+ * <p>The <i>Colour</i> class represents an RGBA colour.</p>
  */
 public class Colour {
+
+	// Public members
+	// -------------------------------------------------------------------------
 
 	/**
 	 * Colour of the backdrop.
@@ -47,60 +49,147 @@ public class Colour {
 	public static final float[] TERRAIN_TUNDRA = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
 
 	/**
-	 * Returns the average colour represented by the given TerrainPoints.
+	 * Returns the average Colour represented by the given Colours.
 	 * 
-	 * @param points The TerrainPoints whose colours are to be averaged.
-	 * @return The average TerrainPoint colour.
+	 * @param clrs The Colours to average.
+	 * 
+	 * @return The average Colour.
 	 */
-	public static float[] averageColour(TerrainPoint ... points) {
-		float[] avgColour = new float[4];
-
-		for (TerrainPoint point : points) {
-			for (int c = 0 ; c < 4 ; c++) {
-				avgColour[c] += point.getColour()[c]/points.length;
-			}
+	public static Colour average(Colour... clrs) {
+		if (clrs.length == 0) {
+			Logger.error("Cannot determine average of 0 colours.");
+			return new Colour();
 		}
-		return avgColour;
+
+		// Returns the average value of the given Colour component accessor function.
+		Function<Function<Colour, Float>, Float> average = (Function<Colour, Float> supplier) -> {
+			return (float) Arrays.stream(clrs).mapToDouble(clr -> supplier.apply(clr)).sum()/clrs.length;
+		};
+
+		return new Colour(average.apply(Colour::getRed),
+						  average.apply(Colour::getGreen),
+						  average.apply(Colour::getBlue),
+						  average.apply(Colour::getAlpha));
 	}
 
 	/**
-	 * Returns a String representation of the given colour.
-	 * 
-	 * @param colour The colour to be represented as a String.
-	 * @return The String representation of the colour.
+	 * Constructs an opaque black Colour object.
 	 */
-	public static String colourString(float[] colour) {
-		StringJoiner joiner = new StringJoiner(", ", "[", "]");
-		for (float c : colour)
-			joiner.add(String.format("%.2f", c));
-		return joiner.toString();
+	public Colour() {
+		this(0f, 0f, 0f, 1f);
 	}
 
 	/**
-	 * Sets the GL colour to the given colour.
+	 * Constructs an opaque Colour object with the given RGB components.
 	 * 
-	 * @param colour The new GL colour.
+	 * @param red   The red RGBA component.
+	 * @param green The green RGBA component.
+	 * @param blue  The blue RGBA component.
 	 */
-	public static void setColour(float[] colour) {
-		if (colour.length == 3 || colour.length == 4) {
-			glColor3f(colour[0], colour[1], colour[2]);
-		} else {
-			Logger.error("Error: Called setColour() with an array of length " + colour.length + ".");
-		}
+	public Colour(float red, float green, float blue) {
+		this(red, green, blue, 1f);
 	}
 
 	/**
-	 * Returns the given colour scaled by the specified factor.
+	 * Constructs a Colour object with the given RGBA components.
 	 * 
-	 * @param scalar The multiplicative amount to scale the colour.
-	 * @param colour The colour to be scaled.
-	 * @return The scaled colour.
+	 * @param red   The red RGBA component.
+	 * @param green The green RGBA component.
+	 * @param blue  The blue RGBA component.
+	 * @param alpha The alpha RGBA component.
 	 */
-	public static float[] scaleColour(float scalar, float[] colour) {
-		float[] scaledColour = new float[colour.length];
-
-		for (int c = 0 ; c < colour.length ; c++)
-			scaledColour[c] = scalar*colour[c];
-		return scaledColour;
+	public Colour(float red, float green, float blue, float alpha) {
+		this.red   = red;
+		this.green = green;
+		this.blue  = blue;
+		this.alpha = alpha;
 	}
+
+	/**
+	 * Returns the red component of this Colour.
+	 * 
+	 * @return The red component.
+	 */
+	public float getRed() {
+		return red;
+	}
+
+	/**
+	 * Returns the green component of this Colour.
+	 * 
+	 * @return The green component.
+	 */
+	public float getGreen() {
+		return green;
+	}
+
+	/**
+	 * Returns the blue component of this Colour.
+	 * 
+	 * @return The blue component.
+	 */
+	public float getBlue() {
+		return blue;
+	}
+
+	/**
+	 * Returns the alpha component of this Colour.
+	 * 
+	 * @return The alpha component.
+	 */
+	public float getAlpha() {
+		return alpha;
+	}
+
+	/**
+	 * Sets the GL colour to this Colour.
+	 */
+	public void glColor() {
+		byte r = (byte) (getRed() - 128);
+		byte g = (byte) (getGreen() - 128);
+		byte b = (byte) (getBlue() - 128);
+		glColor3b(r, g, b);
+	}
+
+	/**
+	 * Scales the RGB components of this Colour by the given scaling factor.
+	 */
+	public void scale(float scale) {
+		red   *= scale;
+		green *= scale;
+		blue  *= scale;
+	}
+
+	/**
+	 * Returns a String representation of this Colour.
+	 * 
+	 * @return The String representation.
+	 */
+	public String toString() {
+		return String.format("(%d, %d, %d, %d)", getRed(), getGreen(), getBlue(), getAlpha());
+	}
+
+
+	// Private members
+	// -------------------------------------------------------------------------
+
+	/**
+	 * The red RGBA component of this Colour.
+	 */
+	private float red;
+
+	/**
+	 * The green RGBA component of this Colour.
+	 */
+	private float green;
+
+	/**
+	 * The blue RGBA component of this Colour.
+	 */
+	private float blue;
+
+	/**
+	 * The alpha RGBA component of this Colour.
+	 */
+	private float alpha;
 }
