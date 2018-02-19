@@ -5,20 +5,14 @@ import geo.Vertex;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since February 18, 2018
+ * @version 1.1
  *
  * <p>The <b>Platform</b> class represents the platform beneath the landscape.</p>
  */
 public class Platform implements Drawable {
-
 	// Public members
 	// -------------------------------------------------------------------------
-
-	/**
-	 * Vertices of the rectangular prism that bounds the platform.
-	 */
-	Vertex[][][] pointPrism;
 
 	/**
 	 * Constructs a Platform with the given geometric constraints.
@@ -59,6 +53,7 @@ public class Platform implements Drawable {
 	public String toString() {
 		return String.format("(%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f)", this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
 	}
+
 
 	// Private members
 	// -------------------------------------------------------------------------
