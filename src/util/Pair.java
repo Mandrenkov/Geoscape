@@ -5,9 +5,9 @@ package util;
  * @since February 25, 2018
  * @version 1.1
  *
- * <p>The <b>Pair</b> class represents a pair of values of types T1 and T2.</p>
+ * <p>The <b>Pair</b> class represents a pair of values of types F and S.</p>
  */
-public class Pair <T1, T2> {
+public class Pair <F, S> {
 
     // Public members
 	// -------------------------------------------------------------------------
@@ -15,7 +15,7 @@ public class Pair <T1, T2> {
     /**
 	 * Constructs a Pointer object and initializes the buffer.
 	 */
-	public Pair(T1 first, T2 second) {
+	public Pair(F first, S second) {
         this.first = first;
         this.second = second;
     }
@@ -25,7 +25,7 @@ public class Pair <T1, T2> {
      * 
      * @return The first value.
      */
-    public T1 getFirst() {
+    public F getFirst() {
         return first;
     }
 
@@ -34,7 +34,7 @@ public class Pair <T1, T2> {
      * 
      * @return The second value.
      */
-    public T2 getSecond() {
+    public S getSecond() {
         return second;
     }
 
@@ -43,7 +43,7 @@ public class Pair <T1, T2> {
      * 
      * @param first The new value of |first|.
      */
-    public void setFirst(T1 first) {
+    public void setFirst(F first) {
         this.first = first;
     }
 
@@ -52,7 +52,7 @@ public class Pair <T1, T2> {
      * 
      * @param second The new value of |second|.
      */
-    public void setSecond(T2 second) {
+    public void setSecond(S second) {
         this.second = second;
     }
 
@@ -71,10 +71,10 @@ public class Pair <T1, T2> {
     /**
      * The first value of the Pair.
      */
-    private T1 first;
+    private F first;
 
     /**
      * The second value of the Pair.
      */
-    private T2 second;
+    private S second;
 }
