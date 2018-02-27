@@ -1,15 +1,34 @@
 package geo;
 
+import java.util.Arrays;
+
 /**
  * @author Mikhail Andrenkov
  * @since February 15, 2018
  * @version 1.1
  *
- * <pThe <b>Vertex</b> class represents a point in R3.</p>
+ * <pThe <b>Vertex</b> class represents a geometric point in R3 Cartesian space.</p>
  */
 public class Vertex {
+
 	// Public members
 	// -------------------------------------------------------------------------
+
+	/**
+	 * The Vertex located at the origin.
+	 */
+	public static final Vertex ORIGIN = new Vertex(0, 0, 0);
+
+	/**
+	 * Returns the average Z-coordinate of the given Vertices.
+	 * 
+	 * @param vertices The Vertices to be averaged.
+	 * 
+	 * @return The average elevation of the Vertices.
+	 */
+	public static float averageZ(Vertex... vertices) {
+		return (float) Arrays.stream(vertices).mapToDouble(vertex -> vertex.getZ()).sum()/vertices.length;
+	}
 
 	/**
 	 * Constructs a Vertex representing the given 3D coordinate.
@@ -57,6 +76,15 @@ public class Vertex {
 		return (float) Math.sqrt(Math.pow(this.x - vertex.x, 2)
 							   + Math.pow(this.y - vertex.y, 2)
 							   + Math.pow(this.z - vertex.z, 2));
+	}
+
+	/**
+	 * Returns the distance from this Vertex to the origin.
+	 * 
+	 * @return The distance to the origin.
+	 */
+	public float magnitude() {
+		return distance(ORIGIN);
 	}
 
 	/**
@@ -115,6 +143,16 @@ public class Vertex {
 
 	/**
 	 * Scales the coordinates of this Vertex by the given scaling factor.
+	 */
+	public void normalize() {
+		float magnitude = magnitude();
+		this.x /= magnitude;
+		this.y /= magnitude;
+		this.z /= magnitude;
+	}
+
+	/**
+	 * Scales the coordinates of this Vertex by the given scaling factor.
 	 * 
 	 * @param scalar The scaling factor.
 	 */
@@ -143,7 +181,7 @@ public class Vertex {
 	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("Vertex: (%.2f, %.2f, %.2f)", x, y, z);
+		return String.format("(%.2f, %.2f, %.2f)", x, y, z);
 	}
 
 

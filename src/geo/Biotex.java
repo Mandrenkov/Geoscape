@@ -10,20 +10,20 @@ import env.Colour;
  *
  * <p>The <b>Biotex</b> class represents a Biome Vertex.</p>
  */
-public class Biotex {
+public class Biotex extends Vertex {
 
 	// Public members
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Constructs a TerrainPoint object at the given 3D coordinate.
+	 * Constructs a Biotex representing the given 3D coordinate.
 	 * 
-	 * @param x X-coordinate of this TerrainPoint.
-	 * @param y Y-coordinate of this TerrainPoint.
-	 * @param z Z-coordinate of this TerrainPoint.
+	 * @param x The X-coordinate of this Biotex.
+	 * @param y The Y-coordinate of this Biotex.
+	 * @param z The Z-coordinate of this Biotex.
 	 */
 	public Biotex(float x, float y, float z) {
-		this.vertex = new Vertex(x, y, z);
+		super(x, y, z);
 		this.biomix = new Biomix();
 	}
 
@@ -46,7 +46,7 @@ public class Biotex {
 	}
 
 	/**
-	 * Sets the Colour of this Biotex to the given Option.
+	 * Sets the Colour of this Biotex to the given Colour.
 	 * 
 	 * @param colour The new Colour of this Biotex.
 	 */
@@ -54,14 +54,18 @@ public class Biotex {
 		this.colour = colour;
 	}
 
+	/**
+	 * Returns a String representation of this Biotex.
+	 * 
+	 * @return The String representation.
+	 */
+	public String toString() {
+		return String.format("%s with Colour %s", super.toString(), colour);
+	}
+
 
 	// Private members
 	// -------------------------------------------------------------------------
-
-	/**
-	 * The Vertex representing the location of this Biotex.
-	 */
-	private Vertex vertex;
 
 	/**
 	 * The Biome influences on this Biotex.
@@ -72,11 +76,4 @@ public class Biotex {
 	 * The colour of this Biotex.
 	 */
 	private Colour colour;
-
-	/**
-	 * Returns a String representation of this TerrainPoint.
-	 */
-	public String toString() {
-		return String.format("%s with Colour %s", vertex, colour);
-	}
 }
