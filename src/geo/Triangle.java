@@ -2,6 +2,8 @@ package geo;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import env.Colour;
+
 /**
  * @author Mikhail Andrenkov
  * @since February 17, 2018
@@ -20,7 +22,17 @@ public class Triangle extends Shape {
 	 * @param vertices The vertices comprising this Triangle.
 	 */
 	public Triangle(Vertex... vertices) {
-		super(vertices);
+		this(new Colour(), vertices);
+	}
+	
+	/**
+	 * Constructs a Triangle object with the given Vertices and Colour.
+	 * 
+	 * @param colour   The colour of this Triangle.
+	 * @param vertices The vertices comprising this Triangle.
+	 */
+	public Triangle(Colour colour, Vertex... vertices) {
+		super(colour, vertices);
 		if (vertices.length != 3) {
 			throw new IllegalArgumentException("Triangles must have 3 vertices.");
 		}
@@ -40,13 +52,22 @@ public class Triangle extends Shape {
 	}
 
 	/**
+	 * Returns the Vertex located in the middle of this Triangle.
+	 * 
+	 * @return The middle Vertex.
+	 */
+	public Vertex getMiddle() {
+		return Vertex.average(vertices);
+	}
+
+	/**
 	 * Returns a normalized GeoVector that is perpendicular to the face of this Triangle.
 	 * 
 	 * @return The normalized GeoVector.
 	 */
-	public GeoVector getNormal() {
-		GeoVector vectorA = new GeoVector(vertices[0]).to(new GeoVector(vertices[1]));
-		GeoVector vectorB = new GeoVector(vertices[0]).to(new GeoVector(vertices[2]));
-		return vectorA.cross(vectorB);
+	public Vector getNormal() {
+		Vector v1 = new Vector(vertices[0]).to(new Vector(vertices[1]));
+		Vector v2 = new Vector(vertices[0]).to(new Vector(vertices[2]));
+		return new Vector(v1, v2);
 	}
 }
