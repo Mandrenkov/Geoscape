@@ -19,13 +19,17 @@ public class Colour {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * The set of options that constrain the generation of random Colours.
+	 */
+	public static enum Option {
+		LIGHT,
+		DEFAULT
+	};
+
+	/**
 	 * Colour of the backdrop.
 	 */
 	public static final float[] BACKDROP = new float[] {0.05f, 0.05f, 0.05f, 1.0f};
-	/**
-	 * Colour of the platform.
-	 */
-	public static final float[] PLATFORM = new float[] {0.1f, 0.1f, 0.1f, 1.0f};
 
 	/**
 	 * Base colour of the "Desert" Biome.
@@ -70,6 +74,23 @@ public class Colour {
 						  average.apply(Colour::getGreen),
 						  average.apply(Colour::getBlue),
 						  average.apply(Colour::getAlpha));
+	}
+
+	/**
+	 * Returns a random opaque Colour using the given colour option.
+	 * 
+	 * @param option The colour generation option.
+	 * 
+	 * @return The random Colour.
+	 */
+	public static Colour random(Option option) {
+		switch (option) {
+			case LIGHT:
+				float clr = (float) Math.random()*0.2f + 0.8f;
+				return new Colour(clr, clr, clr);
+			default:
+				return new Colour((float) Math.random(), (float) Math.random(), (float) Math.random());
+		}
 	}
 
 	/**
@@ -152,12 +173,14 @@ public class Colour {
 	}
 
 	/**
-	 * Scales the RGB components of this Colour by the given scaling factor.
+	 * Multiplies the RGB components of this Colour by the given scalar.
+	 * 
+	 * @param scale The scalar to multiply.
 	 */
-	public void scale(float scale) {
-		red   *= scale;
-		green *= scale;
-		blue  *= scale;
+	public void scale(float scalar) {
+		red   = Math.min(1f, Math.max(0f, scalar*red));
+		green = Math.min(1f, Math.max(0f, scalar*green));
+		blue  = Math.min(1f, Math.max(0f, scalar*blue));
 	}
 
 	/**
@@ -166,7 +189,7 @@ public class Colour {
 	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("(%d, %d, %d, %d)", getRed(), getGreen(), getBlue(), getAlpha());
+		return String.format("(%.2f, %.2f, %.2f, %.2f)", getRed(), getGreen(), getBlue(), getAlpha());
 	}
 
 
