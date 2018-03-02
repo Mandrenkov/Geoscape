@@ -1,16 +1,13 @@
 package geo;
 
-import env.Colour;
 import env.Drawable;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 15, 2018
+ * @since February 17, 2018
  * @version 1.1
  *
- * <pThe <b>Shape</b> class represents a geometric shape.</p>
+ * <pThe <b>Shape</b> class represents a collection of Polygons.</p>
  */
 public abstract class Shape implements Drawable {
 
@@ -20,7 +17,7 @@ public abstract class Shape implements Drawable {
     /**
 	 * Draws this Shape.
 	 */
-	public abstract void draw();
+    public abstract void draw();
 
     /**
 	 * Returns a String representation of this Shape.
@@ -28,40 +25,21 @@ public abstract class Shape implements Drawable {
      * @return A String representing this Shape.
 	 */
 	public String toString() {
-        ArrayList<Vertex> vertices = new ArrayList<>(Arrays.asList(this.vertices));
-		return String.format("%s: %s", this.getClass().getName(), vertices.toString());
+		return String.format("%s: %s", this.getClass().getName(), polygons.toString());
 	}
 
     // Protected members
     // -------------------------------------------------------------------------
 
     /**
-     * List of Vertices comprising this Shape.
+     * List of Shapes comprising this Shape.
      */
-    protected Vertex[] vertices;
+    protected Polygon[] polygons;
 
     /**
-     * The colour of this Shape.
-     */
-    protected Colour colour;
-
-    /**
-	 * Constructs a Shape object with the given vertices.
-     * 
-     * @param vertices The vertices comprising this Shape.
+	 * Constructs an empty Shape object.
 	 */
-	protected Shape(Vertex... vertices) {
-        this.vertices = vertices;
-    }
-
-    /**
-	 * Constructs a Shape object with the given vertices and colour.
-     * 
-     * @param colour   The colour of this Shape.
-     * @param vertices The vertices comprising this Shape.
-	 */
-	protected Shape(Colour colour, Vertex... vertices) {
-        this(vertices);
-        this.colour = colour;
+	protected Shape() {
+        this.polygons = new Polygon[]{};
     }
 }
