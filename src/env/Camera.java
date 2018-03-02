@@ -20,9 +20,9 @@ public class Camera {
 	 * Axis represents an axis in Cartesian space.
 	 */
 	public enum Axis {
-		X,
-		Y,
-		Z
+		X,  // X-axis
+		Y,  // Y-axis
+		Z   // Z-axis
 	};
 
 	/**
