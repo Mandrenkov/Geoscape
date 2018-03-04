@@ -1,22 +1,14 @@
 package env;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_FILL;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
 import geo.Vertex;
-import geo.TerrainPoint;
-import geo.TerrainTriangle;
+import geo.Biotex;
+import geo.Biogle;
 import util.BiomeMap;
 import util.Noise;
-import util.Render;
 
 /**
  * @author Mikhail Andrenkov
@@ -27,85 +19,61 @@ import util.Render;
  */
 public class Grid implements Drawable {
 
-	/**
-	 * Number of rows in this Grid.
-	 */
-	private final int ROWS;
-	/**
-	 * Number of columns in this Grid.
-	 */
-	private final int COLS;
-	/**
-	 * Number of Perlin rows in this Grid.
-	 */
-	private final int PERLIN_ROWS;
-	/**
-	 * Number of Perlin columns in this Grid.
-	 */
-	private final int PERLIN_COLS;
-	/**
-	 * Boundary coordinates of this Grid: [minimum X, minimum Y, maximum X, maximum Y] 
-	 */
-	private final float[] BOUNDS = new float[4];
+	// Public members
+	// -------------------------------------------------------------------------
 
 	/**
-	 * BiomeMap that represents the mapping of coordinates in this Grid to primary Biomes.
-	 */
-	private BiomeMap biomeMap;
-	/**
-	 * 2D-Array of TerrainPoints that constitute this Grid.
-	 */
-	private TerrainPoint[][]  points;
-	/**
-	 * Array of TerrainTriangles that constitute this Grid.
-	 */
-	private ArrayList<TerrainTriangle> terrainTriangles;
-
-	/**
-	 * Constructs a Grid object with the given row and column counts, in addition to the coordinate bounds.
+	 * Constructs a Grid with the given name, number of rows, columns, and coordinate bounds.
 	 * 
-	 * @param rows Number of rows in this Grid.
-	 * @param cols Number of columns in this Grid.
-	 * @param perlinRows Number of Perlin rows in this Grid.
-	 * @param perlinCols Number of Perlin columns in this Grid.
-	 * @param minX Minimum X-coordinate in this Grid.
-	 * @param minY Minimum Y-coordinate in this Grid.
-	 * @param maxX Maximum X-coordinate in this Grid. 
-	 * @param maxY Maximum Y-coordinate in this Grid.
+	 * @param name    The name of this Grid.
+	 * @param rows    The number of rows in this Grid.
+	 * @param columns The number of columns in this Grid.
+	 * @param minX    The minimum X-coordinate of this Grid.
+	 * @param minY    The minimum Y-coordinate of this Grid.
+	 * @param maxX    The maximum X-coordinate of this Grid. 
+	 * @param maxY    The maximum Y-coordinate of this Grid.
 	 */
-	public Grid(int rows, int cols, int perlinRows, int perlinCols, float minX, float minY, float maxX, float maxY) {
-		this.ROWS = rows; //(int) (World.ROWS*(maxY - minY)/World.RANGE_X);
-		this.COLS = cols; //(int) (World.COLS*(maxX - minX)/World.RANGE_Y);
+	public Grid(String name, int rows, int columns, float minX, float minY, float maxX, float maxY) {
+		this.name = name;
+		this.rows = rows;
+		this.columns = columns;
+		this.minX = minX;
+		this.minY = minY;
+		this.maxX = maxX;
+		this.maxY = maxY;
 
-		this.PERLIN_ROWS = perlinRows;
-		this.PERLIN_COLS = perlinCols;
+		this.biotices = new Biotex[this.rows][this.columns];
+		this.biogles = new ArrayList<>();
 
-		BOUNDS[0] = minX;
-		BOUNDS[1] = minY;
-		BOUNDS[2] = maxX;
-		BOUNDS[3] = maxY;
+		// Initialize the Biotices in this Grid.
+		for (int row = 0 ; row < this.rows; ++row) {
+			for (int col = 0 ; col < this.columns ; ++col) {
+				float x = this.minX + row*(this.maxX - this.minX)/(this.columns - 1);
+				float y = this.minY + col*(this.maxY - this.minY)/(this.rows - 1);
+				float z = DEFAULT_Z;
+				this.biotices[row][col] = new Biotex(x, y, z);
+			}
+		}
 
-		biomeMap = new BiomeMap(ROWS, COLS);
-		points = new TerrainPoint[ROWS][COLS];
-		terrainTriangles = new ArrayList<>();
-	}
+		// Initialize the Biogles in this Grid.
+		for (int row = 0; row < this.rows - 1; ++row) {
+			for (int p = 0; p < 2*this.columns - 2; ++p) {
+				int col = p/2;
+				boolean forward = p % 2 == 0;
 
-	/**
-	 * Adds the given TerrainTriangle to this Grid.
-	 * 
-	 * @param The TerrainTriangle to add to this Grid.
-	 */
-	public void addTriangle(TerrainTriangle t) {
-		terrainTriangles.add(t);
+				Biotex[] biogle = new Biotex[3];
+				biogle[0] = forward ? this.biotices[row][col]     : this.biotices[row + 1][col + 1];
+				biogle[1] = forward ? this.biotices[row + 1][col] : this.biotices[row][col + 1];
+				biogle[2] = forward ? this.biotices[row][col + 1] : this.biotices[row + 1][col];
+				this.biogles.add(new Biogle(biogle));
+			}
+		}
 	}
 
 	/**
 	 * Initializes the Points and Triangles that constitute this Grid.
 	 */
 	public void buildPoints() {
-		this.initPoints();
-		this.initTriangles();
-
 		Noise.generateNoise(this);
 	}
 
@@ -113,167 +81,113 @@ public class Grid implements Drawable {
 	 * Draws this Grid.
 	 */
 	public void draw() {
-		// Polygon setup
 		glPolygonMode(GL_FRONT, GL_FILL);
 		glCullFace(GL_BACK);
 
-		// Render triangles
-		glBegin(GL_TRIANGLES);
-			terrainTriangles.forEach(t -> Render.drawTriangle(t, t.getColour()));
-		glEnd();
-	}
-
-	/**
-	 * Returns the BiomeMap associated with this Grid.
-	 * 
-	 * @return This Grid's new BiomeMap.
-	 */
-	public BiomeMap getBiomeMap() {
-		return biomeMap;
-	}
-
-	/**
-	 * Returns the boundaries of this Grid.
-	 * 
-	 * @return The boundaries of this Grid.
-	 */
-	public float[] getBounds() {
-		return BOUNDS;
+		for (Biogle biogle : this.biogles) {
+			biogle.draw();
+		}
 	}
 
 	/**
 	 * Returns the number of columns in this Grid.
 	 * 
-	 * @return The number of columns in this Grid.
+	 * @return The number of columns.
 	 */
-	public int getCols() {
-		return COLS;
-	}
-
-	/**
-	 * Returns the number of Perlin columns in this Grid.
-	 * 
-	 * @return The number of Perlin columns in this Grid.
-	 */
-	public int getPerlinCols() {
-		return PERLIN_COLS;
-	}
-
-	/**
-	 * Returns the number of Perlin rows in this Grid.
-	 * 
-	 * @return The number of Perlin rows in this Grid.
-	 */
-	public int getPerlinRows() {
-		return PERLIN_ROWS;
-	}
-
-	/**
-	 * Returns the TerrainPoint in this Grid located at the given coordinate.
-	 * 
-	 * @param row The X-component of the coordinate.
-	 * @param col The Y-component of the coordinate.
-	 * @return The TerrainPoint in this Grid.
-	 */
-	public TerrainPoint getPoint(int row, int col) {
-		return points[row][col];
-	}
-
-	/**
-	 * Returns the Points in this Grid.
-	 * 
-	 * @return The Points in this Grid.
-	 */
-	public Vertex[][] getPoints() {
-		return points;
+	public int getColumns() {
+		return this.columns;
 	}
 
 	/**
 	 * Returns the number of rows in this Grid.
 	 * 
-	 * @return The number of rows in this Grid.
+	 * @return The number of rows.
 	 */
 	public int getRows() {
-		return ROWS;
+		return this.rows;
 	}
 
 	/**
-	 * Returns the TerrainTriangles in this Grid.
+	 * Returns the Biotex in this Grid located at the given position.
 	 * 
-	 * @return The TerrainTriangles in this Grid.
+	 * @param row The row of this Grid containing the desired Biotex.
+	 * @param col The column of this Grid containing the desired Biotex.
+	 * 
+	 * @return The Biotex located at the given position.
 	 */
-	public ArrayList<TerrainTriangle> getTriangles() {
-		return terrainTriangles;
+	public Biotex getBiotex(int row, int col) {
+		return this.biotices[row][col];
 	}
 
 	/**
-	 * Determines whether the given row and column fit within the bounds of this Grid.
+	 * Returns the Biogles comprising this Grid.
 	 * 
-	 * @param row The row to be tested.
-	 * @param col The column to be tested.
-	 * @return True if the row and column reside in the Grid, otherwise false.
+	 * @return The Biogles.
 	 */
-	public boolean inBounds(int row, int col) {
-		return 0 <= row && row < ROWS && 0 <= col && col < COLS;
-	}
-
-	/**
-	 * Sets the Point located at the given location to the given Point.
-	 * 
-	 * @param point The new Point at the specified location.
-	 * @param row The row component of the location.
-	 * @param col The column component of the location.
-	 */
-	public void setPoint(TerrainPoint point, int row, int col) {
-		points[row][col] = point;
+	public ArrayList<Biogle> getBiogles() {
+		return this.biogles;
 	}
 
 	/**
 	 * Returns a String representation of this Grid.
+	 * 
+	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("Grid from (%.2f, %.2f) to (%.2f, %.2f)", BOUNDS[0], BOUNDS[1], BOUNDS[2], BOUNDS[3]);
+		return String.format("%s [(%.2f, %.2f) to (%.2f, %.2f)]", this.name, this.minX, this.minY, this.maxX, this.maxY);
 	}
 
-	/***** Private Methods *****/
+
+	// Private members
+	// -------------------------------------------------------------------------
 
 	/**
-	 * Creates the Points in this Grid.
+	 * The default elevation of the Biotices in a Grid.
 	 */
-	private void initPoints() {
-		for (int row = 0 ; row < ROWS; row++) {
-			for (int col = 0 ; col < COLS ; col++) {
-				float x = BOUNDS[0] + col*(BOUNDS[2] - BOUNDS[0])/(COLS - 1);
-				float y = BOUNDS[1] + row*(BOUNDS[3] - BOUNDS[1])/(ROWS - 1);
-				float z = 0.1f;
-
-				Biome biome = biomeMap.getBiome(row, col);
-
-				this.setPoint(new TerrainPoint(biome, x, y, z), row, col);
-			}
-		}
-	}
+	private static final float DEFAULT_Z = 0.1f;
 
 	/**
-	 * Creates the Triangles in this Grid.
+	 * The name of this Grid.
 	 */
-	private void initTriangles() {
-		TerrainPoint[] points = new TerrainPoint[COLS*2];
+	private String name;
 
-		for (int row = 0 ; row < ROWS - 1 ; row ++) {
-			int pointIndex = 0;
+	/**
+	 * The number of rows in this Grid.
+	 */
+	private int rows;
 
-			for (int col = 0 ; col < COLS ; col++) {
-				points[pointIndex++] = this.getPoint(row    , col);
-				points[pointIndex++] = this.getPoint(row + 1, col);
-			}
+	/**
+	 * The number of columns in this Grid.
+	 */
+	private int columns;
 
-			boolean flip = false;
+	/**
+	 * The minimum X-coordinate of this Grid. 
+	 */
+	private float minX;
 
-			for (int p = 0 ; p < pointIndex - 2 ; p ++) {
-				if (flip = !flip) this.addTriangle(new TerrainTriangle(points[p    ], points[p + 1], points[p + 2]));
-				else              this.addTriangle(new TerrainTriangle(points[p + 2], points[p + 1], points[p    ]));
-			}
-		}
-	}
+	/**
+	 * The minimum Y-coordinate of this Grid. 
+	 */
+	private float minY;
+
+	/**
+	 * The maximum X-coordinate of this Grid. 
+	 */
+	private float maxX;
+
+	/**
+	 * The maximum Y-coordinate of this Grid. 
+	 */
+	private float maxY;
+
+	/**
+	 * The matrix of Biotices that comprise the Biogles of this Grid.
+	 */
+	private Biotex[][] biotices;
+
+	/**
+	 * The Biogles that comprise this Grid.
+	 */
+	private ArrayList<Biogle> biogles;
 }
