@@ -1,137 +1,146 @@
 package env;
 
 import core.Logger;
-import geo.TerrainPoint;
 import env.Colour;
+import geo.Biotex;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since March 4, 2018
+ * @version 1.1
  *
- * <p>The <b>Biome</b> class represents a landscape region with points that share common characteristics.</p>
+ * <p>The <b>Biome</b> class represents a natural biome.  In the context of this
+ * application, a Biome is a set of common characteristics shared by a group of
+ * Biotices.</p>
  */
 public class Biome {
-	/**
-	 * The "Desert" Biome.
-	 */
-	public static final Biome DESERT = new Biome("Desert", Colour.TERRAIN_DESERT, 0.05f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			float z = point.getZ();
 
-			float refFreq = 10f;		// Frequency of lines waves
-			float refGain = 0.05f;		// Amplitude of line waves
-			float scaleFreq = 300f;		// Density of line waves
-			float scaleGain = 0.001f;	// Height of line waves
+	// Public members
+	// -------------------------------------------------------------------------
 
-			float deltaZ = (float) (scaleGain*Math.cos(scaleFreq*Math.abs(point.getX() - refGain*Math.cos(point.getY()*refFreq))));
-			deltaZ *= dominance;
+	/**
+	 * The Biome instance modelling a desert landform.
+	 */
+	public static final Biome DESERT = new Biome("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.050f) {
+		public void texturize(Biotex biotex, float scalar) {
+			biotex.wave(10f, 0.05f, 300f, 0.001f*scalar);
+		}
+	};
 
-			point.setZ(z + deltaZ);
+	/**
+	 * The Biome instance modelling a hill landform.
+	 */
+	public static final Biome HILL = new Biome("Hill", new Colour(0.200f, 0.400f, 0.000f), 0.500f) {
+		public void texturize(Biotex biotex, float scalar) {
+			biotex.shift(0.001f*scalar);
+		}
+	};
+
+	/**
+	 * The Biome instance modelling a mountain landform.
+	 */
+	public static final Biome MOUNTAIN = new Biome("Mountain", new Colour(0.150f, 0.100f, 0.000f), 1.500f) {
+		public void texturize(Biotex biotex, float scalar) {
+			biotex.shift(0.01f*scalar);
 		}
 	};
 	/**
-	 * The "Hill" Biome.
+	 * The Biome instance modelling a plains landform.
 	 */
-	public static final Biome HILL = new Biome("Hills", Colour.TERRAIN_HILLS, 0.5f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			point.bump(0.001f * dominance);
-		}
-	};
-	/**
-	 * The "Mountain" Biome.
-	 */
-	public static final Biome MOUNTAIN = new Biome("Mountains", Colour.TERRAIN_MOUNTAINS, 1.5f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			point.bump(0.01f * dominance);
-		}
-	};
-	/**
-	 * The "Plain" Biome.
-	 */
-	public static final Biome PLAIN = new Biome("Plain", Colour.TERRAIN_PLAINS, 0.02f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			point.bump(0.0001f * dominance);
-			point.colourDip(dominance/8f);
-		}
-	};
-	/**
-	 * The "Tundra" Biome.
-	 */
-	public static final Biome TUNDRA = new Biome("Tundra", Colour.TERRAIN_TUNDRA, 0.10f) {
-		public void texturize(TerrainPoint point, float dominance) {
-			point.bump(0.0001f * dominance);
-			point.colourDip(dominance/10f);
+	public static final Biome PLAIN = new Biome("Plains", new Colour(0.800f, 1.000f, 0.000f), 0.020f) {
+		public void texturize(Biotex biotex, float scalar) {
+			biotex.shift(0.0001f*scalar);
+			biotex.getColour().shift(0.125f*scalar);
 		}
 	};
 	
 	/**
-	 * Base colour of this Biome.
+	 * The Biome instance modelling a tundra landform.
 	 */
-	private final float[] COLOUR;
-	/**
-	 * Elevation scaling factor for this Biome.
-	 */
-	private final float Z_SCALE;
-	/**
-	 * Name of this Biome.
-	 */
-	private final String NAME;
-
-	/**
-	 * Constructs a Biome object with the specified name, colour, and scaling factor.
-	 *
-	 * @param name Name of this Biome
-	 * @param colour Colour of this Biome
-	 * @param zScale Elevation scaling factor of this Biome
-	 */
-	public Biome(String name, float[] colour, float zScale) {
-		this.NAME = name;
-		this.COLOUR = colour;
-		this.Z_SCALE = zScale;
-	}
+	public static final Biome TUNDRA = new Biome("Tundra", new Colour(1.000f, 1.000f, 1.000f), 0.100f) {
+		public void texturize(Biotex biotex, float scalar) {
+			biotex.shift(0.0001f*scalar);
+			biotex.getColour().shift(0.1f*scalar);
+		}
+	};
 
 	/**
 	 * Returns the colour of this Biome.
 	 *
-	 * @return The colour of this Biome.
+	 * @return The colour.
 	 */
-	public float[] getColour() {
-		return COLOUR;
+	public Colour getColour() {
+		return this.colour;
 	}
 
 	/**
 	 * Returns the name of this Biome.
 	 *
-	 * @return The name of this Biome.
+	 * @return The name.
 	 */
 	public String getName() {
-		return this.NAME;
+		return this.name;
 	}
 
 	/**
-	 * Returns the elevation scaling of this Biome.
+	 * Returns the elevation scale of this Biome.
 	 *
-	 * @return The elevation scaling of this Biome.
+	 * @return The elevation scale.
 	 */
 	public float getScale() {
-		return Z_SCALE;
+		return this.scale;
 	}
 
 	/**
-	 * Applies a texturing to the given point with respect to the provided degree of dominance.
-	 *
-	 * @param point Point to be textured.
-	 * @param dominance Intensity of the texturizing process.  Typically within the range of [0, 1].
+	 * @brief Applies the texture representing this Biome to the given Biotex.
+	 *        The extent of the texturing is controlled by the given scalar which
+	 *        should fall within the range [0, 1].
+	 * 
+	 * @param biotex The Biotex to texturize.
+	 * @param scalar The magnitude of the texturing.
 	 */
-	public void texturize(TerrainPoint point, float dominance) {
-		Logger.warn("texturize() not implemented for Biome \"%s\".", NAME);
+	public void texturize(Biotex biotex, float scalar) {
+		Logger.warn("Biome \"%s\" does not implement Biome::texturize().", this.name);
 	}
 
 	/**
 	 * Returns a String representation of this Biome.
+	 * 
+	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("Biome \"%s\": %s %.2f", NAME, Colour.colourString(COLOUR), Z_SCALE);
+		return String.format("%s [Colour: %s, Scale: %.2f]", this.name, this.colour.toString(), this.scale);
 	}
+
+
+	// Private members
+	// -------------------------------------------------------------------------
+
+	/**
+	 * The colour of this Biome.
+	 */
+	private Colour colour;
+
+	/**
+	 * The name of this Biome.
+	 */
+	private String name;
+
+	/**
+	 * The elevation scale of this Biome.
+	 */
+	private float scale;
+
+	/**
+	 * Constructs a Biome object with the specified parameters.
+	 *
+	 * @param name   The name of this Biome.
+	 * @param colour The base colour of this Biome.
+	 * @param scale  The elevation scaling factor of this Biome.
+	 */
+	private Biome(String name, Colour colour, float scale) {
+		this.name = name;
+		this.colour = colour;
+		this.scale = scale;
+	}	
 }

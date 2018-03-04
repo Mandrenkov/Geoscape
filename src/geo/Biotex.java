@@ -1,7 +1,11 @@
 package geo;
 
+import env.Biome;
 import env.Biomix;
 import env.Colour;
+import java.util.Arrays;
+import java.util.stream.Stream;
+import util.Pair;
 
 /**
  * @author Mikhail Andrenkov
@@ -14,6 +18,19 @@ public class Biotex extends Vertex {
 
 	// Public members
 	// -------------------------------------------------------------------------
+
+	/**
+	 * Returns the average Colour of the given Biotices.
+	 * 
+	 * @param biotices The Biotices to average.
+	 * 
+	 * @return The average Colour.
+	 */
+	public static Colour averageColour(Biotex... biotices) {
+		Stream<Colour> colourStream = Arrays.stream(biotices).map(biotex -> biotex.getColour());
+		Colour[] colourArray = colourStream.toArray(Colour[]::new);
+		return Colour.average(colourArray);
+	}
 
 	/**
 	 * Constructs a Biotex representing the given 3D coordinate.
@@ -52,6 +69,36 @@ public class Biotex extends Vertex {
 	 */
 	public void setColour(Colour colour) {
 		this.colour = colour;
+	}
+
+	/**
+	 * Applies the textures of the Biomes that influence this Biotex.
+	 */
+	public void texturize() {
+		for (Pair<Biome, Double> biomePair : this.biomix) {
+			Biome biome = biomePair.getFirst();
+			float scalar = (float) (double) biomePair.getSecond();
+			biome.texturize(this, scalar);
+		}
+	}
+
+	/**
+	 * Shifts the elevation of this Biotex according to its position relative to
+	 * the wave pattern specified by the given parameters.
+	 * 
+	 * @param frequency The frequency of the reference wave.
+	 * @param amplitude The amplitude of the reference wave.
+	 * @param density   The density of the wave pattern.
+	 * @param height    The magnitude of the shift in the elevation of this Biotex.
+	 */
+	public void wave(float frequency, float amplitude, float density, float height) {
+		// Compute the amplitude of the reference wave along the Y-axis.
+		double refWave = amplitude*Math.cos(this.getY()*frequency);
+		// Determine the distance along the X-axis from this Biotex to the reference wave.
+		double deltaX = density*Math.abs(this.getX() - refWave);
+		// Calculate the difference as a periodic function of the difference along the X-axis.
+		float deltaZ = (float) Math.cos(deltaX)*height;
+		this.z += deltaZ;
 	}
 
 	/**
