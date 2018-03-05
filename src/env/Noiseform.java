@@ -1,18 +1,79 @@
 package util;
 
 import java.util.*;
-
+import bio.Biotex;
 import env.*;
 import geo.*;
+import geo.Vector;
 
 /**
- * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @author  Mikhail Andrenkov
+ * @since   March 4, 2018
+ * @version 1.1
  *
- * <p>Member declarations and definitions for the <b>Noise</b> class.</p>
+ * <p>The <b>Noiseform</b> class represents a noise transform that is applied
+ * to Grid objects.  Specifically, this class uses Perlin noise to distort
+ * a given Grid and then texturizes the Biotices of the given Grid to reflect
+ * the influence of nearby Biomes.</p>
  */
-public class Noise {
+public class Noiseform {
+
+	// Public members
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Constructs a Noiseform with the given Grid and the specified number of 
+	 * Perlin rows and columns.
+	 * 
+	 * @param grid The Grid to be associated with this Noiseform.
+	 * @param rows The number of Perlin rows.
+	 * @param cols The number of Perlin columns.
+	 */
+	public Noiseform(Grid grid, int rows, int cols) {
+		this.grid = grid;
+		this.rows = rows;
+		this.cols = cols;
+
+		this.gradients = new Vector[rows + 1][cols + 1];
+		for (int row = 0; row <= rows; ++row) {
+			for (int col = 0; col <= cols; ++col) {
+				double angle = 2*Math.PI*Math.random();
+				float x = (float) Math.cos(angle);
+				float y = (float) Math.sin(angle);
+				this.gradients[row][col] = new Vector(x, y);
+			}
+		}
+	}
+
+	public void apply() {
+		this.disturb();
+		this.alias();
+		this.texture();
+	}
+
+	// Private members
+	// -------------------------------------------------------------------------
+
+	/**
+	 * The Grid associated with this Noiseform.
+	 */
+	private Grid grid;
+
+	/**
+	 * The number of Perlin rows to be used in this Noiseform.
+	 */
+	private int rows;
+
+	/**
+	 * The number of Perlin columns to be used in this Noiseform.
+	 */
+	private int cols;
+
+	/**
+	 * The map of Perlin gradients used to generate the Perlin noise.
+	 */
+	private Vector[][] gradients;
+
 
 	/**
 	 * Avoids division by zero when mapping Points to the Perlin grid.
@@ -32,7 +93,7 @@ public class Noise {
 	 * @param w Weight corresponding to Y; w should fall within the range [0, 1]
 	 * @return The weighted average.
 	 */
-	public static float weightAvg(float x, float y, float w) {
+	private static float weightAvg(float x, float y, float w) {
 		return x + w*(y - x);
 	}
 
@@ -42,85 +103,14 @@ public class Noise {
 	 * @param v Value to be mapped to the curve; v should shall within the range [0, 1]
 	 * @return The curved value of v.
 	 */
-	public static float unitCurve(float v) {
-		return 1 - (float) (Math.cos(v*Math.PI) + 1)/2;
+	private static float unitCurve(float v) {
+		return (float) (1f - Math.cos(v*Math.PI))/2f;
 	}
 
 	/**
-	 * Applies a Perlin noise filter to the given Grid.
-	 *
-	 * @param grid Grid to be filtered
+	 * Applies a Perlin noise transformation to the Grid associated with this Noiseform.
 	 */
-	public static void generateNoise(Grid grid) {
-		GeoVector[][] gradients = createGradients(grid.getPerlinRows(), grid.getPerlinCols());
-		applyNoise(grid, gradients);
-		applyAliasing(grid);
-		applyTexturing(grid);
-	}
-
-	/**
-	 * Creates a 2D array of normalized vectors according to the given Grid's Perlin dimensions.
-	 *
-	 * @param grid Grid to be filtered
-	 * @return The 2D array of normalized vectors.
-	 */
-	private static GeoVector[][] createGradients(int perlinRows, int perlinCols) {
-		perlinRows++;
-		perlinCols++;
-		GeoVector[][] gradients = new GeoVector[perlinRows][perlinCols];
-
-		for (int x = 0 ; x < perlinRows ; x++) {
-			for (int y = 0 ; y < perlinCols ; y++) {
-				float angle = (float) (Math.random() * 2 * Math.PI);
-
-				float xComp = (float) Math.cos(angle);
-				float yComp = (float) Math.sin(angle);
-
-				gradients[x][y] = new GeoVector(xComp, yComp);
-			}
-		}
-
-		return gradients;
-	}
-
-	/**
-	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
-	 *
-	 * @param grid Grid to be aliased.
-	 */
-	private static void applyAliasing(Grid grid) {
-		float[][] pointZ = new float[grid.getRows()][grid.getCols()];
-
-		// Calculate new Point elevations
-		for (int r = 0 ; r < grid.getRows() ; r++) {
-			for (int c = 0 ; c < grid.getCols() ; c++) {
-				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, c, r, 0.01f);
-
-				float averageZ = 0f;
-				for (TerrainPoint p : nearbyPoints.keySet()) {
-					averageZ += p.getZ();
-				}
-				averageZ /= nearbyPoints.size();
-
-				pointZ[r][c] = averageZ;
-			}
-		}
-
-		// Apply calculated elevations to the Grid Points
-		for (int r = 0 ; r < grid.getRows() ; r++) {
-			for (int c = 0 ; c < grid.getCols() ; c++) {
-				grid.getPoint(r, c).setZ(pointZ[r][c]);;
-			}
-		}
-	}
-
-	/**
-	 * Applies Perlin noise to the given Grid with respect to the gradients array and the Biome characteristics of the Points.
-	 *
-	 * @param grid Grid to be filtered.
-	 * @param gradients Array of gradient vectors.
-	 */
-	private static void applyNoise(Grid grid, GeoVector[][] gradients) {
+	private void disturb() {
 		// Conversion ratios from Grid dimensions to Perlin grid dimensions
 		float perlinXSize = grid.getPerlinCols()/(grid.getBounds()[2] - grid.getBounds()[0] + PERLIN_EPSILON);
 		float perlinYSize = grid.getPerlinRows()/(grid.getBounds()[3] - grid.getBounds()[1] + PERLIN_EPSILON);
@@ -153,25 +143,6 @@ public class Noise {
 				p.setBiomeMix(biomeMix);
 				p.setColour(colour);
 				p.setZ(zInit + zDelta*zScale);
-			}
-		}
-	}
-
-	/**
-	 * Removes prominent Grid edges by averaging the elevations of nearby Points.
-	 *
-	 * @param grid Grid to be aliased.
-	 */
-	private static void applyTexturing(Grid grid) {
-		for (int r = 0 ; r < grid.getRows() ; r++) {
-			for (int c = 0 ; c < grid.getCols() ; c++) {
-				TerrainPoint point = grid.getPoint(r, c);
-
-				HashMap<Biome, Float> biomeMix = point.getBiomeMix();
-
-				for (Biome biome : biomeMix.keySet()) {
-					biome.texturize(point, biomeMix.get(biome));
-				}
 			}
 		}
 	}
@@ -294,4 +265,53 @@ public class Noise {
 		return average / nearbyPoints.size();
 	}
 
+	/**
+	 * Remove prominent edges from the Grid of this Noiseform by averaging the
+	 * elevations of nearby Biotices.
+	 */
+	private void alias() {
+		int dist = 2;
+		int rows = this.grid.getRows();
+		int cols = this.grid.getColumns();
+
+		float[][] sum = new float[rows][cols];
+		int[][] count = new int  [rows][cols];
+
+		// Compute the sum and quantity of the heights of nearby Biotices.
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				float z = this.grid.getBiotex(row, col).getZ();
+
+				for (int r = Math.max(0, row - dist); r <= Math.min(rows - 1, row + dist); ++r) {
+					for (int c = Math.max(0, col - dist); c <= Math.min(cols - 1, col + dist); ++c) {
+						// Verify that the current Biotex is close to the reference Biotex.
+						if (Math.abs(row - r) + Math.abs(col - c) <= dist) {
+							sum[r][c] += z;
+							++count[r][c];
+						}
+					}	
+				}
+			}
+		}
+
+		// Set the elevation of each Grid Biotex to the average elevation of nearby Biotices.
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				float avg = sum[row][col]/count[row][col];
+				Biotex biotex = this.grid.getBiotex(row, col);
+				biotex.setZ(avg);
+			}
+		}
+	}
+
+	/**
+	 * Apply the weighted texturing of each Biotex.
+	 */
+	private void texture() {
+		for (int row = 0; row < this.grid.getRows(); ++row) {
+			for (int col = 0; col < this.grid.getColumns(); ++col) {
+				this.grid.getBiotex(row, col).texturize();
+			}
+		}
+	}
 }
