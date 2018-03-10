@@ -1,9 +1,8 @@
-package util;
+package env;
 
-import java.util.*;
+import util.Algebra;
+import bio.Biomix;
 import bio.Biotex;
-import env.*;
-import geo.*;
 import geo.Vector;
 
 /**
@@ -55,6 +54,11 @@ public class Noiseform {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * Determines the radius of influence of a Point during scaling and Biome calculations.
+	 */
+	private static final int TOLERANCE = 2;
+
+	/**
 	 * The Grid associated with this Noiseform.
 	 */
 	private Grid grid;
@@ -74,195 +78,75 @@ public class Noiseform {
 	 */
 	private Vector[][] gradients;
 
-
-	/**
-	 * Avoids division by zero when mapping Points to the Perlin grid.
-	 */
-	private static final float PERLIN_EPSILON = (float) 1E-5;
-	/**
-	 * Determines the radius of influence of a Point during scaling and Biome calculations.
-	 */
-	private static final float BIOME_CREEP = 0.05f;
-
-
-	/**
-	 * Returns the weighted average corresponding to the given parameters.
-	 *
-	 * @param x Value X
-	 * @param y Value Y
-	 * @param w Weight corresponding to Y; w should fall within the range [0, 1]
-	 * @return The weighted average.
-	 */
-	private static float weightAvg(float x, float y, float w) {
-		return x + w*(y - x);
-	}
-
-	/**
-	 * Maps the given value to a smooth curve with range [0, 1].
-	 *
-	 * @param v Value to be mapped to the curve; v should shall within the range [0, 1]
-	 * @return The curved value of v.
-	 */
-	private static float unitCurve(float v) {
-		return (float) (1f - Math.cos(v*Math.PI))/2f;
-	}
-
 	/**
 	 * Applies a Perlin noise transformation to the Grid associated with this Noiseform.
 	 */
 	private void disturb() {
-		// Conversion ratios from Grid dimensions to Perlin grid dimensions
-		float perlinXSize = grid.getPerlinCols()/(grid.getBounds()[2] - grid.getBounds()[0] + PERLIN_EPSILON);
-		float perlinYSize = grid.getPerlinRows()/(grid.getBounds()[3] - grid.getBounds()[1] + PERLIN_EPSILON);
+		// Define a set of conversion ratios to convert a Grid coordinate into
+		// a Perlin grid coordinate.  An epsilon is thrown in to avoid division
+		// by 0 errors.
+		float epsilon = 1E-6f;
+		float colSize = grid.getWidth()/(this.cols - epsilon);
+		float rowSize = grid.getHeight()/(this.rows + epsilon);
 
-		for (int x = 0 ; x < grid.getCols() ; x++) {
-			for (int y = 0 ; y < grid.getRows() ; y++) {
-				TerrainPoint p = grid.getPoint(y, x);
-				HashMap<TerrainPoint, Float> nearbyPoints = findNearbyPoints(grid, x, y, BIOME_CREEP);
+		for (int row = 0; row < grid.getRows(); ++row) {
+			for (int col = 0; col < grid.getColumns(); ++col) {
+				Biotex biotex = grid.getBiotex(col, row);
 
-				int xCell = (int) ((p.getX() - grid.getBounds()[0])*perlinXSize );
-				int yCell = (int) ((p.getY() - grid.getBounds()[1])*perlinYSize);
+				/**
+				 * Use Perlin noise to calculate the change in elevation of this
+				 * Biotex.
+				 */
+				
+				// Map the Grid coordinate of the Biotex to a Perlin grid coordinate.
+				int colCell = (int) ((biotex.getX() - grid.getMinX())/colSize);
+				int rowCell = (int) ((biotex.getY() - grid.getMinY())/rowSize);
 
-				float zInit  = p.getZ();
-				float zDelta = generatePerlinDelta(grid, gradients, x, y, perlinXSize, perlinYSize);
-				float zScale = generatePerlinScale(nearbyPoints);
+				// Determine the offset of the Biotex to the Perlin coordinate.
+				float colOffset = biotex.getX() % colSize;
+				float rowOffset = biotex.getY() % rowSize;
 
-				// Tie points near grid boundaries to ground elevation
-				if (xCell == 0 || xCell == grid.getPerlinCols() - 1 || yCell == 0 || yCell == grid.getPerlinRows() - 1) {
-					float minX = Math.min(p.getX() - grid.getBounds()[0], grid.getBounds()[2] - p.getX());
-					float minY = Math.min(p.getY() - grid.getBounds()[1], grid.getBounds()[3] - p.getY());
-					float minScale = Math.min(minX*perlinXSize, minY*perlinYSize);
+				// Compute the dot products from each corner of the Perlin cell
+				// to the Biotex.
+				float[][] dotProducts = new float[2][2];
+				dotProducts[0][0] = gradients[rowCell    ][colCell    ].dot(new Vector(rowOffset    , colOffset    ));
+				dotProducts[0][1] = gradients[rowCell    ][colCell + 1].dot(new Vector(rowOffset    , colOffset - 1));
+				dotProducts[1][1] = gradients[rowCell + 1][colCell + 1].dot(new Vector(rowOffset - 1, colOffset - 1));
+				dotProducts[1][0] = gradients[rowCell + 1][colCell    ].dot(new Vector(rowOffset - 1, colOffset    ));
 
-					zScale *= unitCurve(minScale);
-					zInit *= unitCurve(minScale);
+				// Calculate the elevation influence of the Perlin noise.
+				float colWeight = Algebra.curve(colOffset);
+				float colDot0 = Algebra.average(dotProducts[0][0], dotProducts[0][1], colWeight);
+				float colDot1 = Algebra.average(dotProducts[1][0], dotProducts[1][1], colWeight);
+
+				float rowWeight = Algebra.curve(rowOffset);
+				float z = Algebra.average(colDot0, colDot1, rowWeight);
+
+				// Tie the Biotex to the ground if it is near a Grid boundary.
+				if (colCell == 0 || colCell == this.cols - 1 || rowCell == 0 || rowCell == this.rows - 1) {
+					float rowOffsetMin = colSize*Math.min(biotex.getX() - grid.getMinX(), grid.getMaxX() - biotex.getX());
+					float colOffsetMin = rowSize*Math.min(biotex.getY() - grid.getMinY(), grid.getMaxY() - biotex.getY());
+					float offsetMin = Math.min(rowOffsetMin, colOffsetMin);
+					z *= Algebra.curve(offsetMin);
 				}
+				
+				/**
+				 * Use nearby Biotexes to adjust the elevation scaling, Colour,
+				 * and Biomix of the current Biotex.
+				 */
 
-				float[] colour = Colour.averageColour(nearbyPoints.keySet().toArray(new TerrainPoint[nearbyPoints.size()]));
-				HashMap<Biome, Float> biomeMix = generateBiomeMix(nearbyPoints);
+				Nearmap nearmap = new Nearmap(grid, row, col, TOLERANCE);
 
-				p.setBiomeMix(biomeMix);
-				p.setColour(colour);
-				p.setZ(zInit + zDelta*zScale);
+				Colour colour = nearmap.getColour();
+				biotex.setColour(colour);
+
+				Biomix biomix = nearmap.getBiomix();
+				biotex.setBiomix(biomix);
+				
+				z *= nearmap.getScale();
+				biotex.translate(0, 0, z);
 			}
 		}
-	}
-
-	/**
-	 * Maps Points near a center Point to a corresponding distance weight.
-	 *
-	 * @param grid Grid containing the Points.
-	 * @param centerX X coordinate of the center Point.
-	 * @param centerY Y coordinate of the center Point.
-	 * @param tolerance Value denoting the Point distance tolerance (i.e., a Point with a distance that exceeds the tolerance is not included in the map).
-	 * @return A mapping between nearby Points and their associated distance weights.
-	 */
-	private static HashMap<TerrainPoint, Float> findNearbyPoints(Grid grid, int centerX, int centerY, float tolerance) {
-		tolerance *= Math.min(grid.getRows(), grid.getCols());
-		int maxDim = (int) tolerance;
-
-		// Nearby Point index bounds
-		int startX = Math.max(centerX - maxDim, 0);
-		int endX   = Math.min(centerX + maxDim, grid.getCols() - 1);
-		int startY = Math.max(centerY - maxDim, 0);
-		int endY   = Math.min(centerY + maxDim, grid.getRows() - 1);
-
-		TerrainPoint centerP = grid.getPoint(centerY, centerX);
-		HashMap<TerrainPoint, Float> points = new HashMap<>();
-
-		// Iterate through each candidate Point and add it to the map if it is sufficiently close to the center Point
-		for (int x = startX ; x <= endX ; x++) {
-			for (int y = startY ; y <= endY ; y++) {
-				if (x == centerX || y == centerY) continue;
-				float distance = centerP.distance(grid.getPoint(y, x));
-
-				if (distance <= tolerance) {
-					float weight = (float) Math.pow(1f - unitCurve(distance/tolerance), 0.8);
-					points.put(grid.getPoint(y, x), weight);
-				}
-			}
-		}
-
-		return points;
-	}
-
-	private static HashMap<Biome, Float> generateBiomeMix(HashMap<TerrainPoint, Float> nearbyPoints) {
-		HashMap<Biome, Float> biomeMix = new HashMap<>();
-
-		float weightSum = 0f;
-
-		for (TerrainPoint point : nearbyPoints.keySet()) {
-			Biome biome = point.getBiome();
-			float weight = nearbyPoints.get(point);
-
-			biomeMix.putIfAbsent(biome, 0f);
-			biomeMix.put(biome, biomeMix.get(biome) + weight);
-
-			weightSum += weight;
-		}
-
-		for (Biome biome : biomeMix.keySet()) {
-			biomeMix.replace(biome, biomeMix.get(biome)/weightSum);
-		}
-
-		return biomeMix;
-	}
-
-	/**
-	 * Returns the change in elevation of the given Point with respect to the Perlin gradient array.
-	 *
-	 * @param grid Grid containing the Point.
-	 * @param gradients Array of normalized vectors.
-	 * @param x X coordinate of the Point.
-	 * @param y Y coordinate of the Point.
-	 * @param perlinXSize Number of Perlin columns per unit distance along the Grid's X dimension.
-	 * @param perlinYSize Number of Perlin rows per unit distance along the Grid's Y dimension.
-	 * @return The change in elevation of the given Point.
-	 */
-	private static float generatePerlinDelta(Grid grid, GeoVector[][] gradients, int x, int y, float perlinXSize, float perlinYSize) {
-		TerrainPoint p = grid.getPoint(y, x);
-
-		// Transform Grid coordinate system to Perlin coordinate system
-		float xExact = (p.getX() - grid.getBounds()[0])*perlinXSize;
-		float yExact = (p.getY() - grid.getBounds()[1])*perlinYSize;
-
-		int xCell = (int) xExact;
-		int yCell = (int) yExact;
-
-		float xDiff = xExact - xCell;
-		float yDiff = yExact - yCell;
-
-		float weightX = unitCurve(xDiff);
-		float weightY = unitCurve(yDiff);
-
-		// Compute the dot products from each corner of the corresponding Perlin cell to the Point
-		float[][] dotProducts = new float[2][2];
-		dotProducts[0][0] = gradients[xCell    ][yCell    ].dot(new GeoVector(xDiff    , yDiff    ));
-		dotProducts[0][1] = gradients[xCell    ][yCell + 1].dot(new GeoVector(xDiff    , yDiff - 1));
-		dotProducts[1][1] = gradients[xCell + 1][yCell + 1].dot(new GeoVector(xDiff - 1, yDiff - 1));
-		dotProducts[1][0] = gradients[xCell + 1][yCell    ].dot(new GeoVector(xDiff - 1, yDiff    ));
-
-		// Average each dot product along the X dimension
-		float v1 = weightAvg(dotProducts[0][0], dotProducts[1][0], weightX);
-		float v2 = weightAvg(dotProducts[0][1], dotProducts[1][1], weightX);
-
-		// Average the weighted averages along the Y dimension
-		return weightAvg(v1, v2, weightY);
-	}
-
-	/**
-	 * Compute the elevation scaling factor from the given Points.
-	 *
-	 * @param nearbyPoints Mapping of Points to distance weights.
-	 * @return The elevation scaling factor.
-	 */
-	private static float generatePerlinScale(HashMap<TerrainPoint, Float> nearbyPoints) {
-		float average = 0;
-
-		for (TerrainPoint point : nearbyPoints.keySet()) {
-			average += point.getBiome().getScale() * nearbyPoints.get(point);
-		}
-
-		return average / nearbyPoints.size();
 	}
 
 	/**
@@ -270,24 +154,27 @@ public class Noiseform {
 	 * elevations of nearby Biotices.
 	 */
 	private void alias() {
-		int dist = 2;
+		int radius = 2;
 		int rows = this.grid.getRows();
 		int cols = this.grid.getColumns();
 
-		float[][] sum = new float[rows][cols];
-		int[][] count = new int  [rows][cols];
+		float[][] sum    = new float[rows][cols];
+		float[][] weight = new float[rows][cols];
 
-		// Compute the sum and quantity of the heights of nearby Biotices.
+		// Compute the weighted sum of the heights of nearby Biotices.
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
-				float z = this.grid.getBiotex(row, col).getZ();
+				Biotex refBiotex = this.grid.getBiotex(row, col);
 
-				for (int r = Math.max(0, row - dist); r <= Math.min(rows - 1, row + dist); ++r) {
-					for (int c = Math.max(0, col - dist); c <= Math.min(cols - 1, col + dist); ++c) {
+				for (int r = Math.max(0, row - radius); r <= Math.min(rows - 1, row + radius); ++r) {
+					for (int c = Math.max(0, col - radius); c <= Math.min(cols - 1, col + radius); ++c) {
+						Biotex curBiotex = this.grid.getBiotex(r, c);
+
 						// Verify that the current Biotex is close to the reference Biotex.
-						if (Math.abs(row - r) + Math.abs(col - c) <= dist) {
-							sum[r][c] += z;
-							++count[r][c];
+						float dist = refBiotex.distance(curBiotex);
+						if (dist <= radius) {
+							sum[r][c] += refBiotex.getZ()*dist;
+							weight[r][c] += dist;
 						}
 					}	
 				}
@@ -295,9 +182,9 @@ public class Noiseform {
 		}
 
 		// Set the elevation of each Grid Biotex to the average elevation of nearby Biotices.
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				float avg = sum[row][col]/count[row][col];
+		for (int row = 0; row < rows; ++row) {
+			for (int col = 0; col < cols; ++col) {
+				float avg = sum[row][col]/weight[row][col];
 				Biotex biotex = this.grid.getBiotex(row, col);
 				biotex.setZ(avg);
 			}
