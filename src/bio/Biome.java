@@ -1,8 +1,7 @@
-package env;
+package bio;
 
 import core.Logger;
 import env.Colour;
-import geo.Biotex;
 
 /**
  * @author Mikhail Andrenkov
@@ -21,43 +20,50 @@ public class Biome {
 	/**
 	 * The Biome instance modelling a desert landform.
 	 */
-	public static final Biome DESERT = new Biome("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.050f) {
+	public static final Biome DESERT = new Biome("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.05f) {
 		public void texturize(Biotex biotex, float scalar) {
-			biotex.wave(10f, 0.05f, 300f, 0.001f*scalar);
+			biotex.wave(10f, 0.05f, 200f, 0.001f*scalar);
 		}
 	};
 
 	/**
 	 * The Biome instance modelling a hill landform.
 	 */
-	public static final Biome HILL = new Biome("Hill", new Colour(0.200f, 0.400f, 0.000f), 0.500f) {
+	public static final Biome HILL = new Biome("Hill", new Colour(0.2f, 0.4f, 0.0f), 2.0f) {
 		public void texturize(Biotex biotex, float scalar) {
-			biotex.shift(0.001f*scalar);
+			biotex.shift(0.0005f*scalar);
+			//biotex.getColour().shift(0.01f*scalar);
 		}
 	};
 
 	/**
 	 * The Biome instance modelling a mountain landform.
 	 */
-	public static final Biome MOUNTAIN = new Biome("Mountain", new Colour(0.150f, 0.100f, 0.000f), 1.500f) {
+	public static final Biome MOUNTAIN = new Biome("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
 		public void texturize(Biotex biotex, float scalar) {
-			biotex.shift(0.01f*scalar);
+			biotex.shift(0.005f*scalar);
+
+			//float increase = (float) Math.random()*biotex.getZ()*8;
+			//Colour colour = new Colour(increase, increase, increase);
+			//Colour colour = new Colour(this.getColour());
+			//colour.scale(increase);
+			//biotex.getBaseColour().add(colour);
 		}
 	};
 	/**
 	 * The Biome instance modelling a plains landform.
 	 */
-	public static final Biome PLAIN = new Biome("Plains", new Colour(0.800f, 1.000f, 0.000f), 0.020f) {
+	public static final Biome PLAIN = new Biome("Plains", new Colour(0.8f, 1.0f, 0.0f), 0.02f) {
 		public void texturize(Biotex biotex, float scalar) {
 			biotex.shift(0.0001f*scalar);
-			biotex.getColour().shift(0.125f*scalar);
+			biotex.getColour().shift(0.01f*scalar);
 		}
 	};
 	
 	/**
 	 * The Biome instance modelling a tundra landform.
 	 */
-	public static final Biome TUNDRA = new Biome("Tundra", new Colour(1.000f, 1.000f, 1.000f), 0.100f) {
+	public static final Biome TUNDRA = new Biome("Tundra", new Colour(1, 1, 1), 0.10f) {
 		public void texturize(Biotex biotex, float scalar) {
 			biotex.shift(0.0001f*scalar);
 			biotex.getColour().shift(0.1f*scalar);

@@ -1,6 +1,10 @@
 package geo;
 
-import java.util.Arrays;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -20,14 +24,36 @@ public class Vertex {
 	public static final Vertex ORIGIN = new Vertex(0, 0, 0);
 
 	/**
-	 * Returns the average Z-coordinate of the given Vertices.
+	 * Returns the average position of the given Vertices.  This function
+	 * assumes that the given list of Vertices is non-empty.
 	 * 
 	 * @param vertices The Vertices to be averaged.
 	 * 
-	 * @return The average elevation of the Vertices.
+	 * @return The average position.
+	 */
+	public static Vertex average(Vertex... vertices) {
+		Vertex average = new Vertex(0, 0, 0);
+		for (Vertex vertex : vertices) {
+			average.translate(vertex.getX(), vertex.getY(), vertex.getZ());
+		}
+		average.scale(1f/vertices.length);
+		return average;
+	}
+
+	/**
+	 * Returns the average Z-coordinate of the given Vertices.  This function
+	 * assumes that the given list of Vertices is non-empty.
+	 * 
+	 * @param vertices The Vertices to be averaged.
+	 * 
+	 * @return The average Z-coordinate.
 	 */
 	public static float averageZ(Vertex... vertices) {
-		return (float) Arrays.stream(vertices).mapToDouble(vertex -> vertex.getZ()).sum()/vertices.length;
+		float z = 0f;
+		for (Vertex vertex : vertices) {
+			z += vertex.getZ();
+		}
+		return z/vertices.length;
 	}
 
 	/**
@@ -41,6 +67,34 @@ public class Vertex {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.colour = new Colour();
+	}
+
+	/**
+	 * Constructs a Vertex with the given Colour representing the given 3D coordinate.
+	 *
+	 * @param colour The colour of this Vertex.
+	 * @param x      The X-coordinate of this Vertex.
+	 * @param y      The Y-coordinate of this Vertex.
+	 * @param z      The Z-coordinate of this Vertex.
+	 */
+	public Vertex(Colour colour, float x, float y, float z) {
+		this.colour = colour;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	/**
+	 * Constructs a new Vertex that is a clone of the given Vertex.
+	 *
+	 * @param vertex The Vertex to clone.
+	 */
+	public Vertex(Vertex vertex) {
+		this.x = vertex.x;
+		this.y = vertex.y;
+		this.z = vertex.z;
+		this.colour = new Colour(vertex.colour);
 	}
 
 	/**
@@ -53,16 +107,18 @@ public class Vertex {
 		this.x = (v1.x + v2.x)/2;
 		this.y = (v1.y + v2.y)/2;
 		this.z = (v1.z + v2.z)/2;
+		this.colour = Colour.average(v1.colour, v2.colour);
 	}
 
 	/**
-	 * Changes the elevation of this Vertex by a random value within the given range.
+	 * Returns true if this Vertex is close to the given Vertex.
 	 *
-	 * @param magnitude The maximum magnitude of the change in elevation.
+	 * @param vertex The other Vertex.
+	 * 
+	 * @return True if the Vertices occupy the same spatial region.
 	 */
-	public void bump(float magnitude) {
-		float random = (float) (Math.random() - 0.5);
-		this.z += magnitude*2*random;
+	public boolean close(Vertex vertex) {
+		return this.distance(vertex) < 1E-6;
 	}
 
 	/**
@@ -93,7 +149,7 @@ public class Vertex {
 	 * @return The X-coordinate.
 	 */
 	public float getX() {
-		return x;
+		return this.x;
 	}
 
 	/**
@@ -102,7 +158,7 @@ public class Vertex {
 	 * @return The Y-coordinate.
 	 */
 	public float getY() {
-		return y;
+		return this.y;
 	}
 
 	/**
@@ -111,7 +167,20 @@ public class Vertex {
 	 * @return The Z-coordinate.
 	 */
 	public float getZ() {
-		return z;
+		return this.z;
+	}
+
+	/**
+	 * Returns the Colour of this Vertex.
+	 * 
+	 * @return The Colour.
+	 */
+	public Colour getColour() {
+		return this.colour;
+	}
+
+	public void gl() {
+		glVertex3f(this.x, this.y, this.z);
 	}
 
 	/**
@@ -142,6 +211,15 @@ public class Vertex {
 	}
 
 	/**
+	 * Sets the Colour of this Vertex to the specified value.
+	 *
+	 * @param colour The new Colour.
+	 */
+	public void setColour(Colour colour) {
+		this.colour = colour;
+	}
+
+	/**
 	 * Scales the coordinates of this Vertex by the given scaling factor.
 	 */
 	public void normalize() {
@@ -163,6 +241,15 @@ public class Vertex {
 	}
 
 	/**
+	 * Changes the elevation of this Vertex by a random value within the given range.
+	 *
+	 * @param magnitude The maximum magnitude of the change in elevation.
+	 */
+	public void shift(float magnitude) {
+		this.z += (float) ThreadLocalRandom.current().nextDouble(-magnitude, magnitude);
+	}
+
+	/**
 	 * Translates this Vertex by the given coordinate values.
 	 * 
 	 * @param dx The amount to translate the X-coordinate of this Vertex.
@@ -181,25 +268,30 @@ public class Vertex {
 	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("(%.2f, %.2f, %.2f)", x, y, z);
+		return String.format("Vertex (%.2f, %.2f, %.2f) using %s.", this.x, this.y, this.z, this.colour.toString());
 	}
 
 
-	// Private members
+	// Protected members
 	// -------------------------------------------------------------------------
 
 	/**
 	 * The X-coordinate of this Vertex.
 	 */
-	private float x;
+	protected float x;
 	
 	/**
 	 * The Y-coordinate of this Vertex.
 	 */
-	private float y;
+	protected float y;
 	
 	/**
 	 * The Z-coordinate of this Vertex.
 	 */
-	private float z;
+	protected float z;
+
+	/**
+	 * The colour of this Vertex.
+	 */
+	protected Colour colour;
 }

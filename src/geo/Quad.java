@@ -2,7 +2,7 @@ package geo;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.Arrays;
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov
@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * <p>The <b>Quad</b> class represents a quadrilateral.</p>
  */
-public class Quad extends Shape {
+public class Quad extends Polygon {
 
 	// Public members
 	// -------------------------------------------------------------------------
@@ -22,22 +22,9 @@ public class Quad extends Shape {
 	 * @param vertices The vertices comprising this Quad.
 	 */
 	public Quad(Vertex... vertices) {
-		super(vertices);
+		super(vertices, GL_QUADS);
 		if (vertices.length != 4) {
 			throw new IllegalArgumentException("Quads must have 4 vertices.");
 		}
-	}
-
-	/**
-	 * Draws this Quad.
-	 */
-	public void draw() {
-		colour.glColor();
-
-        glBegin(GL_QUADS);
-		for (Vertex vertex : vertices) {
-			addVertex(vertex);
-		}
-		glEnd();
 	}
 }

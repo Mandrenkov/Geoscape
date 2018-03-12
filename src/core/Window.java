@@ -7,7 +7,10 @@ import static org.lwjgl.system.MemoryUtil.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
-import env.Colour;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import util.Pair;
 
 /**
  * @author Mikhail Andrenkov
@@ -52,70 +55,36 @@ public class Window {
 	private static Window singleton = null;
 
 	/**
-	 * The initial width of the window.
-	 */
-	private final int INIT_WIDTH = 1600;
-
-	/**
-	 * The initial height of the window.
-	 */
-	private final int INIT_HEIGHT = 900;
-
-	/**
-	 * The title of the window.
-	 */
-	private final String TITLE = "Geoscape";
-
-	/**
 	 * List of OpenGL flags to enable.
 	 */
 	private final int[] GL_FLAGS = new int[] {
 		GL_DEPTH_TEST,
 		GL_CULL_FACE,
+		GL_POLYGON_SMOOTH,
 		GL_MULT
 	};
 
 	/**
 	 * List of GLFW window hints.
 	 */
-	private final int[][] GLFW_HINTS = new int[][] {
-		{GLFW_VISIBLE,      0},
-		{GLFW_RESIZABLE,    1},
-		{GLFW_FOCUSED,      1},
-		{GLFW_REFRESH_RATE, 144},
-		{GLFW_FLOATING,     1},
-		{GLFW_SAMPLES,      4}
-	};
+	private final ArrayList<Pair<Integer, Integer>> GLFW_HINTS = new ArrayList<>(Arrays.asList(
+		new Pair<Integer, Integer>(GLFW_VISIBLE,      1),
+		new Pair<Integer, Integer>(GLFW_RESIZABLE,    1),
+		new Pair<Integer, Integer>(GLFW_FOCUSED,      1),
+		new Pair<Integer, Integer>(GLFW_REFRESH_RATE, 144),
+		new Pair<Integer, Integer>(GLFW_FLOATING,     1),
+		new Pair<Integer, Integer>(GLFW_SAMPLES,      1)
+	));
 
 	/**
 	 * Flag that determines whether VSYNC is enabled.
 	 */
-	private final int VSYNC = 0;
+	private final int VSYNC = 1;
 
 	/**
 	 * Internal reference to the GLFW window.
 	 */
 	private long handle = NULL;
-
-	/**
-	 * The field of view (FOV) of the Window viewport.
-	 */
-	private final float VIEW_FOV = 70f;
-
-	/**
-	 * The aspect ratio of the Window viewport.
-	 */
-	private final float VIEW_ASPECT = 1f;
-
-	/**
-	 * The distance to the nearest frustrum plane of the Window.
-	 */
-	private final float VIEW_Z_NEAR = 0.03f;
-
-	/**
-	 * The distance to the furthest frustrum plane of the Window.
-	 */
-	private final float VIEW_Z_FAR = 5f;
 
 	/**
 	 * Constructs a Window object.
@@ -136,11 +105,11 @@ public class Window {
 			throw new IllegalStateException("Failed to initialize GLFW.");
 		}
 
-		for (int[] hint : GLFW_HINTS) {
-			glfwWindowHint(hint[0], hint[1]);
+		for (Pair<Integer, Integer> hint : GLFW_HINTS) {
+			glfwWindowHint(hint.getFirst(), hint.getSecond());
 		}
 
-		handle = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, TITLE, NULL, NULL);
+		handle = glfwCreateWindow(1600, 900, "Geoscape", NULL, NULL);
 		if (handle == NULL) {
 			throw new IllegalStateException("Failed to create GLFW window.");
 		}
@@ -156,7 +125,7 @@ public class Window {
 	private void initCallbacks() {
 		// Ensure the OpenGL viewport matches the Window dimensions.
 		glfwSetWindowSizeCallback(handle, (localWindow, newWidth, newHeight) -> {
-			//glViewport(0, 0, newWidth, newHeight);
+			glViewport(0, 0, newWidth, newHeight);
 		});
 
 		//glfwSetKeyCallback(handle, (localWindow, key, scancode, action, mods) -> {
@@ -169,25 +138,42 @@ public class Window {
 	 * Initializes the OpenGL parameters of this Window.
 	 */
 	private void initGL() {
-		// TODO: Streamline this function
 		GL.createCapabilities();
 
 		for (int flag : GL_FLAGS) {
 			glEnable(flag);
 		}
 
-		glClearColor(Colour.BACKDROP[0], Colour.BACKDROP[1], Colour.BACKDROP[2], Colour.BACKDROP[3]);
+		// Set the background colour of the Window.
+		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		//glClearColor(1, 1, 1, 1);
 
-		// Matrix Initialization
+		// Load the OpenGL projection matrix to set the viewing frustrum.
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		// Define frustum
-		float yTop  = (float) (VIEW_Z_NEAR*Math.tan(Math.toRadians(VIEW_FOV/2)));
-		float xLeft = yTop * VIEW_ASPECT;
-		glFrustum(xLeft, -xLeft, -yTop, yTop, VIEW_Z_NEAR, VIEW_Z_FAR);
+		// The vertical FOV of the viewing frustrum.
+		float fov = 70f;
+		// The aspect ratio of the viewing frustrum.
+		float ratio = 16f/9f;
+		// The distance to the near Z-plane of the viewing frustrum.
+		float near = 0.01f;
+		// The distance to the far Z-plane of the viewing frustrum.
+		float far = 10f;
 
+		// Calculate the bounding box of the near plane in terms of the FOV and 
+		// aspect ratio.
+		float y = (float) Math.tan(Math.toRadians(fov/2))*near;
+		float x = ratio*y;
+		glFrustum(x, -x, -y, y, near, far);
+
+		Logger.info("Defining viewing frustum with dimensions (%.3f, %.3f) to (%.3f, %.3f) over [%.3f, %.3f].", -x, -y, x, y, near, far);
+
+		// Load the OpenGL ModelView matrix to manipulate vertex coordinates. 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+
+		// Fill both faces of any rendered polygons.
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }

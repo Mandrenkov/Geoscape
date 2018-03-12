@@ -36,6 +36,19 @@ public class Vector {
 	}
 
 	/**
+	 * Constructs a Vector that stretches from the given start Vertex to the
+	 * provided end Vertex.
+	 *
+	 * @param start The start Vertex.
+	 * @param end   The end Vertex.
+	 */
+	public Vector(Vertex start, Vertex end) {
+		this.x = end.getX() - start.getX();
+		this.y = end.getY() - start.getY();
+		this.z = end.getZ() - start.getZ();
+	}
+
+	/**
 	 * Constructs a Vector with the components of the given Vertex.
 	 *
 	 * @param vertex The reference Vertex.

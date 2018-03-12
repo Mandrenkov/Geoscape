@@ -2,6 +2,9 @@ package geo;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import env.Colour;
+
+import java.awt.MultipleGradientPaint.ColorSpaceType;
 import java.util.function.Function;
 
 /**
@@ -11,18 +14,19 @@ import java.util.function.Function;
  *
  * <p>The <b>Prism</b> class represents a rectangular prism.</p>
  */
-public class Prism extends Composite {
+public class Prism extends Shape {
 
 	// Public members
 	// -------------------------------------------------------------------------
 
     /**
-     * Constructs a Prism with the given corner Vertices.
+     * Constructs a Prism with the given corner Vertices and Colour.
      * 
-     * @param v1 One corner of this Prism.
-     * @param v2 The other corner of this Prism.
+     * @param colour The colour of this Prism.
+     * @param v1     One corner of this Prism.
+     * @param v2     The other corner of this Prism.
      */
-	public Prism(Vertex v1, Vertex v2) {
+	public Prism(Colour colour, Vertex v1, Vertex v2) {
         // Returns an array containing the minumum and maximum values of the given Vertex dimension.
         Function<Function<Vertex, Float>, float[]> minimax = (Function<Vertex, Float> getter) -> {
             float min = Math.min(getter.apply(v1), getter.apply(v2));
@@ -39,40 +43,40 @@ public class Prism extends Composite {
             for (int y = 0; y < 2; ++y) {
                 for (int x = 0; x < 2; ++x) {
                     int i = (z << 2) + (y << 1) + x;
-                    vertices[i] = new Vertex(xs[x], ys[y], zs[z]);
+                    vertices[i] = new Vertex(colour, xs[x], ys[y], zs[z]);
                 }
             }
         }
 
         // Create a clockwise Quad to represent each face of the Prism.
-        Shape[] faces = new Shape[]{new Quad(vertices[0], vertices[1], vertices[2], vertices[3]),
-                                    new Quad(vertices[0], vertices[2], vertices[6], vertices[4]),
-                                    new Quad(vertices[2], vertices[6], vertices[7], vertices[3]),
-                                    new Quad(vertices[3], vertices[7], vertices[5], vertices[1]),
-                                    new Quad(vertices[1], vertices[5], vertices[4], vertices[0]),
-                                    new Quad(vertices[6], vertices[4], vertices[5], vertices[7])};
-        this.shapes = faces;
+        Polygon[] faces = new Polygon[]{new Quad(vertices[0], vertices[1], vertices[3], vertices[2]),  // Bottom
+                                        new Quad(vertices[0], vertices[4], vertices[5], vertices[1]),  // Front
+                                        new Quad(vertices[0], vertices[2], vertices[6], vertices[4]),  // Left
+                                        new Quad(vertices[2], vertices[3], vertices[7], vertices[6]),  // Back
+                                        new Quad(vertices[1], vertices[5], vertices[7], vertices[3]),  // Right
+                                        new Quad(vertices[4], vertices[6], vertices[7], vertices[5])}; // Top
+        this.polygons = faces;
 	}
 
 	/**
-	 * Draws this Sphere.
+	 * Draws this Prism.
 	 */
 	public void draw() {
 		glBegin(GL_QUADS);
-		for (Shape shape : shapes) {
-			shape.draw();
+		for (Polygon polygon : polygons) {
+			polygon.draw();
 		}
 		glEnd();
 	}
 
 	/**
-	 * Returns a String representation of this Sphere.
+	 * Returns a String representation of this Prism.
 	 * 
 	 * @return The String representation.
 	 */
 	public String toString() {
-        Vertex low = shapes[0].getVertices()[0];
-        Vertex high = shapes[7].getVertices()[3];
+        Vertex low = this.polygons[0].getVertexes()[0];
+        Vertex high = this.polygons[5].getVertexes()[3];
 		return String.format("%s to %s", low, high);
 	}
 }

@@ -17,7 +17,20 @@ public abstract class Shape implements Drawable {
     /**
 	 * Draws this Shape.
 	 */
-    public abstract void draw();
+    public void draw() {
+		for (Polygon polygon : this.polygons) {
+			polygon.draw();
+		}
+	}
+
+    /**
+     * Returns the number of Polygons in this Shape.
+     * 
+     * @return The number of Polygons
+     */
+    public int polygons() {
+        return polygons.length;
+    }
 
     /**
 	 * Returns a String representation of this Shape.

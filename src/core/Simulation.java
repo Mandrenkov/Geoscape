@@ -6,11 +6,15 @@ import static org.lwjgl.opengl.GL11.*;
 import bio.Biogle;
 import bio.Biomap;
 import bio.Biome;
+import bio.Biotex;
 import env.Camera;
+import env.Colour;
 import env.Grid;
 import env.Light;
 import env.Platform;
 import env.World;
+import geo.Line;
+import geo.Prism;
 import geo.Vertex;
 
 /**
@@ -42,15 +46,15 @@ public class Simulation {
 		Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
 		this.world.add(platform);
 
-		int size = Top.DEBUG ? 100 : 300;
+		int size = Top.DEBUG ? 300 : 300;
 
 		// Generate the Biomap characterizing the landscape of the World.
 		Biomap biomap = new Biomap(size, size);
-		biomap.setRect(0,                    0,                    biomap.getRows(),   biomap.getCols(),   Biome.HILL);
-		biomap.setSoft(biomap.getRows()*2/3, 0,                    biomap.getRows(),   biomap.getCols()/3, Biome.PLAIN);
-		biomap.setSoft(biomap.getRows()/2,   biomap.getCols()*2/3, biomap.getRows(),   biomap.getCols(),   Biome.DESERT);
-		biomap.setSoft(0,                    0,                    biomap.getRows()/3, biomap.getCols()/4, Biome.TUNDRA);
-		biomap.setSoft(0,                    biomap.getCols()/2,   biomap.getRows()/2, biomap.getCols(),   Biome.MOUNTAIN);
+		biomap.setRect(0,                    0,                    biomap.getRows() - 1, biomap.getCols() - 1, Biome.HILL);
+		biomap.setSoft(biomap.getRows()*2/3, 0,                    biomap.getRows() - 1, biomap.getCols()/3,   Biome.PLAIN);
+		biomap.setSoft(biomap.getRows()/2,   biomap.getCols()*2/3, biomap.getRows() - 1, biomap.getCols() - 1, Biome.DESERT);
+		biomap.setSoft(0,                    0,                    biomap.getRows()/3,   biomap.getCols()/4,   Biome.TUNDRA);
+		biomap.setSoft(0,                    biomap.getCols()/2,   biomap.getRows()/2,   biomap.getCols() - 1, Biome.MOUNTAIN);
 		
 		// Instantiate a Grid using the generated Biomap.
 		Grid land = new Grid("Land", size, size, minX, minY, maxX, maxY, biomap);
@@ -58,10 +62,12 @@ public class Simulation {
 
 		// Declare the set of Lights which illuminate the World in this simulation.
 		Light[] lights = new Light[]{
-			new Light(new Vertex(-3f, -3f, 3f))
+			new Light(new Vertex(-3f, -3f, 3f)),
+			//new Light(new Vertex(0f, 0f, 5f))
 		};
 		world.add(lights);
 
+		
 		// Use the Lights to illuminate the landscape Grid.
 		for (Biogle biogle : land.getBiogles()) {
 			biogle.illuminate(lights);
@@ -76,10 +82,6 @@ public class Simulation {
 	public void start() {
 		Logger.info("Rendering World %s.", this.world);
 
-		// Initialize the Window and Camera singletons.
-		Window.getInstance();
-		Camera.getInstance();
-
 		// Setup the previous loop time.
 		syncTime = glfwGetTime();
 		
@@ -93,7 +95,7 @@ public class Simulation {
 	/**
 	 * Target degree of rotation along the z-axis every second.
 	 */
-	private static final float Z_ROTATE_DELTA = -30.00f;
+	private static final float Z_ROTATE_DELTA = 30;
 
 	/**
 	 * The World associated with this Simulation.
@@ -125,10 +127,10 @@ public class Simulation {
 			double period = now - syncTime;
 			syncTime = now;
 
-			float rotation = (float) period*Z_ROTATE_DELTA;
+			float rotation = (float) (period*Z_ROTATE_DELTA);
 
 			Camera camera = Camera.getInstance();
-			camera.rotate(Camera.Axis.Z, rotation);
+			camera.rotate(rotation, 0, 0, 1);
 
 			// Prepare for the next frame.
 			glfwSwapBuffers(handle);

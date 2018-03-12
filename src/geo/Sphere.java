@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import env.Colour;
+
 /**
  * @author Mikhail Andrenkov
  * @since February 18, 2018
@@ -13,7 +15,7 @@ import java.util.Set;
  *
  * <p>The <b>Sphere</b> class represents a sphere.</p>
  */
-public class Sphere extends Composite {
+public class Sphere extends Shape {
 
 	// Public members
 	// -------------------------------------------------------------------------
@@ -34,32 +36,22 @@ public class Sphere extends Composite {
 			faces = refine(faces);
 		}
 
-		// Derive the set of unique Vertices that constitute the face Triangles.
-		Set<Vertex> vertices = new HashSet<>();
+		// Derive the set of unique Vertexes that constitute the face Triangles.
+		Set<Vertex> vertexes = new HashSet<>();
 		for (Triangle face : faces) {
-			for (Vertex vertex : face.getVertices()) {
-				vertices.add(vertex);
+			for (Vertex vertex : face.getVertexes()) {
+				vertexes.add(vertex);
 			}
 		}
 
-		// Scale and translate each Vertex to match the origin and radius of this Sphere.
-		for (Vertex vertex : vertices) {
+		// Colour, scale, and translate each Vertex to match the origin and
+		// radius of this Sphere.
+		for (Vertex vertex : vertexes) {
 			vertex.scale(radius);
 			vertex.translate(origin.getX(), origin.getY(), origin.getZ());
 		}
 
-		setShapes(faces.stream().toArray(Shape[]::new));
-	}
-
-	/**
-	 * Draws this Sphere.
-	 */
-	public void draw() {
-		glBegin(GL_TRIANGLES);
-		for (Shape shape : shapes) {
-			shape.draw();
-		}
-		glEnd();
+		this.polygons = faces.stream().toArray(Polygon[]::new);
 	}
 
 	/**
@@ -78,7 +70,7 @@ public class Sphere extends Composite {
 	/**
 	 * The number of refinement iterations to be performed.
 	 */
-	private static final int REFINE_STEPS = 5;
+	private static final int REFINE_STEPS = 3;
 
 	/**
 	 * The origin of this Sphere.
@@ -99,20 +91,24 @@ public class Sphere extends Composite {
 		ArrayList<Triangle> faces = new ArrayList<>();
 
 		// Declare the Vertices representing the corners of the octahedron.
-		Vertex u = new Vertex( 0,  0,  1);
-		Vertex d = new Vertex( 0,  0, -1);
-		Vertex l = new Vertex(-1,  0,  0);
-		Vertex r = new Vertex( 1,  0,  0);
-		Vertex b = new Vertex( 0, -1,  0);
-		Vertex f = new Vertex( 0,  1,  0);
+		Vertex u = new Vertex(Colour.random(Colour.Option.LIGHT),  0,  0,  1);
+		Vertex d = new Vertex(Colour.random(Colour.Option.LIGHT),  0,  0, -1);
+		Vertex l = new Vertex(Colour.random(Colour.Option.LIGHT), -1,  0,  0);
+		Vertex r = new Vertex(Colour.random(Colour.Option.LIGHT),  1,  0,  0);
+		Vertex b = new Vertex(Colour.random(Colour.Option.LIGHT),  0, -1,  0);
+		Vertex f = new Vertex(Colour.random(Colour.Option.LIGHT),  0,  1,  0);
 		
 		// Create the Triangles representing the faces of the octahedron.
-		for (Vertex z : new Vertex[]{u, d}) {
-			faces.add(new Triangle(z, f, l));
-			faces.add(new Triangle(z, l, b));
-			faces.add(new Triangle(z, b, r));
-			faces.add(new Triangle(z, r, f));
-		}
+		faces.add(new Triangle(u, f, r));
+		faces.add(new Triangle(u, r, b));
+		faces.add(new Triangle(u, b, l));
+		faces.add(new Triangle(u, l, f));
+		
+		faces.add(new Triangle(d, f, l));
+		faces.add(new Triangle(d, l, b));
+		faces.add(new Triangle(d, b, r));
+		faces.add(new Triangle(d, r, f));
+
 		return faces;
 	}
 
@@ -127,20 +123,20 @@ public class Sphere extends Composite {
 		// Replace each Triangle face on the Sphere with 4 new Triangles that
 		// better represent the round nature of the Sphere.
 		for (Triangle face : faces) {
-			Vertex[] corners = face.getVertices();
+			Vertex[] corners = face.getVertexes();
 			Vertex[] midpoints = new Vertex[3];
 
 			// Find the normalized midpoint coordinates of each edge in the Triangle.
 			for (int i = 0; i < 3; ++i) {
 				midpoints[i] = new Vertex(corners[i], corners[(i + 1) % 3]);
-				midpoints[i].normalize();
+				midpoints[i].normalize(); 
 			}
 
 			// Construct 4 new faces using the original Triangle's corners and midpoints.
-			newTriangles.add(new Triangle(midpoints[0], corners[0],   midpoints[2]));
-			newTriangles.add(new Triangle(midpoints[1], corners[1],   midpoints[0]));
-			newTriangles.add(new Triangle(midpoints[2], corners[2],   midpoints[1]));
-			newTriangles.add(new Triangle(midpoints[2], midpoints[1], midpoints[0]));
+			newTriangles.add(new Triangle(corners[0], midpoints[0], midpoints[2]));
+			newTriangles.add(new Triangle(corners[1], midpoints[1], midpoints[0]));
+			newTriangles.add(new Triangle(corners[2], midpoints[2], midpoints[1]));
+			newTriangles.add(new Triangle(midpoints[0], midpoints[1], midpoints[2]));
 		}
 		return newTriangles;
 	}

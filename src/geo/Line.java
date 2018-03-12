@@ -2,8 +2,6 @@ package geo;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import env.Colour;
-
 /**
  * @author Mikhail Andrenkov
  * @since February 17, 2018
@@ -11,7 +9,7 @@ import env.Colour;
  *
  * <p>The <b>Line</b> class represents a line.</p>
  */
-public class Line extends Shape {
+public class Line extends Polygon {
 
 	// Public members
 	// -------------------------------------------------------------------------
@@ -23,20 +21,7 @@ public class Line extends Shape {
 	 * @param start  The start Vertex of this Line.
      * @param end    The end Vertex of this Line.
 	 */
-	public Line(Colour colour, Vertex start, Vertex end) {
-        super(colour, start, end);
-	}
-
-	/**
-	 * Draws this Line.
-	 */
-	public void draw() {
-		colour.glColor();
-
-		glBegin(GL_LINE);
-		for (Vertex vertex : vertices) {
-			addVertex(vertex);
-		}
-		glEnd();
+	public Line(Vertex start, Vertex end) {
+        super(new Vertex[]{start, end}, GL_LINES);
 	}
 }

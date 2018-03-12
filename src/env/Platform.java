@@ -11,6 +11,7 @@ import geo.Vertex;
  * <p>The <b>Platform</b> class represents the platform beneath the landscape.</p>
  */
 public class Platform implements Drawable {
+
 	// Public members
 	// -------------------------------------------------------------------------
 
@@ -18,13 +19,13 @@ public class Platform implements Drawable {
 	 * Constructs a Platform with the given geometric constraints.
 	 *
 	 * @param minX The minimum X constraint.
-	 * @param maxX The maximum X constraint.
 	 * @param minY The minimum Y constraint.
-	 * @param maxY The maximum Y constraint.
 	 * @param minZ The minimum Z constraint.
+	 * @param maxX The maximum X constraint.
+	 * @param maxY The maximum Y constraint.
 	 * @param maxZ The maximum Z constraint.
 	 */
-	public Platform(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
+	public Platform(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
 		this.minX = minX;
 		this.minY = minY;
 		this.minZ = minZ;
@@ -44,6 +45,15 @@ public class Platform implements Drawable {
 	public void draw() {
 		prism.draw();
 	}
+
+	/**
+     * Returns the number of Polygons in this Polygon.
+     * 
+     * @return The number of Polygons
+     */
+    public int polygons() {
+        return prism.polygons();
+    }
 
 	/**
 	 * Returns the String representation of this Platform.

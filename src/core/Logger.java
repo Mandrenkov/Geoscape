@@ -15,6 +15,18 @@ public class Logger {
 
     // Public members
     // -------------------------------------------------------------------------
+
+    /**
+     * Logs a debug message to stdout.
+     * 
+     * @param msg  The message to display.
+     * @param args The arguments to be substituted into the message.  
+     */
+    public static void debug(String msg, Object ... args) {
+        if (Top.DEBUG) {
+            print("Debug", msg, args);
+        }
+    }
     
     /**
      * Logs an information message to stdout.
@@ -71,9 +83,7 @@ public class Logger {
     private static void print(String severity, String msg, Object ... args) {
         String now = getTimestamp();
         String prefix = String.format("[%s] %s: ", now, severity);
-        if (Top.DEBUG) {
-            System.out.printf(prefix + msg + "\n", args);
-        }
+        System.out.printf(prefix + msg + "\n", args);
     }
 
     /**

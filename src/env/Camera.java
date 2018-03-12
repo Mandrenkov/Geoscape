@@ -41,12 +41,24 @@ public class Camera {
 	 * Rotates the Camera about the given Axis by the specified value in degrees.
 	 *
 	 * @param axis     The Axis of rotation.
-	 * @param rotation The degree of clockwise rotation about the Axis.
+	 * @param rotation The degree of counter-clockwise rotation about the Axis.
 	 */
-	public void rotate(Axis axis, float rotation) {
-		float x = axis == Axis.X ? 1 : 0;
-		float y = axis == Axis.Y ? 1 : 0;
-		float z = axis == Axis.Z ? 1 : 0;
+	/*public void rotate(Axis axis, int rotation) {
+		int x = axis == Axis.X ? 1 : 0;
+		int y = axis == Axis.Y ? 1 : 0;
+		int z = axis == Axis.Z ? 1 : 0;
+		glRotatef(rotation, x, y, z);
+	}*/
+
+	/**
+	 * Rotates the Camera about the given Axis by the specified value in degrees.
+	 *
+	 * @param rotation The degree of CCW rotation about the Axis.
+	 * @param x        The X-component of the line.
+	 * @param y        The Y-component of the line.
+	 * @param z        The Z-component of the line.
+	 */
+	public void rotate(float rotation, float x, float y, float z) {
 		glRotatef(rotation, x, y, z);
 	}
 
@@ -59,7 +71,7 @@ public class Camera {
 	 */
 	public void translate(float dx, float dy, float dz) {
 		position.translate(dx, dy, dz);
-		glTranslatef(dx, dy, dz);
+		glTranslatef(-dx, -dy, -dz);
 	}
 
 
@@ -82,8 +94,9 @@ public class Camera {
 	private Camera() {
 		this.position = new Vertex(Vertex.ORIGIN);
 
-		this.rotate(Axis.X, -50);
-		this.rotate(Axis.Z, -55);
-		this.translate(0, 1.6f, -1.5f);
+		this.translate(0, 0, 1.5f);
+		//this.rotate(-45, 1, 0, 0);
+		this.rotate(-65, 1, 0, 0);
+		this.rotate(-135, 0, 0, 1);
 	}
 }

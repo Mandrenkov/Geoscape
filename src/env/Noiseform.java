@@ -3,6 +3,7 @@ package env;
 import util.Algebra;
 import bio.Biomix;
 import bio.Biotex;
+import core.Logger;
 import geo.Vector;
 
 /**
@@ -54,11 +55,6 @@ public class Noiseform {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Determines the radius of influence of a Point during scaling and Biome calculations.
-	 */
-	private static final int TOLERANCE = 2;
-
-	/**
 	 * The Grid associated with this Noiseform.
 	 */
 	private Grid grid;
@@ -85,66 +81,75 @@ public class Noiseform {
 		// Define a set of conversion ratios to convert a Grid coordinate into
 		// a Perlin grid coordinate.  An epsilon is thrown in to avoid division
 		// by 0 errors.
-		float epsilon = 1E-6f;
+		float epsilon = 1E-4f;
 		float colSize = grid.getWidth()/(this.cols - epsilon);
-		float rowSize = grid.getHeight()/(this.rows + epsilon);
+		float rowSize = grid.getHeight()/(this.rows - epsilon);
+		float minSize = Math.min(colSize, rowSize);
 
 		for (int row = 0; row < grid.getRows(); ++row) {
 			for (int col = 0; col < grid.getColumns(); ++col) {
-				Biotex biotex = grid.getBiotex(col, row);
+				Biotex biotex = grid.getBiotex(row, col);
 
 				/**
 				 * Use Perlin noise to calculate the change in elevation of this
 				 * Biotex.
 				 */
+
+				// Calculate the X and Y components of the Biotex relative to
+				// the origin of the Grid.
+				float dx = biotex.getX() - grid.getMinX();
+				float dy = biotex.getY() - grid.getMinY();
 				
 				// Map the Grid coordinate of the Biotex to a Perlin grid coordinate.
-				int colCell = (int) ((biotex.getX() - grid.getMinX())/colSize);
-				int rowCell = (int) ((biotex.getY() - grid.getMinY())/rowSize);
+				int colCell = (int) (dx/colSize);
+				int rowCell = (int) (dy/rowSize);
 
 				// Determine the offset of the Biotex to the Perlin coordinate.
-				float colOffset = biotex.getX() % colSize;
-				float rowOffset = biotex.getY() % rowSize;
+				float colOffset = dx % colSize;
+				float rowOffset = dy % rowSize;
 
 				// Compute the dot products from each corner of the Perlin cell
 				// to the Biotex.
 				float[][] dotProducts = new float[2][2];
-				dotProducts[0][0] = gradients[rowCell    ][colCell    ].dot(new Vector(rowOffset    , colOffset    ));
-				dotProducts[0][1] = gradients[rowCell    ][colCell + 1].dot(new Vector(rowOffset    , colOffset - 1));
-				dotProducts[1][1] = gradients[rowCell + 1][colCell + 1].dot(new Vector(rowOffset - 1, colOffset - 1));
-				dotProducts[1][0] = gradients[rowCell + 1][colCell    ].dot(new Vector(rowOffset - 1, colOffset    ));
+				dotProducts[0][0] = gradients[rowCell    ][colCell    ].dot(new Vector(colOffset          , rowOffset    ));
+				dotProducts[0][1] = gradients[rowCell    ][colCell + 1].dot(new Vector(colOffset - colSize, rowOffset    ));
+				dotProducts[1][1] = gradients[rowCell + 1][colCell + 1].dot(new Vector(colOffset - colSize, rowOffset - rowSize));
+				dotProducts[1][0] = gradients[rowCell + 1][colCell    ].dot(new Vector(colOffset          , rowOffset - rowSize));
 
 				// Calculate the elevation influence of the Perlin noise.
-				float colWeight = Algebra.curve(colOffset);
+				float colWeight = Algebra.curve(colOffset/colSize);
 				float colDot0 = Algebra.average(dotProducts[0][0], dotProducts[0][1], colWeight);
 				float colDot1 = Algebra.average(dotProducts[1][0], dotProducts[1][1], colWeight);
 
-				float rowWeight = Algebra.curve(rowOffset);
-				float z = Algebra.average(colDot0, colDot1, rowWeight);
-
-				// Tie the Biotex to the ground if it is near a Grid boundary.
-				if (colCell == 0 || colCell == this.cols - 1 || rowCell == 0 || rowCell == this.rows - 1) {
-					float rowOffsetMin = colSize*Math.min(biotex.getX() - grid.getMinX(), grid.getMaxX() - biotex.getX());
-					float colOffsetMin = rowSize*Math.min(biotex.getY() - grid.getMinY(), grid.getMaxY() - biotex.getY());
-					float offsetMin = Math.min(rowOffsetMin, colOffsetMin);
-					z *= Algebra.curve(offsetMin);
-				}
+				float rowWeight = Algebra.curve(rowOffset/rowSize);
+				float dz = Algebra.average(colDot0, colDot1, rowWeight);
 				
 				/**
 				 * Use nearby Biotexes to adjust the elevation scaling, Colour,
 				 * and Biomix of the current Biotex.
 				 */
 
-				Nearmap nearmap = new Nearmap(grid, row, col, TOLERANCE);
+				LocalMap locals = new LocalMap(grid, row, col, 0.05f);
 
-				Colour colour = nearmap.getColour();
+				//Logger.debug("locals = %s", locals.toString());
+
+				Colour colour = locals.getColour();
 				biotex.setColour(colour);
 
-				Biomix biomix = nearmap.getBiomix();
+				Biomix biomix = locals.getBiomix();
 				biotex.setBiomix(biomix);
+
+				dz *= locals.getScale();
+				float z = biotex.getZ() + dz;
 				
-				z *= nearmap.getScale();
-				biotex.translate(0, 0, z);
+				// Tie the Biotex to the ground if it is near a Grid boundary.
+				float colBorder = Math.min(biotex.getX() - grid.getMinX(), grid.getMaxX() - biotex.getX());
+				float rowBorder = Math.min(biotex.getY() - grid.getMinY(), grid.getMaxY() - biotex.getY());
+				float minBorder = Math.min(colBorder, rowBorder);
+				if (minBorder < minSize/2) {
+					z *= Algebra.curve(2*minBorder/minSize);
+				}
+				biotex.setZ(z);
 			}
 		}
 	}
@@ -162,18 +167,18 @@ public class Noiseform {
 		float[][] weight = new float[rows][cols];
 
 		// Compute the weighted sum of the heights of nearby Biotices.
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				Biotex refBiotex = this.grid.getBiotex(row, col);
+		for (int row = 0; row < rows; ++row) {
+			for (int col = 0; col < cols; ++col) {
+				Biotex reftex = this.grid.getBiotex(row, col);
 
 				for (int r = Math.max(0, row - radius); r <= Math.min(rows - 1, row + radius); ++r) {
 					for (int c = Math.max(0, col - radius); c <= Math.min(cols - 1, col + radius); ++c) {
-						Biotex curBiotex = this.grid.getBiotex(r, c);
+						Biotex curtex = this.grid.getBiotex(r, c);
 
 						// Verify that the current Biotex is close to the reference Biotex.
-						float dist = refBiotex.distance(curBiotex);
+						float dist = reftex.distance(curtex);
 						if (dist <= radius) {
-							sum[r][c] += refBiotex.getZ()*dist;
+							sum[r][c] += reftex.getZ()*dist;
 							weight[r][c] += dist;
 						}
 					}	

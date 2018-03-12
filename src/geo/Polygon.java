@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import core.Logger;
 import env.Colour;
 import env.Drawable;
 
@@ -15,7 +16,7 @@ import env.Drawable;
  *
  * <pThe <b>Polygon</b> class represents a geometric polygon.</p>
  */
-public abstract class Polygon implements Drawable {
+public class Polygon implements Drawable {
 
     // Public members
     // -------------------------------------------------------------------------
@@ -23,7 +24,23 @@ public abstract class Polygon implements Drawable {
     /**
 	 * Draws this Polygon.
 	 */
-    public abstract void draw();
+    public void draw() {
+        glBegin(this.mode);	
+		for (Vertex vertex : this.vertexes) {
+            vertex.getColour().gl();
+			vertex.gl();
+		}
+		glEnd();
+    }
+
+    /**
+     * Returns the number of Polygons in this Polygon.
+     * 
+     * @return The number of Polygons
+     */
+    public int polygons() {
+        return 1;
+    }
 
     /**
      * Returns the Colour of this Polygon.
@@ -31,7 +48,7 @@ public abstract class Polygon implements Drawable {
      * @return The Colour of this Polygon.
      */
     public Colour getColour() {
-        return colour;
+        return this.colour;
     }
     
     /**
@@ -39,8 +56,8 @@ public abstract class Polygon implements Drawable {
      * 
      * @return The Vertices comprising this Polygon.
      */
-    public Vertex[] getVertices() {
-        return vertices;
+    public Vertex[] getVertexes() {
+        return this.vertexes;
     }
 
     /**
@@ -55,10 +72,10 @@ public abstract class Polygon implements Drawable {
     /**
      * Sets the Vertices of this Polygon.
      * 
-     * @param vertices The new Vertices of this Polygon.
+     * @param vertexes The new Vertices of this Polygon.
      */
-    public void setVertices(Vertex[] vertices) {
-        this.vertices = vertices;
+    public void setVertices(Vertex[] vertexes) {
+        this.vertexes = vertexes;
     }
 
     /**
@@ -67,17 +84,17 @@ public abstract class Polygon implements Drawable {
      * @return A String representing this Polygon.
 	 */
 	public String toString() {
-        ArrayList<Vertex> vertices = new ArrayList<>(Arrays.asList(this.vertices));
-		return String.format("%s: %s", this.getClass().getName(), vertices.toString());
+        ArrayList<Vertex> vertexes = new ArrayList<>(Arrays.asList(this.vertexes));
+		return String.format("%s: %s", this.getClass().getName(), vertexes.toString());
 	}
 
     // Protected members
     // -------------------------------------------------------------------------
 
     /**
-     * List of Vertices comprising this Polygon.
+     * List of Vertexes comprising this Polygon.
      */
-    protected Vertex[] vertices;
+    protected Vertex[] vertexes;
 
     /**
      * The colour of this Polygon.
@@ -85,38 +102,34 @@ public abstract class Polygon implements Drawable {
     protected Colour colour;
 
     /**
+     * The OpenGL drawing mode to be applied to this Polygon.
+     */
+    protected int mode;
+
+    /**
 	 * Constructs an empty Polygon.
 	 */
 	protected Polygon() {
-        this.vertices = new Vertex[]{};
+        this.vertexes = new Vertex[]{};
     }
 
     /**
 	 * Constructs a Polygon with the given Vertices.
      * 
-     * @param vertices The Vertices comprising this Polygon.
+     * @param vertexes The Vertices comprising this Polygon.
 	 */
-	protected Polygon(Vertex... vertices) {
-        this.vertices = vertices;
+	protected Polygon(Vertex[] vertexes) {
+        this(vertexes, GL_POLYGON);
     }
 
     /**
-	 * Constructs a Polygon with the given Colour and Vertices.
+	 * Constructs a Polygon with the given OpenGL drawing mode and Vertices.
      * 
-     * @param colour   The Colour of this Polygon.
-     * @param vertices The Vertices comprising this Polygon.
+     * @param vertexes The Vertices comprising this Polygon.
+     * @param mode     The OpenGL drawing mode.
 	 */
-	protected Polygon(Colour colour, Vertex... vertices) {
-        this(vertices);
-        this.colour = colour;
+	protected Polygon(Vertex[] vertexes, int mode) {
+        this.vertexes = vertexes;
+        this.mode = mode;
     }
-
-    /**
-	 * Adds the given Vertex to the GL representation of this Polygon.
-	 *
-	 * @param vertex The vertex to be added.
-	 */
-	protected void addVertex(Vertex vertex) {
-		glVertex3f(vertex.getX(), vertex.getY(), vertex.getZ());
-	}
 }

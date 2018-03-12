@@ -4,18 +4,18 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
-import geo.Vertex;
-import geo.Biotex;
-import geo.Biogle;
-import util.BiomeMap;
-import util.Noise;
+import bio.Biotex;
+import core.Logger;
+import bio.Biogle;
+import bio.Biomap;
+import bio.Biome;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since March 4, 2018
+ * @version 1.1
  *
- * <p>Member declarations and definitions for the <b>Grid</b> class.</p>
+ * <p>The <b>Grid</b> class represents the surface of a landscape.</p>
  */
 public class Grid implements Drawable {
 
@@ -23,41 +23,46 @@ public class Grid implements Drawable {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Constructs a Grid with the given name, number of rows, columns, and coordinate bounds.
+	 * Constructs a Grid with the given name, rows, columns, coordinate bounds,
+	 * and Biomap.
 	 * 
-	 * @param name    The name of this Grid.
-	 * @param rows    The number of rows in this Grid.
-	 * @param columns The number of columns in this Grid.
-	 * @param minX    The minimum X-coordinate of this Grid.
-	 * @param minY    The minimum Y-coordinate of this Grid.
-	 * @param maxX    The maximum X-coordinate of this Grid. 
-	 * @param maxY    The maximum Y-coordinate of this Grid.
+	 * @param name   The name of this Grid.
+	 * @param rows   The number of rows in this Grid.
+	 * @param cols   The number of columns in this Grid.
+	 * @param minX   The minimum X-coordinate of this Grid.
+	 * @param minY   The minimum Y-coordinate of this Grid.
+	 * @param maxX   The maximum X-coordinate of this Grid. 
+	 * @param maxY   The maximum Y-coordinate of this Grid.
+	 * @param biomap The Biomap representing the Biomes imposed on this Grid.
 	 */
-	public Grid(String name, int rows, int columns, float minX, float minY, float maxX, float maxY) {
+	public Grid(String name, int rows, int cols, float minX, float minY, float maxX, float maxY, Biomap biomap) {
 		this.name = name;
 		this.rows = rows;
-		this.columns = columns;
+		this.cols = cols;
 		this.minX = minX;
 		this.minY = minY;
 		this.maxX = maxX;
 		this.maxY = maxY;
 
-		this.biotices = new Biotex[this.rows][this.columns];
+		this.biotices = new Biotex[this.rows][this.cols];
 		this.biogles = new ArrayList<>();
 
 		// Initialize the Biotices in this Grid.
 		for (int row = 0 ; row < this.rows; ++row) {
-			for (int col = 0 ; col < this.columns ; ++col) {
-				float x = this.minX + row*(this.maxX - this.minX)/(this.columns - 1);
-				float y = this.minY + col*(this.maxY - this.minY)/(this.rows - 1);
+			for (int col = 0 ; col < this.cols ; ++col) {
+				float x = this.minX + col*(this.maxX - this.minX)/(this.cols - 1);
+				float y = this.minY + row*(this.maxY - this.minY)/(this.rows - 1);
 				float z = DEFAULT_Z;
-				this.biotices[row][col] = new Biotex(x, y, z);
+				Biome biome = biomap.getBiome(row, col);
+				
+				Biotex biotex = new Biotex(biome, x, y, z);
+				this.biotices[row][col] = biotex;
 			}
 		}
 
 		// Initialize the Biogles in this Grid.
 		for (int row = 0; row < this.rows - 1; ++row) {
-			for (int p = 0; p < 2*this.columns - 2; ++p) {
+			for (int p = 0; p < 2*this.cols - 2; ++p) {
 				int col = p/2;
 				boolean forward = p % 2 == 0;
 
@@ -68,26 +73,28 @@ public class Grid implements Drawable {
 				this.biogles.add(new Biogle(biogle));
 			}
 		}
-	}
 
-	/**
-	 * Initializes the Points and Triangles that constitute this Grid.
-	 */
-	public void buildPoints() {
-		Noise.generateNoise(this);
+		Noiseform noiseform = new Noiseform(this, 10, 10);
+		noiseform.apply();
 	}
 
 	/**
 	 * Draws this Grid.
 	 */
 	public void draw() {
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glCullFace(GL_BACK);
-
 		for (Biogle biogle : this.biogles) {
 			biogle.draw();
 		}
 	}
+
+	/**
+     * Returns the number of Polygons in this Polygon.
+     * 
+     * @return The number of Polygons
+     */
+    public int polygons() {
+        return this.biogles.size();
+    }
 
 	/**
 	 * Returns the number of columns in this Grid.
@@ -95,7 +102,7 @@ public class Grid implements Drawable {
 	 * @return The number of columns.
 	 */
 	public int getColumns() {
-		return this.columns;
+		return this.cols;
 	}
 
 	/**
@@ -129,6 +136,78 @@ public class Grid implements Drawable {
 	}
 
 	/**
+	 * Returns the minimum X-coordinate of this Grid.
+	 * 
+	 * @return The minimum X-coordinate.
+	 */
+	public float getMinX() {
+		return this.minX;
+	}
+
+	/**
+	 * Returns the minimum Y-coordinate of this Grid.
+	 * 
+	 * @return The minimum Y-coordinate.
+	 */
+	public float getMinY() {
+		return this.minY;
+	}
+
+	/**
+	 * Returns the maximum X-coordinate of this Grid.
+	 * 
+	 * @return The maximum X-coordinate.
+	 */
+	public float getMaxX() {
+		return this.maxX;
+	}
+
+	/**
+	 * Returns the maximum Y-coordinate of this Grid.
+	 * 
+	 * @return The maximum Y-coordinate.
+	 */
+	public float getMaxY() {
+		return this.maxY;
+	}
+
+	/**
+	 * Returns the width of a cell in this Grid.
+	 * 
+	 * @return The width.
+	 */
+	public float getCellWidth() {
+		return this.getWidth()/this.cols;
+	}
+
+	/**
+	 * Returns the height of a cell in this Grid.
+	 * 
+	 * @return The height.
+	 */
+	public float getCellHeight() {
+		return this.getHeight()/this.rows;
+	}
+
+	/**
+	 * Returns the width of this Grid.
+	 * 
+	 * @return The width.
+	 */
+	public float getWidth() {
+		return this.maxX - this.minX;
+	}
+
+	/**
+	 * Returns the height of this Grid.
+	 * 
+	 * @return The height.
+	 */
+	public float getHeight() {
+		return this.maxY - this.minY;
+	}
+
+	/**
 	 * Returns a String representation of this Grid.
 	 * 
 	 * @return The String representation.
@@ -159,7 +238,7 @@ public class Grid implements Drawable {
 	/**
 	 * The number of columns in this Grid.
 	 */
-	private int columns;
+	private int cols;
 
 	/**
 	 * The minimum X-coordinate of this Grid. 

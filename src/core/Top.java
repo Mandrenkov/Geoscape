@@ -3,6 +3,8 @@ package core;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 
+import env.Camera;
+
 /**
  * @author Mikhail Andrenkov
  * @since May 14, 2017
@@ -25,7 +27,10 @@ public class Top {
 		Logger.info("Application starting...");
 
 		try {
-			// Start a new Simulation.
+			// Initialize the Window and Camera singletons.
+			Window.getInstance();
+			Camera.getInstance();
+
 			Simulation simulation = new Simulation();
 			simulation.start();
 

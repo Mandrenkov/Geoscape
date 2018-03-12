@@ -1,10 +1,11 @@
-package geo;
+package bio;
 
-import env.Biome;
-import env.Biomix;
 import env.Colour;
+import geo.Vertex;
 import java.util.Arrays;
 import java.util.stream.Stream;
+
+import util.Algebra;
 import util.Pair;
 
 /**
@@ -39,9 +40,22 @@ public class Biotex extends Vertex {
 	 * @param y The Y-coordinate of this Biotex.
 	 * @param z The Z-coordinate of this Biotex.
 	 */
-	public Biotex(float x, float y, float z) {
+	public Biotex(Biome biome, float x, float y, float z) {
 		super(x, y, z);
+		this.biome = biome;
+
+		this.colour = new Colour(biome.getColour());
 		this.biomix = new Biomix();
+		this.biomix.add(biome, 1f);
+	}
+
+	/**
+	 * Returns the primary Biome associated with this Biotex.
+	 * 
+	 * @return The Biome.
+	 */
+	public Biome getBiome() {
+		return this.biome;
 	}
 
 	/**
@@ -54,12 +68,21 @@ public class Biotex extends Vertex {
 	}
 
 	/**
-	 * Returns the Colour of this Biotex.
+	 * Returns the Colour of this Biotex. 
 	 * 
 	 * @return The Colour.
 	 */
 	public Colour getColour() {
 		return this.colour;
+	}
+
+	/**
+	 * Sets the Biomix of this Biotex to the given Biomix.
+	 * 
+	 * @param biomix The new Biomix of this Biotex.
+	 */
+	public void setBiomix(Biomix biomix) {
+		this.biomix = biomix;
 	}
 
 	/**
@@ -75,9 +98,9 @@ public class Biotex extends Vertex {
 	 * Applies the textures of the Biomes that influence this Biotex.
 	 */
 	public void texturize() {
-		for (Pair<Biome, Double> biomePair : this.biomix) {
+		for (Pair<Biome, Float> biomePair : this.biomix) {
 			Biome biome = biomePair.getFirst();
-			float scalar = (float) (double) biomePair.getSecond();
+			float scalar = (float) biomePair.getSecond();
 			biome.texturize(this, scalar);
 		}
 	}
@@ -107,12 +130,17 @@ public class Biotex extends Vertex {
 	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("%s with Colour %s", super.toString(), colour);
+		return String.format("Biotex (%.2f, %.2f, %.2f) with %s", this.x, this.y, this.z, this.colour);
 	}
 
 
 	// Private members
 	// -------------------------------------------------------------------------
+
+	/**
+	 * The original Biome of this Biotex. 
+	 */
+	private Biome biome;
 
 	/**
 	 * The Biome influences on this Biotex.

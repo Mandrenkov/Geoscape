@@ -3,6 +3,8 @@ package env;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import core.Logger;
 
@@ -27,53 +29,27 @@ public class Colour {
 	};
 
 	/**
-	 * Colour of the backdrop.
-	 */
-	public static final float[] BACKDROP = new float[] {0.05f, 0.05f, 0.05f, 1.0f};
-
-	/**
-	 * Base colour of the "Desert" Biome.
-	 */
-	public static final float[] TERRAIN_DESERT = new float[] {0.6f, 0.3f, 0.0f, 1.0f};
-	/**
-	 * Base colour of the "Hills" Biome.
-	 */
-	public static final float[] TERRAIN_HILLS = new float[] {0.2f, 0.4f, 0.0f, 1.0f};
-	/**
-	 * Base colour of the "Mountains" Biome.
-	 */
-	public static final float[] TERRAIN_MOUNTAINS = new float[] {0.15f, 0.1f, 0.0f, 1.0f};
-	/**
-	 * Base colour of the "Plains" Biome.
-	 */
-	public static final float[] TERRAIN_PLAINS = new float[] {0.8f, 1.0f, 0.0f, 1.0f};
-	/**
-	 * Base colour of the "Tunda" Biome.
-	 */
-	public static final float[] TERRAIN_TUNDRA = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
-
-	/**
 	 * Returns the average Colour represented by the given Colours.
 	 * 
-	 * @param clrs The Colours to average.
+	 * @param colours The Colours to average.
 	 * 
 	 * @return The average Colour.
 	 */
-	public static Colour average(Colour... clrs) {
-		if (clrs.length == 0) {
+	public static Colour average(Colour... colours) {
+		if (colours.length == 0) {
 			Logger.error("Cannot determine average of 0 colours.");
 			return new Colour();
 		}
 
 		// Returns the average value of the given Colour component accessor function.
-		Function<Function<Colour, Float>, Float> average = (Function<Colour, Float> supplier) -> {
+		BiFunction<Colour[], Function<Colour, Float>, Float> average = (Colour[] clrs, Function<Colour, Float> supplier) -> {
 			return (float) Arrays.stream(clrs).mapToDouble(clr -> supplier.apply(clr)).sum()/clrs.length;
 		};
 
-		return new Colour(average.apply(Colour::getRed),
-						  average.apply(Colour::getGreen),
-						  average.apply(Colour::getBlue),
-						  average.apply(Colour::getAlpha));
+		return new Colour(average.apply(colours, Colour::getRed),
+						  average.apply(colours, Colour::getGreen),
+						  average.apply(colours, Colour::getBlue),
+						  average.apply(colours, Colour::getAlpha));
 	}
 
 	/**
@@ -86,7 +62,7 @@ public class Colour {
 	public static Colour random(Option option) {
 		switch (option) {
 			case LIGHT:
-				float clr = (float) Math.random()*0.2f + 0.8f;
+				float clr = (float) Math.random()*0.3f + 0.7f;
 				return new Colour(clr, clr, clr);
 			default:
 				return new Colour((float) Math.random(), (float) Math.random(), (float) Math.random());
@@ -94,10 +70,19 @@ public class Colour {
 	}
 
 	/**
-	 * Constructs an opaque black Colour object.
+	 * Constructs an opaque black Colour.
 	 */
 	public Colour() {
 		this(0f, 0f, 0f, 1f);
+	}
+
+	/**
+	 * Constructs a Colour that is a clone of the given Colour.
+	 * 
+	 * @param colour The Colour to clone.
+	 */
+	public Colour(Colour colour) {
+		this(colour.red, colour.green, colour.blue, colour.alpha);
 	}
 
 	/**
@@ -127,12 +112,23 @@ public class Colour {
 	}
 
 	/**
+	 * Adds the components of the given Colour to this Colour.
+	 * 
+	 * @param colour The Colour to add.
+	 */
+	public void add(Colour colour) {
+		this.red   = Math.min(1f, this.red   + colour.red  );
+		this.green = Math.min(1f, this.green + colour.green);
+		this.blue  = Math.min(1f, this.blue  + colour.blue );
+	}
+
+	/**
 	 * Returns the red component of this Colour.
 	 * 
 	 * @return The red component.
 	 */
 	public float getRed() {
-		return red;
+		return this.red;
 	}
 
 	/**
@@ -141,7 +137,7 @@ public class Colour {
 	 * @return The green component.
 	 */
 	public float getGreen() {
-		return green;
+		return this.green;
 	}
 
 	/**
@@ -150,7 +146,7 @@ public class Colour {
 	 * @return The blue component.
 	 */
 	public float getBlue() {
-		return blue;
+		return this.blue;
 	}
 
 	/**
@@ -159,17 +155,14 @@ public class Colour {
 	 * @return The alpha component.
 	 */
 	public float getAlpha() {
-		return alpha;
+		return this.alpha;
 	}
 
 	/**
 	 * Sets the GL colour to this Colour.
 	 */
-	public void glColor() {
-		byte r = (byte) (getRed() - 128);
-		byte g = (byte) (getGreen() - 128);
-		byte b = (byte) (getBlue() - 128);
-		glColor3b(r, g, b);
+	public void gl() {
+		glColor3f(this.red, this.green, this.blue);
 	}
 
 	/**
@@ -178,9 +171,21 @@ public class Colour {
 	 * @param scale The scalar to multiply.
 	 */
 	public void scale(float scalar) {
-		red   = Math.min(1f, Math.max(0f, scalar*red));
-		green = Math.min(1f, Math.max(0f, scalar*green));
-		blue  = Math.min(1f, Math.max(0f, scalar*blue));
+		this.red   = Math.min(1f, scalar*this.red);
+		this.green = Math.min(1f, scalar*this.green);
+		this.blue  = Math.min(1f, scalar*this.blue);
+	}
+
+	/**
+	 * Changes the RGB components of this Colour by a random value within the given range.
+	 *
+	 * @param magnitude The maximum magnitude of the change in the components.
+	 */
+	public void shift(float magnitude) {
+		float rand = (float) ThreadLocalRandom.current().nextDouble(-magnitude, magnitude);
+		this.red   = Math.min(1f, Math.max(0f, rand + this.red));
+		this.green = Math.min(1f, Math.max(0f, rand + this.green));
+		this.blue  = Math.min(1f, Math.max(0f, rand + this.blue));
 	}
 
 	/**
@@ -189,7 +194,7 @@ public class Colour {
 	 * @return The String representation.
 	 */
 	public String toString() {
-		return String.format("(%.2f, %.2f, %.2f, %.2f)", getRed(), getGreen(), getBlue(), getAlpha());
+		return String.format("Colour (%.2f, %.2f, %.2f, %.2f)", this.red, this.green, this.blue, this.alpha);
 	}
 
 
