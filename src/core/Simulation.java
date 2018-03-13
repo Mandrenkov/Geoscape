@@ -50,11 +50,11 @@ public class Simulation {
 
 		// Generate the Biomap characterizing the landscape of the World.
 		Biomap biomap = new Biomap(size, size);
-		biomap.setRect(0,                    0,                    biomap.getRows() - 1, biomap.getCols() - 1, Biome.HILL);
-		biomap.setSoft(biomap.getRows()*2/3, 0,                    biomap.getRows() - 1, biomap.getCols()/3,   Biome.PLAIN);
-		biomap.setSoft(biomap.getRows()/2,   biomap.getCols()*2/3, biomap.getRows() - 1, biomap.getCols() - 1, Biome.DESERT);
-		biomap.setSoft(0,                    0,                    biomap.getRows()/3,   biomap.getCols()/4,   Biome.TUNDRA);
-		biomap.setSoft(0,                    biomap.getCols()/2,   biomap.getRows()/2,   biomap.getCols() - 1, Biome.MOUNTAIN);
+		biomap.setRect(0,                     0,                    biomap.getCols() - 1, biomap.getRows() - 1,       Biome.HILL);
+		biomap.setCloud(0,                    biomap.getRows()*2/3, biomap.getCols()/3,   biomap.getRows() - 1, 4, 4, Biome.PLAIN);
+		biomap.setCloud(biomap.getCols()*2/3, biomap.getRows()/2,   biomap.getCols() - 1, biomap.getRows() - 1, 4, 4, Biome.DESERT);
+		biomap.setCloud(0,                    0,                    biomap.getCols()/4,   biomap.getRows()/3,   4, 4, Biome.TUNDRA);
+		biomap.setCloud(biomap.getCols()/2,   0,                    biomap.getCols() - 1, biomap.getRows()/2,   4, 4, Biome.MOUNTAIN);
 		
 		// Instantiate a Grid using the generated Biomap.
 		Grid land = new Grid("Land", size, size, minX, minY, maxX, maxY, biomap);
