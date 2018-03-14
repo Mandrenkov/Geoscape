@@ -2,31 +2,30 @@ package geo;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import env.Colour;
-
-import java.awt.MultipleGradientPaint.ColorSpaceType;
 import java.util.function.Function;
+
+import env.Colour;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2018
+ * @since March 13, 2018
  * @version 1.1
  *
  * <p>The <b>Prism</b> class represents a rectangular prism.</p>
  */
 public class Prism extends Shape {
 
-	// Public members
-	// -------------------------------------------------------------------------
+    // Public members
+    // -------------------------------------------------------------------------
 
     /**
      * Constructs a Prism with the given corner Vertices and Colour.
-     * 
+     *
      * @param colour The colour of this Prism.
      * @param v1     One corner of this Prism.
      * @param v2     The other corner of this Prism.
      */
-	public Prism(Colour colour, Vertex v1, Vertex v2) {
+    public Prism(Colour colour, Vertex v1, Vertex v2) {
         // Returns an array containing the minumum and maximum values of the given Vertex dimension.
         Function<Function<Vertex, Float>, float[]> minimax = (Function<Vertex, Float> getter) -> {
             float min = Math.min(getter.apply(v1), getter.apply(v2));
@@ -56,27 +55,27 @@ public class Prism extends Shape {
                                         new Quad(vertices[1], vertices[5], vertices[7], vertices[3]),  // Right
                                         new Quad(vertices[4], vertices[6], vertices[7], vertices[5])}; // Top
         this.polygons = faces;
-	}
+    }
 
-	/**
-	 * Draws this Prism.
-	 */
-	public void draw() {
-		glBegin(GL_QUADS);
-		for (Polygon polygon : polygons) {
-			polygon.draw();
-		}
-		glEnd();
-	}
+    /**
+     * Draws this Prism.
+     */
+    public void draw() {
+        glBegin(GL_QUADS);
+        for (Polygon polygon : polygons) {
+            polygon.draw();
+        }
+        glEnd();
+    }
 
-	/**
-	 * Returns a String representation of this Prism.
-	 * 
-	 * @return The String representation.
-	 */
-	public String toString() {
+    /**
+     * Returns a String representation of this Prism.
+     *
+     * @return The String representation.
+     */
+    public String toString() {
         Vertex low = this.polygons[0].getVertexes()[0];
         Vertex high = this.polygons[5].getVertexes()[3];
-		return String.format("%s to %s", low, high);
-	}
+        return String.format("%s to %s", low, high);
+    }
 }

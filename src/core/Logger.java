@@ -6,8 +6,8 @@ import java.util.Date;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 12, 2018
- * @version 1.1.0
+ * @since March 13, 2018
+ * @version 1.1
  *
  * <p>The <i>Logger</i> class logs application messages.</p>
  */
@@ -18,21 +18,21 @@ public class Logger {
 
     /**
      * Logs a debug message to stdout.
-     * 
+     *
      * @param msg  The message to display.
-     * @param args The arguments to be substituted into the message.  
+     * @param args The arguments to be substituted into the message.
      */
     public static void debug(String msg, Object ... args) {
         if (Top.DEBUG) {
             print("Debug", msg, args);
         }
     }
-    
+
     /**
      * Logs an information message to stdout.
-     * 
+     *
      * @param msg  The message to display.
-     * @param args The arguments to be substituted into the message.  
+     * @param args The arguments to be substituted into the message.
      */
     public static void info(String msg, Object ... args) {
         print("Info", msg, args);
@@ -40,9 +40,9 @@ public class Logger {
 
     /**
      * Logs a warning message to stdout.
-     * 
+     *
      * @param msg  The message to display.
-     * @param args The arguments to be substituted into the message.  
+     * @param args The arguments to be substituted into the message.
      */
     public static void warn(String msg, Object ... args) {
         print("Warn", msg, args);
@@ -50,9 +50,9 @@ public class Logger {
 
     /**
      * Logs an error message to stdout.
-     * 
+     *
      * @param msg  The message to display.
-     * @param args The arguments to be substituted into the message.  
+     * @param args The arguments to be substituted into the message.
      */
     public static void error(String msg, Object ... args) {
         print("Error", msg, args);
@@ -60,9 +60,9 @@ public class Logger {
 
     /**
      * Logs an error message to stdout and then terminates the program.
-     * 
+     *
      * @param msg  The message to display.
-     * @param args The arguments to be substituted into the message.  
+     * @param args The arguments to be substituted into the message.
      */
     public static void fatal(String msg, Object ... args) {
         error(msg, args);
@@ -70,12 +70,12 @@ public class Logger {
     }
 
     // Private members
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Substitutes the given arguments into the provided message to generate a
      * string that is logged to stdout with the given severity tag.
-     * 
+     *
      * @param severity The severity of the message.
      * @param msg  The message to display.
      * @param args The arguments to be substituted into the message.
@@ -88,7 +88,7 @@ public class Logger {
 
     /**
      * Generates a String representation of the current time.
-     * 
+     *
      * @return The current timestamp.
      */
     private static String getTimestamp() {

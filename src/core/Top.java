@@ -7,44 +7,44 @@ import env.Camera;
 
 /**
  * @author Mikhail Andrenkov
- * @since May 14, 2017
- * @version 1.0
+ * @since March 13, 2018
+ * @version 1.1
  *
  * <p>The <i>Top</i> class is the execution entry point.</p>
  */
 public class Top {
-	/**
-	 * Toggles debug parameters and the display of logged messages.
-	 */
-	public static final boolean DEBUG = true;
+    /**
+     * Toggles debug parameters and the display of logged messages.
+     */
+    public static final boolean DEBUG = true;
 
-	/**
-	 * Execution entry point.
-	 *
-	 * @param args Command-line arguments.
-	 */
-	public static void main(String[] args) {
-		Logger.info("Application starting...");
+    /**
+     * Execution entry point.
+     *
+     * @param args Command-line arguments.
+     */
+    public static void main(String[] args) {
+        Logger.info("Application starting...");
 
-		try {
-			// Initialize the Window and Camera singletons.
-			Window.getInstance();
-			Camera.getInstance();
+        try {
+            // Initialize the Window and Camera singletons.
+            Window.getInstance();
+            Camera.getInstance();
 
-			Simulation simulation = new Simulation();
-			simulation.start();
+            Simulation simulation = new Simulation();
+            simulation.start();
 
-			// Free the window callbacks and destroy the window.
-			long handle = Window.getInstance().getHandle();
-			glfwFreeCallbacks(handle);
-			glfwDestroyWindow(handle);
-		} finally {
-			// Terminate GLFW and free the error callback.
-			glfwTerminate();
-			glfwSetErrorCallback(null).free();
-		}
+            // Free the window callbacks and destroy the window.
+            long handle = Window.getInstance().getHandle();
+            glfwFreeCallbacks(handle);
+            glfwDestroyWindow(handle);
+        } finally {
+            // Terminate GLFW and free the error callback.
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
+        }
 
-		Logger.info("Application terminated.");
-	}
+        Logger.info("Application terminated.");
+    }
 
 }

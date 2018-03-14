@@ -2,18 +2,15 @@ package env;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import bio.Biome;
 import bio.Biomix;
 import bio.Biotex;
-import core.Logger;
 import util.Algebra;
-import util.Pair;
 
 /**
  * @author Mikhail Andrenkov
- * @since March 6, 2018
+ * @since March 13, 2018
  * @version 1.1
  *
  * <pThe <b>LocalMap</b> class represents a weighted set of nearby Biotexes.</p>
@@ -26,7 +23,7 @@ public class LocalMap {
     /**
      * Constructs a LocalMap using the Biotex located at the given row and column
      * of the specified Grid with the provided proximity distance.
-     * 
+     *
      * @param grid    The Grid containing the Biotex.
      * @param row     The row of the Biotex.
      * @param col     The column of the Biotex.
@@ -47,7 +44,7 @@ public class LocalMap {
 
         // Determine the bounding columns containing Biotexes to be added to the map.
         int minCol = (int) Math.max(0, col - mandist);
-        int maxCol = (int) Math.min(grid.getColumns() - 1, col + mandist);        
+        int maxCol = (int) Math.min(grid.getColumns() - 1, col + mandist);
 
         for (int r = minRow; r <= maxRow; ++r) {
             for (int c = minCol; c <= maxCol; ++c) {
@@ -62,13 +59,13 @@ public class LocalMap {
                     this.map.put(curtex, weight);
                     this.weightSum += weight;
                 }
-            }	
+            }
         }
     }
 
     /**
      * Returns the representative Biomix of this LocalMap.
-     * 
+     *
      * @return The Biomix.
      */
     public Biomix getBiomix() {
@@ -83,7 +80,7 @@ public class LocalMap {
 
     /**
      * Returns the representative Colour of this LocalMap.
-     * 
+     *
      * @return The Colour.
      */
     public Colour getColour() {
@@ -102,27 +99,27 @@ public class LocalMap {
 
     /**
      * Returns the representative elevation scale of this LocalMap.
-     * 
+     *
      * @return The elevation scale.
      */
     public float getScale() {
         float average = 0;
-		for (Biotex biotex : this.map.keySet()) {
+        for (Biotex biotex : this.map.keySet()) {
             float scale = biotex.getBiome().getScale();
             float weight = this.map.get(biotex);
-			average += weight*scale/this.map.size();
-		}
-		return average;
+            average += weight*scale/this.map.size();
+        }
+        return average;
     }
 
     /**
-	 * Returns a String representation of this Shape.
-     * 
+     * Returns a String representation of this Shape.
+     *
      * @return A String representing this Shape.
-	 */
-	public String toString() {
-		return String.format("%s: %s", this.biotex.toString(), map.toString());
-	}
+     */
+    public String toString() {
+        return String.format("%s: %s", this.biotex.toString(), map.toString());
+    }
 
 
     // Private members

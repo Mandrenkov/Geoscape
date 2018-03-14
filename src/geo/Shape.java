@@ -4,7 +4,7 @@ import env.Drawable;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 17, 2018
+ * @since March 13, 2018
  * @version 1.1
  *
  * <pThe <b>Shape</b> class represents a collection of Polygons.</p>
@@ -15,17 +15,17 @@ public abstract class Shape implements Drawable {
     // -------------------------------------------------------------------------
 
     /**
-	 * Draws this Shape.
-	 */
+     * Draws this Shape.
+     */
     public void draw() {
-		for (Polygon polygon : this.polygons) {
-			polygon.draw();
-		}
-	}
+        for (Polygon polygon : this.polygons) {
+            polygon.draw();
+        }
+    }
 
     /**
      * Returns the number of Polygons in this Shape.
-     * 
+     *
      * @return The number of Polygons
      */
     public int polygons() {
@@ -33,13 +33,13 @@ public abstract class Shape implements Drawable {
     }
 
     /**
-	 * Returns a String representation of this Shape.
-     * 
+     * Returns a String representation of this Shape.
+     *
      * @return A String representing this Shape.
-	 */
-	public String toString() {
-		return String.format("%s: %s", this.getClass().getName(), polygons.toString());
-	}
+     */
+    public String toString() {
+        return String.format("%s: %s", this.getClass().getName(), polygons.toString());
+    }
 
     // Protected members
     // -------------------------------------------------------------------------
@@ -50,9 +50,9 @@ public abstract class Shape implements Drawable {
     protected Polygon[] polygons;
 
     /**
-	 * Constructs an empty Shape object.
-	 */
-	protected Shape() {
+     * Constructs an empty Shape object.
+     */
+    protected Shape() {
         this.polygons = new Polygon[]{};
     }
 }

@@ -2,7 +2,7 @@ package util;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 25, 2018
+ * @since March 13, 2018
  * @version 1.1
  *
  * <p>The <b>Pair</b> class represents a pair of values of types F and S.</p>
@@ -10,19 +10,19 @@ package util;
 public class Pair <F, S> {
 
     // Public members
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-	 * Constructs a Pointer object and initializes the buffer.
-	 */
-	public Pair(F first, S second) {
+     * Constructs a Pointer object and initializes the buffer.
+     */
+    public Pair(F first, S second) {
         this.first = first;
         this.second = second;
     }
-    
+
     /**
      * Returns the first value of this Pair.
-     * 
+     *
      * @return The first value.
      */
     public F getFirst() {
@@ -31,7 +31,7 @@ public class Pair <F, S> {
 
     /**
      * Returns the second value of this Pair.
-     * 
+     *
      * @return The second value.
      */
     public S getSecond() {
@@ -40,7 +40,7 @@ public class Pair <F, S> {
 
     /**
      * Sets the first value of this Pair.
-     * 
+     *
      * @param first The new value of |first|.
      */
     public void setFirst(F first) {
@@ -49,7 +49,7 @@ public class Pair <F, S> {
 
     /**
      * Sets the second value of this Pair.
-     * 
+     *
      * @param second The new value of |second|.
      */
     public void setSecond(S second) {
@@ -57,16 +57,16 @@ public class Pair <F, S> {
     }
 
     /**
-	 * Returns a String representation of this Pair.
-     * 
+     * Returns a String representation of this Pair.
+     *
      * @return The String representation.
-	 */
-	public String toString() {
-		return "(" + this.first + ", " + this.second + ")";
-	}
+     */
+    public String toString() {
+        return "(" + this.first + ", " + this.second + ")";
+    }
 
     // Private members
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The first value of the Pair.

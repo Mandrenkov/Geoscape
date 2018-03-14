@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import util.Pair;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 25, 2018
+ * @since March 13, 2018
  * @version 1.1
  *
  * <p>The <b>Biomix</b> class represents a mixture of Biomes.</p>
@@ -16,18 +17,18 @@ import util.Pair;
 public class Biomix implements Iterable<Pair<Biome, Float>> {
 
     // Public members
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-	 * Constructs an empty Biomix.
-	 */
+     * Constructs an empty Biomix.
+     */
     public Biomix() {
         this.map = new HashMap<>();
     }
 
     /**
      * Adds the given Biome to this Biomix with the specified weight.
-     * 
+     *
      * @param biome The Biome to be added to this Biomemix.
      * @param weight The weight of this Biome.
      */
@@ -42,7 +43,7 @@ public class Biomix implements Iterable<Pair<Biome, Float>> {
 
     /**
      * Returns the average Biome scale represented by this Biomix.
-     * 
+     *
      * @return The average scale.
      */
     public float getScale() {
@@ -56,17 +57,17 @@ public class Biomix implements Iterable<Pair<Biome, Float>> {
     }
 
     @Override
-	public Iterator<Pair<Biome, Float>> iterator() {
+    public Iterator<Pair<Biome, Float>> iterator() {
         ArrayList<Pair<Biome, Float>> biolist = new ArrayList<>();
         for (Biome biome : this.map.keySet()) {
             biolist.add(new Pair<>(biome, this.map.get(biome)));
         }
-		return biolist.iterator();
-	}
+        return biolist.iterator();
+    }
 
     /**
      * Returns the String representation of this Biomix.
-     * 
+     *
      * @return The String representation.
      */
     public String toString() {

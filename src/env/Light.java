@@ -5,76 +5,76 @@ import geo.Vertex;
 
 /**
  * @author Mikhail Andrenkov
- * @since February 18, 2018
+ * @since March 13, 2018
  * @version 1.1
  *
  * <p>The <b>Light</b> class represents a light source.</p>
  */
 public class Light implements Drawable {
 
-	// Public members
-	// -------------------------------------------------------------------------
+    // Public members
+    // -------------------------------------------------------------------------
 
-	/**
-	 * Constructs a Light at the specified position.
-	 *
-	 * @param position The position of this Light.
-	 */
-	public Light(Vertex position) {
-		this.position = position;
-		this.sphere = new Sphere(position, RADIUS);
-	}
+    /**
+     * Constructs a Light at the specified position.
+     *
+     * @param position The position of this Light.
+     */
+    public Light(Vertex position) {
+        this.position = position;
+        this.sphere = new Sphere(position, RADIUS);
+    }
 
-	/**
-	 * Draws this Light.
-	 */
-	public void draw() {
-		this.sphere.draw();
-	}
+    /**
+     * Draws this Light.
+     */
+    public void draw() {
+        this.sphere.draw();
+    }
 
-	/**
+    /**
      * Returns the number of Polygons in this Light.
-     * 
+     *
      * @return The number of Polygons
      */
     public int polygons() {
         return this.sphere.polygons();
     }
 
-	/**
-	 * Returns the position of this Light.
-	 *
-	 * @return The position.
-	 */
-	public Vertex getPosition() {
-		return position;
-	}
+    /**
+     * Returns the position of this Light.
+     *
+     * @return The position.
+     */
+    public Vertex getPosition() {
+        return position;
+    }
 
-	/**
-	 * Returns a String representation of this Light.
-	 * 
-	 * @return The String representation.
-	 */
-	public String toString() {
-		return position.toString();
-	}
+    /**
+     * Returns a String representation of this Light.
+     *
+     * @return The String representation.
+     */
+    public String toString() {
+        return position.toString();
+    }
 
 
-	// Private members
-	// -------------------------------------------------------------------------
+    // Private members
+    // -------------------------------------------------------------------------
 
-	/**
-	 * The radius of the Spheres that represent Lights.
-	 */
-	private final float RADIUS = 0.10f;
+    /**
+     * The radius of the Spheres that represent Lights.
+     */
+    private final float RADIUS = 0.10f;
 
-	/**
-	 * The position of this Light.
-	 */
-	private Vertex position;
+    /**
+     * The position of this Light.
+     */
+    private Vertex position;
 
-	/**
-	 * The Sphere representing this Light.
-	 */
-	private Sphere sphere;
+    /**
+     * The Sphere representing this Light.
+     */
+    private Sphere sphere;
 }
