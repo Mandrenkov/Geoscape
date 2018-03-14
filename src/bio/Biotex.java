@@ -1,7 +1,6 @@
 package bio;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 import env.Colour;
 import geo.Vertex;
@@ -20,15 +19,16 @@ public class Biotex extends Vertex {
     // -------------------------------------------------------------------------
 
     /**
-     * Returns the average Colour of the given Biotices.
+     * Returns the average Colour of the given Biotexes.
      *
-     * @param biotices The Biotices to average.
+     * @param biotexes The Biotexes to average.
      *
      * @return The average Colour.
      */
-    public static Colour averageColour(Biotex... biotices) {
-        Stream<Colour> colourStream = Arrays.stream(biotices).map(biotex -> biotex.getColour());
-        Colour[] colourArray = colourStream.toArray(Colour[]::new);
+    public static Colour averageColour(Biotex... biotexes) {
+        Colour[] colourArray = Arrays.stream(biotexes)
+                                     .map(biotex -> biotex.getColour())
+                                     .toArray(Colour[]::new);
         return Colour.average(colourArray);
     }
 

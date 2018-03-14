@@ -41,19 +41,19 @@ public class Grid implements Drawable {
         this.maxX = maxX;
         this.maxY = maxY;
 
-        this.biotices = new Biotex[this.rows][this.cols];
+        this.biotexes = new Biotex[this.rows][this.cols];
         this.biogles = new ArrayList<>();
 
-        // Initialize the Biotices in this Grid.
+        // Initialize the Biotexes in this Grid.
         for (int row = 0 ; row < this.rows; ++row) {
             for (int col = 0 ; col < this.cols ; ++col) {
                 float x = this.minX + col*(this.maxX - this.minX)/(this.cols - 1);
                 float y = this.minY + row*(this.maxY - this.minY)/(this.rows - 1);
-                float z = DEFAULT_Z;
+                float z = 0.1f;
                 Biome biome = biomap.getBiome(row, col);
 
                 Biotex biotex = new Biotex(biome, x, y, z);
-                this.biotices[row][col] = biotex;
+                this.biotexes[row][col] = biotex;
             }
         }
 
@@ -64,9 +64,9 @@ public class Grid implements Drawable {
                 boolean forward = p % 2 == 0;
 
                 Biotex[] biogle = new Biotex[3];
-                biogle[0] = forward ? this.biotices[row][col]     : this.biotices[row + 1][col + 1];
-                biogle[1] = forward ? this.biotices[row + 1][col] : this.biotices[row][col + 1];
-                biogle[2] = forward ? this.biotices[row][col + 1] : this.biotices[row + 1][col];
+                biogle[0] = forward ? this.biotexes[row][col]     : this.biotexes[row + 1][col + 1];
+                biogle[1] = forward ? this.biotexes[row + 1][col] : this.biotexes[row][col + 1];
+                biogle[2] = forward ? this.biotexes[row][col + 1] : this.biotexes[row + 1][col];
                 this.biogles.add(new Biogle(biogle));
             }
         }
@@ -120,7 +120,7 @@ public class Grid implements Drawable {
      * @return The Biotex located at the given position.
      */
     public Biotex getBiotex(int row, int col) {
-        return this.biotices[row][col];
+        return this.biotexes[row][col];
     }
 
     /**
@@ -218,11 +218,6 @@ public class Grid implements Drawable {
     // -------------------------------------------------------------------------
 
     /**
-     * The default elevation of the Biotices in a Grid.
-     */
-    private static final float DEFAULT_Z = 0.1f;
-
-    /**
      * The name of this Grid.
      */
     private String name;
@@ -258,9 +253,9 @@ public class Grid implements Drawable {
     private float maxY;
 
     /**
-     * The matrix of Biotices that comprise the Biogles of this Grid.
+     * The matrix of Biotexes that comprise the Biogles of this Grid.
      */
-    private Biotex[][] biotices;
+    private Biotex[][] biotexes;
 
     /**
      * The Biogles that comprise this Grid.

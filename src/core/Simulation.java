@@ -54,15 +54,13 @@ public class Simulation {
 
         // Instantiate a Grid using the generated Biomap.
         Grid land = new Grid("Land", size, size, minX, minY, maxX, maxY, biomap);
-        world.add(land);
+        this.world.add(land);
 
         // Declare the set of Lights which illuminate the World in this simulation.
         Light[] lights = new Light[]{
-            new Light(new Vertex(-3f, -3f, 3f)),
-            //new Light(new Vertex(0f, 0f, 5f))
+            new Light(new Vertex(-3f, -3f, 3f))
         };
-        world.add(lights);
-
+        this.world.add(lights);
 
         // Use the Lights to illuminate the landscape Grid.
         for (Biogle biogle : land.getBiogles()) {
@@ -77,10 +75,7 @@ public class Simulation {
      */
     public void start() {
         Logger.info("Rendering World %s.", this.world);
-
-        // Setup the previous loop time.
         syncTime = glfwGetTime();
-
         loop();
     }
 

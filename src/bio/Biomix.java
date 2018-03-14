@@ -33,12 +33,8 @@ public class Biomix implements Iterable<Pair<Biome, Float>> {
      * @param weight The weight of this Biome.
      */
     public void add(Biome biome, float weight) {
-        float prev = map.containsKey(biome) ? map.get(biome) : 0;
-        map.put(biome, prev + weight);
-    }
-
-    public void clear() {
-        this.map.clear();
+        float prev = this.map.getOrDefault(biome, 0f);
+        this.map.put(biome, prev + weight);
     }
 
     /**
@@ -53,7 +49,7 @@ public class Biomix implements Iterable<Pair<Biome, Float>> {
             float weight = this.map.get(biome);
             mult *= weight*scale;
         }
-        return (float) Math.pow(mult, 1.0/map.size());
+        return (float) Math.pow(mult, 1.0/this.map.size());
     }
 
     @Override
@@ -85,7 +81,8 @@ public class Biomix implements Iterable<Pair<Biome, Float>> {
     // -------------------------------------------------------------------------
 
     /**
-     * The list of Biomes associated with this Biomix along with their respective weights.
+     * The list of Biomes associated with this Biomix along with their respective
+     * weights.
      */
     private Map<Biome, Float> map;
 }

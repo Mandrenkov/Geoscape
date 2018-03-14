@@ -1,7 +1,5 @@
 package geo;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.function.Function;
 
 import env.Colour;
@@ -42,30 +40,18 @@ public class Prism extends Shape {
             for (int y = 0; y < 2; ++y) {
                 for (int x = 0; x < 2; ++x) {
                     int i = (z << 2) + (y << 1) + x;
-                    vertices[i] = new Vertex(colour, xs[x], ys[y], zs[z]);
+                    vertices[i] = new Vertex(xs[x], ys[y], zs[z], colour);
                 }
             }
         }
 
         // Create a clockwise Quad to represent each face of the Prism.
-        Polygon[] faces = new Polygon[]{new Quad(vertices[0], vertices[1], vertices[3], vertices[2]),  // Bottom
-                                        new Quad(vertices[0], vertices[4], vertices[5], vertices[1]),  // Front
-                                        new Quad(vertices[0], vertices[2], vertices[6], vertices[4]),  // Left
-                                        new Quad(vertices[2], vertices[3], vertices[7], vertices[6]),  // Back
-                                        new Quad(vertices[1], vertices[5], vertices[7], vertices[3]),  // Right
-                                        new Quad(vertices[4], vertices[6], vertices[7], vertices[5])}; // Top
-        this.polygons = faces;
-    }
-
-    /**
-     * Draws this Prism.
-     */
-    public void draw() {
-        glBegin(GL_QUADS);
-        for (Polygon polygon : polygons) {
-            polygon.draw();
-        }
-        glEnd();
+        this.polygons = new Polygon[]{new Quad(vertices[0], vertices[1], vertices[3], vertices[2]),  // Bottom
+                                      new Quad(vertices[0], vertices[4], vertices[5], vertices[1]),  // Front
+                                      new Quad(vertices[0], vertices[2], vertices[6], vertices[4]),  // Left
+                                      new Quad(vertices[2], vertices[3], vertices[7], vertices[6]),  // Back
+                                      new Quad(vertices[1], vertices[5], vertices[7], vertices[3]),  // Right
+                                      new Quad(vertices[4], vertices[6], vertices[7], vertices[5])}; // Top
     }
 
     /**

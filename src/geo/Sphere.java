@@ -30,7 +30,7 @@ public class Sphere extends Shape {
 
         // Create the Triangular faces of the Sphere.
         ArrayList<Triangle> faces = approximate();
-        for (int i = 0; i < REFINE_STEPS; ++i) {
+        for (int i = 0; i < 3; ++i) {
             faces = refine(faces);
         }
 
@@ -66,11 +66,6 @@ public class Sphere extends Shape {
     // -------------------------------------------------------------------------
 
     /**
-     * The number of refinement iterations to be performed.
-     */
-    private static final int REFINE_STEPS = 3;
-
-    /**
      * The origin of this Sphere.
      */
     private Vertex origin;
@@ -88,13 +83,14 @@ public class Sphere extends Shape {
     private ArrayList<Triangle> approximate() {
         ArrayList<Triangle> faces = new ArrayList<>();
 
-        // Declare the Vertices representing the corners of the octahedron.
-        Vertex u = new Vertex(Colour.random(Colour.Option.LIGHT),  0,  0,  1);
-        Vertex d = new Vertex(Colour.random(Colour.Option.LIGHT),  0,  0, -1);
-        Vertex l = new Vertex(Colour.random(Colour.Option.LIGHT), -1,  0,  0);
-        Vertex r = new Vertex(Colour.random(Colour.Option.LIGHT),  1,  0,  0);
-        Vertex b = new Vertex(Colour.random(Colour.Option.LIGHT),  0, -1,  0);
-        Vertex f = new Vertex(Colour.random(Colour.Option.LIGHT),  0,  1,  0);
+		// Declare the Vertices representing the corners of the octahedron.
+		Colour.Option option = Colour.Option.LIGHT;
+        Vertex u = new Vertex( 0,  0,  1, Colour.random(option));
+        Vertex d = new Vertex( 0,  0, -1, Colour.random(option));
+        Vertex l = new Vertex(-1,  0,  0, Colour.random(option));
+        Vertex r = new Vertex( 1,  0,  0, Colour.random(option));
+        Vertex b = new Vertex( 0, -1,  0, Colour.random(option));
+        Vertex f = new Vertex( 0,  1,  0, Colour.random(option));
 
         // Create the Triangles representing the faces of the octahedron.
         faces.add(new Triangle(u, f, r));

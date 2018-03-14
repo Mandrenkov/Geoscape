@@ -99,7 +99,7 @@ public class Vector {
      * @return The X-component.
      */
     public float getX() {
-        return x;
+        return this.x;
     }
 
     /**
@@ -108,7 +108,7 @@ public class Vector {
      * @return The Y-component.
      */
     public float getY() {
-        return y;
+        return this.y;
     }
 
     /**
@@ -117,7 +117,7 @@ public class Vector {
      * @return The Z-component.
      */
     public float getZ() {
-        return z;
+        return this.z;
     }
 
     /**

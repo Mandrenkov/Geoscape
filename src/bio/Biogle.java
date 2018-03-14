@@ -21,14 +21,14 @@ public class Biogle extends Triangle {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Biogle using the given Biotices.
+     * Constructs a Biogle using the given Biotexes.
      *
-     * @param biotices The Biotices comprising this Biogle.
+     * @param biotexes The Biotexes comprising this Biogle.
      */
-    public Biogle(Biotex... biotices) {
-        super((Vertex[]) biotices);
-        this.biotices = biotices;
-        this.colour = Biotex.averageColour(biotices);
+    public Biogle(Biotex... biotexes) {
+        super((Vertex[]) biotexes);
+        this.biotexes = biotexes;
+        this.colour = Biotex.averageColour(biotexes);
     }
 
     /**
@@ -59,7 +59,7 @@ public class Biogle extends Triangle {
      * @param lights The Lights illuminating this Biogle.
      */
     public void illuminate(Light... lights) {
-        this.colour = Biotex.averageColour(this.biotices);
+        this.colour = Biotex.averageColour(this.biotexes);
 
         // Scale the colour using the elevation of the Biogle.
         // The 10x multiplier is completely arbitrary.
@@ -86,8 +86,6 @@ public class Biogle extends Triangle {
 
         scaleLight *= scaleZ;
 
-        //System.err.println(scaleLight);
-
         this.colour.scale(scaleLight);
     }
 
@@ -95,9 +93,9 @@ public class Biogle extends Triangle {
     // -------------------------------------------------------------------------
 
     /**
-     * The Biotices comprising this Biogle.
+     * The Biotexes comprising this Biogle.
      */
-    private Biotex[] biotices;
+    private Biotex[] biotexes;
 
     /**
      * The colour of this Biogle.

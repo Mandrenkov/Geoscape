@@ -40,19 +40,6 @@ public class Camera {
     /**
      * Rotates the Camera about the given Axis by the specified value in degrees.
      *
-     * @param axis     The Axis of rotation.
-     * @param rotation The degree of counter-clockwise rotation about the Axis.
-     */
-    /*public void rotate(Axis axis, int rotation) {
-        int x = axis == Axis.X ? 1 : 0;
-        int y = axis == Axis.Y ? 1 : 0;
-        int z = axis == Axis.Z ? 1 : 0;
-        glRotatef(rotation, x, y, z);
-    }*/
-
-    /**
-     * Rotates the Camera about the given Axis by the specified value in degrees.
-     *
      * @param rotation The degree of CCW rotation about the Axis.
      * @param x        The X-component of the line.
      * @param y        The Y-component of the line.

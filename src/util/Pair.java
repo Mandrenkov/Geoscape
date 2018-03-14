@@ -26,7 +26,7 @@ public class Pair <F, S> {
      * @return The first value.
      */
     public F getFirst() {
-        return first;
+        return this.first;
     }
 
     /**
@@ -35,7 +35,7 @@ public class Pair <F, S> {
      * @return The second value.
      */
     public S getSecond() {
-        return second;
+        return this.second;
     }
 
     /**

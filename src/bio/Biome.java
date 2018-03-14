@@ -10,7 +10,7 @@ import env.Colour;
  *
  * <p>The <b>Biome</b> class represents a natural biome.  In the context of this
  * application, a Biome is a set of common characteristics shared by a group of
- * Biotices.</p>
+ * Biotexes.</p>
  */
 public class Biome {
 
@@ -42,12 +42,6 @@ public class Biome {
     public static final Biome MOUNTAIN = new Biome("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
         public void texturize(Biotex biotex, float scalar) {
             biotex.shift(0.005f*scalar);
-
-            //float increase = (float) Math.random()*biotex.getZ()*8;
-            //Colour colour = new Colour(increase, increase, increase);
-            //Colour colour = new Colour(this.getColour());
-            //colour.scale(increase);
-            //biotex.getBaseColour().add(colour);
         }
     };
     /**

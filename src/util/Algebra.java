@@ -36,6 +36,6 @@ public class Algebra {
      * @return The mapped value.
      */
     public static float curve(float x) {
-        return (float) (1f - Math.cos(x*Math.PI))/2f;
+        return (float) (1f - Math.cos(Math.PI*x))/2f;
     }
 }

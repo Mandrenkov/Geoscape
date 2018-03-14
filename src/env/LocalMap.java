@@ -54,7 +54,6 @@ public class LocalMap {
                 // reference Biotex.
                 float dist = this.biotex.distance(curtex);
                 if (dist <= eucdist) {
-                    //System.out.println(dist);
                     float weight = (float) Math.pow(1f - Algebra.curve(dist/(eucdist + 1E-4f)), 0.8);
                     this.map.put(curtex, weight);
                     this.weightSum += weight;
@@ -73,7 +72,7 @@ public class LocalMap {
         for (Biotex biotex : this.map.keySet()) {
             Biome biome = biotex.getBiome();
             float weight = this.map.get(biotex);
-            biomix.add(biome, weight/weightSum);
+            biomix.add(biome, weight/this.weightSum);
         }
         return biomix;
     }
@@ -118,7 +117,7 @@ public class LocalMap {
      * @return A String representing this Shape.
      */
     public String toString() {
-        return String.format("%s: %s", this.biotex.toString(), map.toString());
+        return String.format("%s: %s", this.biotex.toString(), this.map.toString());
     }
 
 

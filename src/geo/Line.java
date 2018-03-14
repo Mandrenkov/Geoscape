@@ -21,7 +21,10 @@ public class Line extends Polygon {
      * @param start  The start Vertex of this Line.
      * @param end    The end Vertex of this Line.
      */
-    public Line(Vertex start, Vertex end) {
-        super(new Vertex[]{start, end}, GL_LINES);
+    public Line(Vertex... vertexes) {
+        super(vertexes, GL_LINES);
+        if (vertexes.length != 2) {
+            throw new IllegalArgumentException("Lines must have 2 vertices.");
+        }
     }
 }

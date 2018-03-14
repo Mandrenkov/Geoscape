@@ -16,13 +16,13 @@ public class Light implements Drawable {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Light at the specified position.
+     * Constructs a Light at the specified location.
      *
-     * @param position The position of this Light.
+     * @param location The location of this Light.
      */
-    public Light(Vertex position) {
-        this.position = position;
-        this.sphere = new Sphere(position, RADIUS);
+    public Light(Vertex location) {
+        this.location = location;
+        this.sphere = new Sphere(location, 0.1f);
     }
 
     /**
@@ -42,12 +42,12 @@ public class Light implements Drawable {
     }
 
     /**
-     * Returns the position of this Light.
+     * Returns the location of this Light.
      *
-     * @return The position.
+     * @return The location.
      */
     public Vertex getPosition() {
-        return position;
+        return this.location;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Light implements Drawable {
      * @return The String representation.
      */
     public String toString() {
-        return position.toString();
+        return this.location.toString();
     }
 
 
@@ -64,14 +64,9 @@ public class Light implements Drawable {
     // -------------------------------------------------------------------------
 
     /**
-     * The radius of the Spheres that represent Lights.
+     * The location of this Light.
      */
-    private final float RADIUS = 0.10f;
-
-    /**
-     * The position of this Light.
-     */
-    private Vertex position;
+    private Vertex location;
 
     /**
      * The Sphere representing this Light.

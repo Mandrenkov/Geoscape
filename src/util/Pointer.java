@@ -29,7 +29,7 @@ public class Pointer {
      * @return The value at this Pointer.
      */
     public int get() {
-        return (int) buffer.get(0);
+        return (int) this.buffer.get(0);
     }
 
     /**
@@ -38,7 +38,7 @@ public class Pointer {
      * @return The IntBuffer associated with this Pointer.
      */
     public IntBuffer getBuffer() {
-        return buffer;
+        return this.buffer;
     }
 
     /**
@@ -47,14 +47,14 @@ public class Pointer {
      * @param newValue The new value at this Pointer.
      */
     public void set(int newValue) {
-        buffer.put(newValue, 0);
+        this.buffer.put(newValue, 0);
     }
 
     /**
      * Returns a String representation of this Pointer.
      */
     public String toString() {
-        return String.valueOf(buffer.get(0));
+        return String.valueOf(this.buffer.get(0));
     }
 
 }

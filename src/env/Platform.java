@@ -35,7 +35,7 @@ public class Platform implements Drawable {
 
         Vertex low = new Vertex(minX, minY, minZ);
         Vertex high = new Vertex(maxX, maxY, maxZ);
-        Colour clr = new Colour(0.1f, 0.1f, 0.1f, 1.0f);
+        Colour clr = new Colour(0.1f, 0.1f, 0.1f);
         this.prism = new Prism(clr, low, high);
     }
 
@@ -43,7 +43,7 @@ public class Platform implements Drawable {
      * Draws this Platform.
      */
     public void draw() {
-        prism.draw();
+        this.prism.draw();
     }
 
     /**
@@ -52,7 +52,7 @@ public class Platform implements Drawable {
      * @return The number of Polygons
      */
     public int polygons() {
-        return prism.polygons();
+        return this.prism.polygons();
     }
 
     /**

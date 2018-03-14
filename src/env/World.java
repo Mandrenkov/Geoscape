@@ -41,10 +41,10 @@ public class World implements Drawable {
         // Add Axes to the World for debugging purposes.
         if (Top.DEBUG) {
             float length = 1.1f;
-            Line xAxis = new Line(Vertex.ORIGIN, new Vertex(new Colour(1, 0, 0), length, 0, 0));
-            Line yAxis = new Line(Vertex.ORIGIN, new Vertex(new Colour(0, 1, 0), 0, length, 0));
-            Line zAxis = new Line(Vertex.ORIGIN, new Vertex(new Colour(0, 0, 1), 0, 0, length));
-            drawables.addAll(Arrays.asList(xAxis, yAxis, zAxis));
+            Line xAxis = new Line(Vertex.ORIGIN, new Vertex(length, 0, 0, new Colour(1, 0, 0)));
+            Line yAxis = new Line(Vertex.ORIGIN, new Vertex(0, length, 0, new Colour(0, 1, 0)));
+            Line zAxis = new Line(Vertex.ORIGIN, new Vertex(0, 0, length, new Colour(0, 0, 1)));
+            this.drawables.addAll(Arrays.asList(xAxis, yAxis, zAxis));
         }
     }
 
@@ -61,7 +61,7 @@ public class World implements Drawable {
      * Draws this World.
      */
     public void draw() {
-        for (Drawable drawable : drawables) {
+        for (Drawable drawable : this.drawables) {
             drawable.draw();
         }
     }
@@ -72,7 +72,9 @@ public class World implements Drawable {
      * @return The number of Polygons.
      */
     public int polygons() {
-        return drawables.stream().mapToInt(drawable -> drawable.polygons()).sum();
+        return drawables.stream()
+                        .mapToInt(drawable -> drawable.polygons())
+                        .sum();
     }
 
     /**

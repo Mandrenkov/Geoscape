@@ -28,7 +28,7 @@ public class Biomap {
         this.map = new Biome[this.rows][this.cols];
         for (int row = 0; row < this.rows; ++row) {
             for (int col = 0; col < this.cols; ++col) {
-                map[row][col] = DEFAULT_BIOME;
+                this.map[row][col] = Biomap.DEFAULT_BIOME;
             }
         }
     }
@@ -42,7 +42,7 @@ public class Biomap {
      * @return The Biome.
      */
     public Biome getBiome(int row, int col) {
-        return map[row][col];
+        return this.map[row][col];
     }
 
     /**
@@ -71,7 +71,7 @@ public class Biomap {
      * @param biome The Biome to be associated with the coordinate.
      */
     public void set(int row, int col, Biome biome) {
-        map[row][col] = biome;
+        this.map[row][col] = biome;
     }
 
     /**

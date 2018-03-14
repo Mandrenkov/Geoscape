@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
 import core.Logger;
 
 /**
@@ -73,7 +74,7 @@ public class Colour {
      * Constructs an opaque black Colour.
      */
     public Colour() {
-        this(0f, 0f, 0f, 1f);
+        this(0, 0, 0, 1);
     }
 
     /**

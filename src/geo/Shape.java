@@ -29,7 +29,7 @@ public abstract class Shape implements Drawable {
      * @return The number of Polygons
      */
     public int polygons() {
-        return polygons.length;
+        return this.polygons.length;
     }
 
     /**
@@ -38,7 +38,7 @@ public abstract class Shape implements Drawable {
      * @return A String representing this Shape.
      */
     public String toString() {
-        return String.format("%s: %s", this.getClass().getName(), polygons.toString());
+        return String.format("%s: %s", this.getClass().getName(), this.polygons.toString());
     }
 
     // Protected members

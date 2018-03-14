@@ -42,7 +42,7 @@ public class Window {
      * @return The GLFW handle.
      */
     public long getHandle() {
-        return handle;
+        return this.handle;
     }
 
 
@@ -105,18 +105,18 @@ public class Window {
             throw new IllegalStateException("Failed to initialize GLFW.");
         }
 
-        for (Pair<Integer, Integer> hint : GLFW_HINTS) {
+        for (Pair<Integer, Integer> hint : this.GLFW_HINTS) {
             glfwWindowHint(hint.getFirst(), hint.getSecond());
         }
 
-        handle = glfwCreateWindow(1600, 900, "Geoscape", NULL, NULL);
-        if (handle == NULL) {
+        this.handle = glfwCreateWindow(1600, 900, "Geoscape", NULL, NULL);
+        if (this.handle == NULL) {
             throw new IllegalStateException("Failed to create GLFW window.");
         }
 
-        glfwMakeContextCurrent(handle);
-        glfwShowWindow(handle);
-        glfwSwapInterval(VSYNC);
+        glfwMakeContextCurrent(this.handle);
+        glfwShowWindow(this.handle);
+        glfwSwapInterval(this.VSYNC);
     }
 
     /**
@@ -124,11 +124,11 @@ public class Window {
      */
     private void initCallbacks() {
         // Ensure the OpenGL viewport matches the Window dimensions.
-        glfwSetWindowSizeCallback(handle, (localWindow, newWidth, newHeight) -> {
+        glfwSetWindowSizeCallback(this.handle, (localWindow, newWidth, newHeight) -> {
             glViewport(0, 0, newWidth, newHeight);
         });
 
-        //glfwSetKeyCallback(handle, (localWindow, key, scancode, action, mods) -> {
+        //glfwSetKeyCallback(this.handle, (localWindow, key, scancode, action, mods) -> {
         //    if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
         //        glfwSetWindowShouldClose(localWindow, true);
         //});
@@ -140,7 +140,7 @@ public class Window {
     private void initGL() {
         GL.createCapabilities();
 
-        for (int flag : GL_FLAGS) {
+        for (int flag : this.GL_FLAGS) {
             glEnable(flag);
         }
 

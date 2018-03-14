@@ -12,7 +12,7 @@ import util.Algebra;
  *
  * <p>The <b>Noiseform</b> class represents a noise transform that is applied
  * to Grid objects.  Specifically, this class uses Perlin noise to distort
- * a given Grid and then texturizes the Biotices of the given Grid to reflect
+ * a given Grid and then texturizes the Biotexes of the given Grid to reflect
  * the influence of nearby Biomes.</p>
  */
 public class Noiseform {
@@ -44,6 +44,9 @@ public class Noiseform {
         }
     }
 
+	/**
+	 * Applies this Noisform transformation.
+	 */
     public void apply() {
         this.disturb();
         this.alias();
@@ -81,13 +84,13 @@ public class Noiseform {
         // a Perlin grid coordinate.  An epsilon is thrown in to avoid division
         // by 0 errors.
         float epsilon = 1E-4f;
-        float colSize = grid.getWidth()/(this.cols - epsilon);
-        float rowSize = grid.getHeight()/(this.rows - epsilon);
+        float colSize = this.grid.getWidth()/(this.cols - epsilon);
+        float rowSize = this.grid.getHeight()/(this.rows - epsilon);
         float minSize = Math.min(colSize, rowSize);
 
-        for (int row = 0; row < grid.getRows(); ++row) {
-            for (int col = 0; col < grid.getColumns(); ++col) {
-                Biotex biotex = grid.getBiotex(row, col);
+        for (int row = 0; row < this.grid.getRows(); ++row) {
+            for (int col = 0; col < this.grid.getColumns(); ++col) {
+                Biotex biotex = this.grid.getBiotex(row, col);
 
                 /**
                  * Use Perlin noise to calculate the change in elevation of this
@@ -96,8 +99,8 @@ public class Noiseform {
 
                 // Calculate the X and Y components of the Biotex relative to
                 // the origin of the Grid.
-                float dx = biotex.getX() - grid.getMinX();
-                float dy = biotex.getY() - grid.getMinY();
+                float dx = biotex.getX() - this.grid.getMinX();
+                float dy = biotex.getY() - this.grid.getMinY();
 
                 // Map the Grid coordinate of the Biotex to a Perlin grid coordinate.
                 int colCell = (int) (dx/colSize);
@@ -128,7 +131,7 @@ public class Noiseform {
                  * and Biomix of the current Biotex.
                  */
 
-                LocalMap locals = new LocalMap(grid, row, col, 0.05f);
+                LocalMap locals = new LocalMap(this.grid, row, col, 0.05f);
 
                 //Logger.debug("locals = %s", locals.toString());
 
@@ -142,8 +145,8 @@ public class Noiseform {
                 float z = biotex.getZ() + dz;
 
                 // Tie the Biotex to the ground if it is near a Grid boundary.
-                float colBorder = Math.min(biotex.getX() - grid.getMinX(), grid.getMaxX() - biotex.getX());
-                float rowBorder = Math.min(biotex.getY() - grid.getMinY(), grid.getMaxY() - biotex.getY());
+                float colBorder = Math.min(biotex.getX() - this.grid.getMinX(), this.grid.getMaxX() - biotex.getX());
+                float rowBorder = Math.min(biotex.getY() - this.grid.getMinY(), this.grid.getMaxY() - biotex.getY());
                 float minBorder = Math.min(colBorder, rowBorder);
                 if (minBorder < minSize/2) {
                     z *= Algebra.curve(2*minBorder/minSize);
@@ -155,7 +158,7 @@ public class Noiseform {
 
     /**
      * Remove prominent edges from the Grid of this Noiseform by averaging the
-     * elevations of nearby Biotices.
+     * elevations of nearby Biotexes.
      */
     private void alias() {
         int radius = 2;
@@ -165,7 +168,7 @@ public class Noiseform {
         float[][] sum    = new float[rows][cols];
         float[][] weight = new float[rows][cols];
 
-        // Compute the weighted sum of the heights of nearby Biotices.
+        // Compute the weighted sum of the heights of nearby Biotexes.
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
                 Biotex reftex = this.grid.getBiotex(row, col);
@@ -185,7 +188,7 @@ public class Noiseform {
             }
         }
 
-        // Set the elevation of each Grid Biotex to the average elevation of nearby Biotices.
+        // Set the elevation of each Grid Biotex to the average elevation of nearby Biotexes.
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
                 float avg = sum[row][col]/weight[row][col];

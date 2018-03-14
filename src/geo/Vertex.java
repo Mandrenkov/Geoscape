@@ -49,7 +49,7 @@ public class Vertex {
      * @return The average Z-coordinate.
      */
     public static float averageZ(Vertex... vertices) {
-        float z = 0f;
+        float z = 0;
         for (Vertex vertex : vertices) {
             z += vertex.getZ();
         }
@@ -73,16 +73,16 @@ public class Vertex {
     /**
      * Constructs a Vertex with the given Colour representing the given 3D coordinate.
      *
-     * @param colour The colour of this Vertex.
      * @param x      The X-coordinate of this Vertex.
      * @param y      The Y-coordinate of this Vertex.
      * @param z      The Z-coordinate of this Vertex.
+     * @param colour The colour of this Vertex.
      */
-    public Vertex(Colour colour, float x, float y, float z) {
-        this.colour = colour;
+    public Vertex(float x, float y, float z, Colour colour) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.colour = colour;
     }
 
     /**
@@ -140,7 +140,7 @@ public class Vertex {
      * @return The distance to the origin.
      */
     public float magnitude() {
-        return distance(ORIGIN);
+        return distance(Vertex.ORIGIN);
     }
 
     /**
