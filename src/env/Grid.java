@@ -3,6 +3,7 @@ package env;
 import java.util.ArrayList;
 
 import bio.Biotex;
+import core.Logger;
 import bio.Biogle;
 import bio.Biomap;
 import bio.Biome;
@@ -33,6 +34,8 @@ public class Grid implements Drawable {
      * @param biomap The Biomap representing the Biomes imposed on this Grid.
      */
     public Grid(String name, int rows, int cols, float minX, float minY, float maxX, float maxY, Biomap biomap) {
+        Logger.debug("Creating Grid \"%s\" with %d rows and %d columns from (%.2f, %.2f) to (%.2f, %.2f).", name, rows, cols, minX, minY, maxX, maxY);
+
         this.name = name;
         this.rows = rows;
         this.cols = cols;
@@ -210,7 +213,7 @@ public class Grid implements Drawable {
      * @return The String representation.
      */
     public String toString() {
-        return String.format("%s [(%.2f, %.2f) to (%.2f, %.2f)]", this.name, this.minX, this.minY, this.maxX, this.maxY);
+        return String.format("Grid \"%s\" (%.2f, %.2f) to (%.2f, %.2f)", this.name, this.minX, this.minY, this.maxX, this.maxY);
     }
 
 

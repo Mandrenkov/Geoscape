@@ -119,7 +119,7 @@ public class World implements Drawable {
      * @return The String representation.
      */
     public String toString() {
-        return String.format("\"%s\" with %d polygons", this.name, this.polygons());
+        return String.format("World \"%s\" (%d polygons)", this.name, this.polygons());
     }
 
     // Private members

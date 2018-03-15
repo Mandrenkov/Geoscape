@@ -167,13 +167,17 @@ public class Window {
         float x = ratio*y;
         glFrustum(x, -x, -y, y, near, far);
 
-        Logger.info("Defining viewing frustum with dimensions (%.3f, %.3f) to (%.3f, %.3f) over [%.3f, %.3f].", -x, -y, x, y, near, far);
+        Logger.debug("Viewing frustum has dimensions (%.3f, %.3f) to (%.3f, %.3f) over [%.3f, %.3f].", -x, -y, x, y, near, far);
 
         // Load the OpenGL ModelView matrix to manipulate vertex coordinates.
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        // Fill both faces of any rendered polygons.
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        // Set the polygon rendering mode.  The effect of each option is described
+        // below:
+        //   GL_POINT - Render the vertexes of each polygon.
+        //   GL_LINE  - Render the outlines of each polygon.
+        //   GL_FILL  - Render the faces of each polygon.
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 }

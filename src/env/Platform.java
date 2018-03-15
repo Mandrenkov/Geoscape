@@ -1,5 +1,6 @@
 package env;
 
+import core.Logger;
 import geo.Prism;
 import geo.Vertex;
 
@@ -37,6 +38,8 @@ public class Platform implements Drawable {
         Vertex high = new Vertex(maxX, maxY, maxZ);
         Colour clr = new Colour(0.1f, 0.1f, 0.1f);
         this.prism = new Prism(clr, low, high);
+
+        Logger.debug("Creating Platform from (%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f).", minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     /**

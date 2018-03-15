@@ -36,13 +36,13 @@ public class Simulation {
         float maxY =  0.8f;
         this.world = new World("Geoscape", minX, minY, maxX, maxY);
 
-        // Create the Platform underneath World.
+        // Create the Platform underneath the World.
         float minZ = -0.30f;
         float maxZ =  0.00f;
         Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
         this.world.add(platform);
 
-        int size = Top.DEBUG ? 300 : 300;
+        int size = Top.DEBUG ? 100 : 300;
 
         // Generate the Biomap characterizing the landscape of the World.
         Biomap biomap = new Biomap(size, size);
@@ -74,7 +74,7 @@ public class Simulation {
      * is raised.
      */
     public void start() {
-        Logger.info("Rendering World %s.", this.world);
+        Logger.info("Rendering %s.", this.world);
         syncTime = glfwGetTime();
         loop();
     }

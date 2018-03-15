@@ -24,7 +24,7 @@ public class Top {
      * @param args Command-line arguments.
      */
     public static void main(String[] args) {
-        Logger.info("Application starting...");
+        Logger.info("Application is starting...");
 
         try {
             // Initialize the Window and Camera singletons.

@@ -2,6 +2,7 @@ package env;
 
 import bio.Biomix;
 import bio.Biotex;
+import core.Logger;
 import geo.Vector;
 import util.Algebra;
 
@@ -80,6 +81,8 @@ public class Noiseform {
      * Applies a Perlin noise transformation to the Grid associated with this Noiseform.
      */
     private void disturb() {
+        Logger.debug("Applying Perlin noise transformation to %s.", this.grid);
+
         // Define a set of conversion ratios to convert a Grid coordinate into
         // a Perlin grid coordinate.  An epsilon is thrown in to avoid division
         // by 0 errors.
@@ -161,6 +164,8 @@ public class Noiseform {
      * elevations of nearby Biotexes.
      */
     private void alias() {
+        Logger.debug("Applying aliasing to %s.", this.grid);
+
         int radius = 2;
         int rows = this.grid.getRows();
         int cols = this.grid.getColumns();
@@ -202,6 +207,8 @@ public class Noiseform {
      * Apply the weighted texturing of each Biotex.
      */
     private void texture() {
+        Logger.debug("Applying textures to %s.", this.grid);
+
         for (int row = 0; row < this.grid.getRows(); ++row) {
             for (int col = 0; col < this.grid.getColumns(); ++col) {
                 this.grid.getBiotex(row, col).texturize();

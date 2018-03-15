@@ -1,5 +1,6 @@
 package env;
 
+import core.Logger;
 import geo.Sphere;
 import geo.Vertex;
 
@@ -23,6 +24,7 @@ public class Light implements Drawable {
     public Light(Vertex location) {
         this.location = location;
         this.sphere = new Sphere(location, 0.1f);
+        Logger.debug("Creating Light at (%.2f, %.2f, %.2f).", location.getX(), location.getY(), location.getZ());
     }
 
     /**
@@ -56,7 +58,7 @@ public class Light implements Drawable {
      * @return The String representation.
      */
     public String toString() {
-        return this.location.toString();
+        return String.format("Light %s", this.location.toString());
     }
 
 
