@@ -55,33 +55,6 @@ public class Window {
     private static Window singleton = null;
 
     /**
-     * List of OpenGL flags to enable.
-     */
-    private final int[] GL_FLAGS = new int[] {
-        GL_DEPTH_TEST,
-        GL_CULL_FACE,
-        GL_POLYGON_SMOOTH,
-        GL_MULT
-    };
-
-    /**
-     * List of GLFW window hints.
-     */
-    private final ArrayList<Pair<Integer, Integer>> GLFW_HINTS = new ArrayList<>(Arrays.asList(
-        new Pair<Integer, Integer>(GLFW_VISIBLE,      1),
-        new Pair<Integer, Integer>(GLFW_RESIZABLE,    1),
-        new Pair<Integer, Integer>(GLFW_FOCUSED,      1),
-        new Pair<Integer, Integer>(GLFW_REFRESH_RATE, 144),
-        new Pair<Integer, Integer>(GLFW_FLOATING,     1),
-        new Pair<Integer, Integer>(GLFW_SAMPLES,      1)
-    ));
-
-    /**
-     * Flag that determines whether VSYNC is enabled.
-     */
-    private final int VSYNC = 1;
-
-    /**
      * Internal reference to the GLFW window.
      */
     private long handle = NULL;
@@ -105,7 +78,15 @@ public class Window {
             throw new IllegalStateException("Failed to initialize GLFW.");
         }
 
-        for (Pair<Integer, Integer> hint : this.GLFW_HINTS) {
+        // Apply a set of GLFW hints for the upcoming window.
+        ArrayList<Pair<Integer, Integer>> glfwHints = new ArrayList<>(Arrays.asList(
+            new Pair<Integer, Integer>(GLFW_VISIBLE,      1),
+            new Pair<Integer, Integer>(GLFW_RESIZABLE,    1),
+            new Pair<Integer, Integer>(GLFW_FOCUSED,      1),
+            new Pair<Integer, Integer>(GLFW_REFRESH_RATE, 144),
+            new Pair<Integer, Integer>(GLFW_SAMPLES,      1)
+        ));
+        for (Pair<Integer, Integer> hint : glfwHints) {
             glfwWindowHint(hint.getFirst(), hint.getSecond());
         }
 
@@ -116,7 +97,9 @@ public class Window {
 
         glfwMakeContextCurrent(this.handle);
         glfwShowWindow(this.handle);
-        glfwSwapInterval(this.VSYNC);
+
+        int vsync = GL_TRUE;
+        glfwSwapInterval(vsync);
     }
 
     /**
@@ -140,13 +123,19 @@ public class Window {
     private void initGL() {
         GL.createCapabilities();
 
-        for (int flag : this.GL_FLAGS) {
+        // Apply a set of OpenGL flags.
+        int[] glFlags = new int[] {
+            GL_DEPTH_TEST,
+            GL_CULL_FACE,
+            GL_POLYGON_SMOOTH,
+            GL_MULT
+        };
+        for (int flag : glFlags) {
             glEnable(flag);
         }
 
         // Set the background colour of the Window.
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-        //glClearColor(1, 1, 1, 1);
 
         // Load the OpenGL projection matrix to set the viewing frustrum.
         glMatrixMode(GL_PROJECTION);
