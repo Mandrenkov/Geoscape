@@ -7,20 +7,20 @@ import java.util.Arrays;
  * @since March 13, 2018
  * @version 1.1
  *
- * <p>The <b>Biomap</b> class stores and manipulates the 2D distribution of Biomes.</p>
+ * <p>The <b>BioMap</b> class stores and manipulates the 2D distribution of Biomes.</p>
  */
-public class Biomap {
+public class BioMap {
 
     // Public members
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Biomap with the given number of rows and columns.
+     * Constructs a BioMap with the given number of rows and columns.
      *
      * @param rows The number of rows.
      * @param cols The number of columns.
      */
-    public Biomap(int rows, int cols) {
+    public BioMap(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
 
@@ -28,7 +28,7 @@ public class Biomap {
         this.map = new Biome[this.rows][this.cols];
         for (int row = 0; row < this.rows; ++row) {
             for (int col = 0; col < this.cols; ++col) {
-                this.map[row][col] = Biomap.DEFAULT_BIOME;
+                this.map[row][col] = BioMap.DEFAULT_BIOME;
             }
         }
     }
@@ -46,7 +46,7 @@ public class Biomap {
     }
 
     /**
-     * Returns the number of columns in this Biomap.
+     * Returns the number of columns in this BioMap.
      *
      * @return The number of columns.
      */
@@ -55,7 +55,7 @@ public class Biomap {
     }
 
     /**
-     * Returns the number of rows in the Biomap.
+     * Returns the number of rows in the BioMap.
      *
      * @return The number of rows.
      */
@@ -184,14 +184,14 @@ public class Biomap {
     }
 
     /**
-     * Returns a String representation of this Biomap.
+     * Returns a String representation of this BioMap.
      *
      * @return The String representation.
      */
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        String header = String.format("Biomap (%d x %d):", this.rows, this.cols);
+        String header = String.format("BioMap (%d x %d):", this.rows, this.cols);
         str.append(header + "\n");
 
         for (Biome[] row : this.map) {
@@ -219,12 +219,12 @@ public class Biomap {
     private Biome[][] map;
 
     /**
-     * The number of rows in this Biomap.
+     * The number of rows in this BioMap.
      */
     private int rows;
 
     /**
-     * The number of columns in this Biomap.
+     * The number of columns in this BioMap.
      */
     private int cols;
 }

@@ -2,10 +2,10 @@ package env;
 
 import java.util.ArrayList;
 
-import bio.Biotex;
+import bio.BioVertex;
 import core.Logger;
-import bio.Biogle;
-import bio.Biomap;
+import bio.BioTriangle;
+import bio.BioMap;
 import bio.Biome;
 
 /**
@@ -22,7 +22,7 @@ public class Grid implements Drawable {
 
     /**
      * Constructs a Grid with the given name, rows, columns, coordinate bounds,
-     * and Biomap.
+     * and BioMap.
      *
      * @param name   The name of this Grid.
      * @param rows   The number of rows in this Grid.
@@ -31,9 +31,9 @@ public class Grid implements Drawable {
      * @param minY   The minimum Y-coordinate of this Grid.
      * @param maxX   The maximum X-coordinate of this Grid.
      * @param maxY   The maximum Y-coordinate of this Grid.
-     * @param biomap The Biomap representing the Biomes imposed on this Grid.
+     * @param biomap The BioMap representing the Biomes imposed on this Grid.
      */
-    public Grid(String name, int rows, int cols, float minX, float minY, float maxX, float maxY, Biomap biomap) {
+    public Grid(String name, int rows, int cols, float minX, float minY, float maxX, float maxY, BioMap biomap) {
         Logger.debug("Creating Grid \"%s\" with %d rows and %d columns from (%.2f, %.2f) to (%.2f, %.2f).", name, rows, cols, minX, minY, maxX, maxY);
 
         this.name = name;
@@ -44,10 +44,10 @@ public class Grid implements Drawable {
         this.maxX = maxX;
         this.maxY = maxY;
 
-        this.biotexes = new Biotex[this.rows][this.cols];
+        this.biotexes = new BioVertex[this.rows][this.cols];
         this.biogles = new ArrayList<>();
 
-        // Initialize the Biotexes in this Grid.
+        // Initialize the BioVertexes in this Grid.
         for (int row = 0 ; row < this.rows; ++row) {
             for (int col = 0 ; col < this.cols ; ++col) {
                 float x = this.minX + col*(this.maxX - this.minX)/(this.cols - 1);
@@ -55,22 +55,22 @@ public class Grid implements Drawable {
                 float z = 0.1f;
                 Biome biome = biomap.getBiome(row, col);
 
-                Biotex biotex = new Biotex(biome, x, y, z);
+                BioVertex biotex = new BioVertex(biome, x, y, z);
                 this.biotexes[row][col] = biotex;
             }
         }
 
-        // Initialize the Biogles in this Grid.
+        // Initialize the BioTriangles in this Grid.
         for (int row = 0; row < this.rows - 1; ++row) {
             for (int p = 0; p < 2*this.cols - 2; ++p) {
                 int col = p/2;
                 boolean forward = p % 2 == 0;
 
-                Biotex[] biogle = new Biotex[3];
+                BioVertex[] biogle = new BioVertex[3];
                 biogle[0] = forward ? this.biotexes[row][col]     : this.biotexes[row + 1][col + 1];
                 biogle[1] = forward ? this.biotexes[row + 1][col] : this.biotexes[row][col + 1];
                 biogle[2] = forward ? this.biotexes[row][col + 1] : this.biotexes[row + 1][col];
-                this.biogles.add(new Biogle(biogle));
+                this.biogles.add(new BioTriangle(biogle));
             }
         }
 
@@ -82,7 +82,7 @@ public class Grid implements Drawable {
      * Draws this Grid.
      */
     public void draw() {
-        for (Biogle biogle : this.biogles) {
+        for (BioTriangle biogle : this.biogles) {
             biogle.draw();
         }
     }
@@ -115,23 +115,23 @@ public class Grid implements Drawable {
     }
 
     /**
-     * Returns the Biotex in this Grid located at the given position.
+     * Returns the BioVertex in this Grid located at the given position.
      *
-     * @param row The row of this Grid containing the desired Biotex.
-     * @param col The column of this Grid containing the desired Biotex.
+     * @param row The row of this Grid containing the desired BioVertex.
+     * @param col The column of this Grid containing the desired BioVertex.
      *
-     * @return The Biotex located at the given position.
+     * @return The BioVertex located at the given position.
      */
-    public Biotex getBiotex(int row, int col) {
+    public BioVertex getVertex(int row, int col) {
         return this.biotexes[row][col];
     }
 
     /**
-     * Returns the Biogles comprising this Grid.
+     * Returns the BioTriangles comprising this Grid.
      *
-     * @return The Biogles.
+     * @return The BioTriangles.
      */
-    public ArrayList<Biogle> getBiogles() {
+    public ArrayList<BioTriangle> getTriangles() {
         return this.biogles;
     }
 
@@ -256,12 +256,12 @@ public class Grid implements Drawable {
     private float maxY;
 
     /**
-     * The matrix of Biotexes that comprise the Biogles of this Grid.
+     * The matrix of BioVertexes that comprise the BioTriangles of this Grid.
      */
-    private Biotex[][] biotexes;
+    private BioVertex[][] biotexes;
 
     /**
-     * The Biogles that comprise this Grid.
+     * The BioTriangles that comprise this Grid.
      */
-    private ArrayList<Biogle> biogles;
+    private ArrayList<BioTriangle> biogles;
 }

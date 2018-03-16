@@ -13,26 +13,26 @@ import geo.Vertex;
  * @since March 13, 2018
  * @version 1.1
  *
- * <p>The <b>Biogle</b> class represents a Biome Triangle.</p>
+ * <p>The <b>BioTriangle</b> class represents a Biome Triangle.</p>
  */
-public class Biogle extends Triangle {
+public class BioTriangle extends Triangle {
 
     // Public members
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Biogle using the given Biotexes.
+     * Constructs a BioTriangle using the given BioVertexes.
      *
-     * @param biotexes The Biotexes comprising this Biogle.
+     * @param biotexes The BioVertexes comprising this BioTriangle.
      */
-    public Biogle(Biotex... biotexes) {
+    public BioTriangle(BioVertex... biotexes) {
         super((Vertex[]) biotexes);
         this.biotexes = biotexes;
-        this.colour = Biotex.averageColour(biotexes);
+        this.colour = BioVertex.averageColour(biotexes);
     }
 
     /**
-     * Draws this Biogle.
+     * Draws this BioTriangle.
      */
     public void draw() {
         this.colour.gl();
@@ -45,7 +45,7 @@ public class Biogle extends Triangle {
     }
 
     /**
-     * Returns the Colour of this Biogle.
+     * Returns the Colour of this BioTriangle.
      *
      * @return The Colour.
      */
@@ -54,18 +54,18 @@ public class Biogle extends Triangle {
     }
 
     /**
-     * Illuminates this Biogle with respect to the given Lights.
+     * Illuminates this BioTriangle with respect to the given Lights.
      *
-     * @param lights The Lights illuminating this Biogle.
+     * @param lights The Lights illuminating this BioTriangle.
      */
     public void illuminate(Light... lights) {
-        this.colour = Biotex.averageColour(this.biotexes);
+        this.colour = BioVertex.averageColour(this.biotexes);
 
-        // Scale the colour using the elevation of the Biogle.
+        // Scale the colour using the elevation of the BioTriangle.
         // The 10x multiplier is completely arbitrary.
         float scaleZ = 10*Vertex.averageZ(this.vertexes);
 
-        // Cache the middle Vertex and normal of this Biogle.
+        // Cache the middle Vertex and normal of this BioTriangle.
         Vertex middle = this.getMiddle();
         Vector normal = this.getNormal();
 
@@ -93,12 +93,12 @@ public class Biogle extends Triangle {
     // -------------------------------------------------------------------------
 
     /**
-     * The Biotexes comprising this Biogle.
+     * The BioVertexes comprising this BioTriangle.
      */
-    private Biotex[] biotexes;
+    private BioVertex[] biotexes;
 
     /**
-     * The colour of this Biogle.
+     * The colour of this BioTriangle.
      */
     private Colour colour;
 }

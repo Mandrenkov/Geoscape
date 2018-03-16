@@ -11,35 +11,35 @@ import util.Pair;
  * @since March 13, 2018
  * @version 1.1
  *
- * <p>The <b>Biotex</b> class represents a Biome Vertex.</p>
+ * <p>The <b>BioVertex</b> class represents a Biome Vertex.</p>
  */
-public class Biotex extends Vertex {
+public class BioVertex extends Vertex {
 
     // Public members
     // -------------------------------------------------------------------------
 
     /**
-     * Returns the average Colour of the given Biotexes.
+     * Returns the average Colour of the given BioVertexes.
      *
-     * @param biotexes The Biotexes to average.
+     * @param BioVertexes The BioVertexes to average.
      *
      * @return The average Colour.
      */
-    public static Colour averageColour(Biotex... biotexes) {
-        Colour[] colourArray = Arrays.stream(biotexes)
-                                     .map(biotex -> biotex.getColour())
+    public static Colour averageColour(BioVertex... BioVertexes) {
+        Colour[] colourArray = Arrays.stream(BioVertexes)
+                                     .map(BioVertex -> BioVertex.getColour())
                                      .toArray(Colour[]::new);
         return Colour.average(colourArray);
     }
 
     /**
-     * Constructs a Biotex representing the given 3D coordinate.
+     * Constructs a BioVertex representing the given 3D coordinate.
      *
-     * @param x The X-coordinate of this Biotex.
-     * @param y The Y-coordinate of this Biotex.
-     * @param z The Z-coordinate of this Biotex.
+     * @param x The X-coordinate of this BioVertex.
+     * @param y The Y-coordinate of this BioVertex.
+     * @param z The Z-coordinate of this BioVertex.
      */
-    public Biotex(Biome biome, float x, float y, float z) {
+    public BioVertex(Biome biome, float x, float y, float z) {
         super(x, y, z);
         this.biome = biome;
 
@@ -49,7 +49,7 @@ public class Biotex extends Vertex {
     }
 
     /**
-     * Returns the primary Biome associated with this Biotex.
+     * Returns the primary Biome associated with this BioVertex.
      *
      * @return The Biome.
      */
@@ -58,7 +58,7 @@ public class Biotex extends Vertex {
     }
 
     /**
-     * Returns the Biomix associated with this Biotex.
+     * Returns the Biomix associated with this BioVertex.
      *
      * @return The Biomix.
      */
@@ -67,7 +67,7 @@ public class Biotex extends Vertex {
     }
 
     /**
-     * Returns the Colour of this Biotex.
+     * Returns the Colour of this BioVertex.
      *
      * @return The Colour.
      */
@@ -76,25 +76,25 @@ public class Biotex extends Vertex {
     }
 
     /**
-     * Sets the Biomix of this Biotex to the given Biomix.
+     * Sets the Biomix of this BioVertex to the given Biomix.
      *
-     * @param biomix The new Biomix of this Biotex.
+     * @param biomix The new Biomix of this BioVertex.
      */
     public void setBiomix(Biomix biomix) {
         this.biomix = biomix;
     }
 
     /**
-     * Sets the Colour of this Biotex to the given Colour.
+     * Sets the Colour of this BioVertex to the given Colour.
      *
-     * @param colour The new Colour of this Biotex.
+     * @param colour The new Colour of this BioVertex.
      */
     public void setColour(Colour colour) {
         this.colour = colour;
     }
 
     /**
-     * Applies the textures of the Biomes that influence this Biotex.
+     * Applies the textures of the Biomes that influence this BioVertex.
      */
     public void texturize() {
         for (Pair<Biome, Float> biomePair : this.biomix) {
@@ -105,18 +105,18 @@ public class Biotex extends Vertex {
     }
 
     /**
-     * Shifts the elevation of this Biotex according to its position relative to
+     * Shifts the elevation of this BioVertex according to its position relative to
      * the wave pattern specified by the given parameters.
      *
      * @param frequency The frequency of the reference wave.
      * @param amplitude The amplitude of the reference wave.
      * @param density   The density of the wave pattern.
-     * @param height    The magnitude of the shift in the elevation of this Biotex.
+     * @param height    The magnitude of the shift in the elevation of this BioVertex.
      */
     public void wave(float frequency, float amplitude, float density, float height) {
         // Compute the amplitude of the reference wave along the Y-axis.
         double refWave = amplitude*Math.cos(this.getY()*frequency);
-        // Determine the distance along the X-axis from this Biotex to the reference wave.
+        // Determine the distance along the X-axis from this BioVertex to the reference wave.
         double deltaX = density*Math.abs(this.getX() - refWave);
         // Calculate the difference as a periodic function of the difference along the X-axis.
         float deltaZ = (float) Math.cos(deltaX)*height;
@@ -124,12 +124,12 @@ public class Biotex extends Vertex {
     }
 
     /**
-     * Returns a String representation of this Biotex.
+     * Returns a String representation of this BioVertex.
      *
      * @return The String representation.
      */
     public String toString() {
-        return String.format("Biotex (%.2f, %.2f, %.2f) with %s", this.x, this.y, this.z, this.colour);
+        return String.format("BioVertex (%.2f, %.2f, %.2f) with %s", this.x, this.y, this.z, this.colour);
     }
 
 
@@ -137,17 +137,17 @@ public class Biotex extends Vertex {
     // -------------------------------------------------------------------------
 
     /**
-     * The original Biome of this Biotex.
+     * The original Biome of this BioVertex.
      */
     private Biome biome;
 
     /**
-     * The Biome influences on this Biotex.
+     * The Biome influences on this BioVertex.
      */
     private Biomix biomix;
 
     /**
-     * The colour of this Biotex.
+     * The colour of this BioVertex.
      */
     private Colour colour;
 }

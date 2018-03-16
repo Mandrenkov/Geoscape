@@ -3,8 +3,8 @@ package core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import bio.Biogle;
-import bio.Biomap;
+import bio.BioTriangle;
+import bio.BioMap;
 import bio.Biome;
 import env.Camera;
 import env.Grid;
@@ -44,15 +44,15 @@ public class Simulation {
 
         int size = Top.DEBUG ? 100 : 300;
 
-        // Generate the Biomap characterizing the landscape of the World.
-        Biomap biomap = new Biomap(size, size);
+        // Generate the BioMap characterizing the landscape of the World.
+        BioMap biomap = new BioMap(size, size);
         biomap.setRect(0,                     0,                    biomap.getCols() - 1, biomap.getRows() - 1,       Biome.HILL);
         biomap.setCloud(0,                    biomap.getRows()*2/3, biomap.getCols()/3,   biomap.getRows() - 1, 4, 4, Biome.PLAIN);
         biomap.setCloud(biomap.getCols()*2/3, biomap.getRows()/2,   biomap.getCols() - 1, biomap.getRows() - 1, 4, 4, Biome.DESERT);
         biomap.setCloud(0,                    0,                    biomap.getCols()/4,   biomap.getRows()/3,   4, 4, Biome.TUNDRA);
         biomap.setCloud(biomap.getCols()/2,   0,                    biomap.getCols() - 1, biomap.getRows()/2,   4, 4, Biome.MOUNTAIN);
 
-        // Instantiate a Grid using the generated Biomap.
+        // Instantiate a Grid using the generated BioMap.
         Grid land = new Grid("Land", size, size, minX, minY, maxX, maxY, biomap);
         this.world.add(land);
 
@@ -63,7 +63,7 @@ public class Simulation {
         this.world.add(lights);
 
         // Use the Lights to illuminate the landscape Grid.
-        for (Biogle biogle : land.getBiogles()) {
+        for (BioTriangle biogle : land.getTriangles()) {
             biogle.illuminate(lights);
         }
     }
