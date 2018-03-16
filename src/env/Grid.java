@@ -1,9 +1,12 @@
 package env;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.ArrayList;
 
 import bio.BioVertex;
 import core.Logger;
+import geo.Vertex;
 import bio.BioTriangle;
 import bio.BioMap;
 import bio.Biome;
@@ -82,9 +85,14 @@ public class Grid implements Drawable {
      * Draws this Grid.
      */
     public void draw() {
+        glBegin(GL_TRIANGLES);
         for (BioTriangle biogle : this.biogles) {
-            biogle.draw();
+            biogle.getColour().glColour();
+            for (Vertex vertex : biogle.getVertexes()) {
+                vertex.glVertex();
+            }
         }
+        glEnd();
     }
 
     /**

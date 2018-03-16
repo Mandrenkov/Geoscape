@@ -179,7 +179,17 @@ public class Vertex {
         return this.colour;
     }
 
-    public void gl() {
+    /**
+     * Sets the GL colour to the Colour of this Vertex.
+     */
+    public void glColour() {
+        this.colour.glColour();
+    }
+
+    /**
+     * Adds this Vertex to the GL buffer.
+     */
+    public void glVertex() {
         glVertex3f(this.x, this.y, this.z);
     }
 

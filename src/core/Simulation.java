@@ -42,7 +42,7 @@ public class Simulation {
         Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
         this.world.add(platform);
 
-        int size = Top.DEBUG ? 100 : 300;
+        int size = Top.DEBUG ? 300 : 300;
 
         // Generate the BioMap characterizing the landscape of the World.
         BioMap biomap = new BioMap(size, size);

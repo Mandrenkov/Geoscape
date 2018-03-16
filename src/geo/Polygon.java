@@ -26,8 +26,8 @@ public class Polygon implements Drawable {
     public void draw() {
         glBegin(this.mode);
         for (Vertex vertex : this.vertexes) {
-            vertex.getColour().gl();
-            vertex.gl();
+            vertex.glColour();
+            vertex.glVertex();
         }
         glEnd();
     }

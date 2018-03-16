@@ -35,11 +35,11 @@ public class BioTriangle extends Triangle {
      * Draws this BioTriangle.
      */
     public void draw() {
-        this.colour.gl();
+        this.colour.glColour();
 
         glBegin(GL_TRIANGLES);
         for (Vertex vertex : this.vertexes) {
-            vertex.gl();
+            vertex.glVertex();
         }
         glEnd();
     }

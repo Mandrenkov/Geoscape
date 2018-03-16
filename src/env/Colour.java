@@ -162,7 +162,7 @@ public class Colour {
     /**
      * Sets the GL colour to this Colour.
      */
-    public void gl() {
+    public void glColour() {
         glColor3f(this.red, this.green, this.blue);
     }
 

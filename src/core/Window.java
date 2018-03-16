@@ -167,6 +167,6 @@ public class Window {
         //   GL_POINT - Render the vertexes of each polygon.
         //   GL_LINE  - Render the outlines of each polygon.
         //   GL_FILL  - Render the faces of each polygon.
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
