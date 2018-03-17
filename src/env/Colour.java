@@ -3,11 +3,11 @@ package env;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import core.Logger;
+import util.Algebra;
 
 /**
  * @author Mikhail Andrenkov
@@ -183,10 +183,10 @@ public class Colour {
      * @param magnitude The maximum magnitude of the change in the components.
      */
     public void shift(float magnitude) {
-        float rand = (float) ThreadLocalRandom.current().nextDouble(-magnitude, magnitude);
-        this.red   = Math.min(1f, Math.max(0f, rand + this.red));
-        this.green = Math.min(1f, Math.max(0f, rand + this.green));
-        this.blue  = Math.min(1f, Math.max(0f, rand + this.blue));
+        float rng  = Algebra.random(magnitude);
+        this.red   = Math.min(1f, Math.max(0f, rng + this.red));
+        this.green = Math.min(1f, Math.max(0f, rng + this.green));
+        this.blue  = Math.min(1f, Math.max(0f, rng + this.blue));
     }
 
     /**

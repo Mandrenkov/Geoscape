@@ -1,7 +1,6 @@
 package bio;
 
 import java.util.Arrays;
-
 import env.Colour;
 import geo.Vertex;
 import util.Pair;

@@ -38,4 +38,16 @@ public class Algebra {
     public static float curve(float x) {
         return (float) (1f - Math.cos(Math.PI*x))/2f;
     }
+    
+    /**
+     * Generates and returns a random number with an absolute value that does
+     * not exceed the given value.
+     * 
+     * @param magnitude The maximum absolute value of the returned number.
+     * 
+     * @return The random number.
+     */
+    public static float random(float magnitude) {
+        return (float) (2*Math.random() - 1)*magnitude;
+    }
 }
