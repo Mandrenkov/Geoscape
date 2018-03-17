@@ -56,5 +56,4 @@ public class Pointer {
     public String toString() {
         return String.valueOf(this.buffer.get(0));
     }
-
 }

@@ -25,10 +25,11 @@ public class BioMap {
         this.cols = cols;
 
         // Initialize the map with the default Biome.
+        Biome biome = Biome.HILL;
         this.map = new Biome[this.rows][this.cols];
         for (int row = 0; row < this.rows; ++row) {
             for (int col = 0; col < this.cols; ++col) {
-                this.map[row][col] = BioMap.DEFAULT_BIOME;
+                this.map[row][col] = biome;
             }
         }
     }
@@ -207,11 +208,6 @@ public class BioMap {
 
     // Private members
     // -------------------------------------------------------------------------
-
-    /**
-     * The default Biome populated in the map.
-     */
-    private static final Biome DEFAULT_BIOME = Biome.HILL;
 
     /**
      * The 2D-array representing the Biome distribution of a Grid.

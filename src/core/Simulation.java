@@ -84,11 +84,6 @@ public class Simulation {
     // -------------------------------------------------------------------------
 
     /**
-     * Target degree of rotation along the z-axis every second.
-     */
-    private static final float Z_ROTATE_DELTA = 30;
-
-    /**
      * The World associated with this Simulation.
      */
     private World world;
@@ -118,7 +113,9 @@ public class Simulation {
             double period = now - syncTime;
             syncTime = now;
 
-            float rotation = (float) (period*Z_ROTATE_DELTA);
+            // The target degree of rotation along the z-axis every second.
+            float rotationDelta = 30;
+            float rotation = (float) (period*rotationDelta);
 
             Camera camera = Camera.getInstance();
             camera.rotate(rotation, 0, 0, 1);
