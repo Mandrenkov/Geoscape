@@ -51,9 +51,9 @@ public class Polygon implements Drawable {
     }
 
     /**
-     * Returns the list of Vertices comprising this Polygon.
+     * Returns the list of Vertexes comprising this Polygon.
      *
-     * @return The Vertices comprising this Polygon.
+     * @return The Vertexes comprising this Polygon.
      */
     public Vertex[] getVertexes() {
         return this.vertexes;
@@ -69,11 +69,11 @@ public class Polygon implements Drawable {
     }
 
     /**
-     * Sets the Vertices of this Polygon.
+     * Sets the Vertexes of this Polygon.
      *
-     * @param vertexes The new Vertices of this Polygon.
+     * @param vertexes The new Vertexes of this Polygon.
      */
-    public void setVertices(Vertex[] vertexes) {
+    public void setVertexes(Vertex[] vertexes) {
         this.vertexes = vertexes;
     }
 
@@ -113,18 +113,18 @@ public class Polygon implements Drawable {
     }
 
     /**
-     * Constructs a Polygon with the given Vertices.
+     * Constructs a Polygon with the given Vertexes.
      *
-     * @param vertexes The Vertices comprising this Polygon.
+     * @param vertexes The Vertexes comprising this Polygon.
      */
     protected Polygon(Vertex[] vertexes) {
         this(vertexes, GL_POLYGON);
     }
 
     /**
-     * Constructs a Polygon with the given OpenGL drawing mode and Vertices.
+     * Constructs a Polygon with the given OpenGL drawing mode and Vertexes.
      *
-     * @param vertexes The Vertices comprising this Polygon.
+     * @param vertexes The Vertexes comprising this Polygon.
      * @param mode     The OpenGL drawing mode.
      */
     protected Polygon(Vertex[] vertexes, int mode) {

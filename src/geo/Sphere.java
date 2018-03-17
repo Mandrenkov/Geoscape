@@ -83,7 +83,7 @@ public class Sphere extends Shape {
     private ArrayList<Triangle> approximate() {
         ArrayList<Triangle> faces = new ArrayList<>();
 
-		// Declare the Vertices representing the corners of the octahedron.
+		// Declare the Vertexes representing the corners of the octahedron.
 		Colour.Option option = Colour.Option.LIGHT;
         Vertex u = new Vertex( 0,  0,  1, Colour.random(option));
         Vertex d = new Vertex( 0,  0, -1, Colour.random(option));

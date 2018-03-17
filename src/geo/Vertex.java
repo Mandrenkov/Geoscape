@@ -23,36 +23,36 @@ public class Vertex {
     public static final Vertex ORIGIN = new Vertex(0, 0, 0);
 
     /**
-     * Returns the average position of the given Vertices.  This function
-     * assumes that the given list of Vertices is non-empty.
+     * Returns the average position of the given Vertexes.  This function
+     * assumes that the given list of Vertexes is non-empty.
      *
-     * @param vertices The Vertices to be averaged.
+     * @param vertexes The Vertexes to be averaged.
      *
      * @return The average position.
      */
-    public static Vertex average(Vertex... vertices) {
+    public static Vertex average(Vertex... vertexes) {
         Vertex average = new Vertex(0, 0, 0);
-        for (Vertex vertex : vertices) {
+        for (Vertex vertex : vertexes) {
             average.translate(vertex.getX(), vertex.getY(), vertex.getZ());
         }
-        average.scale(1f/vertices.length);
+        average.scale(1f/vertexes.length);
         return average;
     }
 
     /**
-     * Returns the average Z-coordinate of the given Vertices.  This function
-     * assumes that the given list of Vertices is non-empty.
+     * Returns the average Z-coordinate of the given Vertexes.  This function
+     * assumes that the given list of Vertexes is non-empty.
      *
-     * @param vertices The Vertices to be averaged.
+     * @param vertexes The Vertexes to be averaged.
      *
      * @return The average Z-coordinate.
      */
-    public static float averageZ(Vertex... vertices) {
+    public static float averageZ(Vertex... vertexes) {
         float z = 0;
-        for (Vertex vertex : vertices) {
+        for (Vertex vertex : vertexes) {
             z += vertex.getZ();
         }
-        return z/vertices.length;
+        return z/vertexes.length;
     }
 
     /**
@@ -97,7 +97,7 @@ public class Vertex {
     }
 
     /**
-     * Constructs a Vertex at the midpoint of the given Vertices.
+     * Constructs a Vertex at the midpoint of the given Vertexes.
      *
      * @param v1 The first Vertex.
      * @param v2 The second Vertex.
@@ -114,7 +114,7 @@ public class Vertex {
      *
      * @param vertex The other Vertex.
      *
-     * @return True if the Vertices occupy the same spatial region.
+     * @return True if the Vertexes occupy the same spatial region.
      */
     public boolean close(Vertex vertex) {
         return this.distance(vertex) < 1E-6;
@@ -125,7 +125,7 @@ public class Vertex {
      *
      * @param vertex The other Vertex.
      *
-     * @return The distance between the Vertices.
+     * @return The distance between the Vertexes.
      */
     public float distance(Vertex vertex) {
         return (float) Math.sqrt(Math.pow(this.x - vertex.x, 2)
@@ -277,7 +277,7 @@ public class Vertex {
      * @return The String representation.
      */
     public String toString() {
-        return String.format("Vertex (%.2f, %.2f, %.2f) using %s.", this.x, this.y, this.z, this.colour.toString());
+        return String.format("Vertex (%.2f, %.2f, %.2f)", this.x, this.y, this.z);
     }
 
 

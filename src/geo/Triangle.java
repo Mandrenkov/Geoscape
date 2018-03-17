@@ -15,14 +15,14 @@ public class Triangle extends Polygon {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Triangle object with the given set of Vertices.
+     * Constructs a Triangle object with the given set of Vertexes.
      *
-     * @param vertices The vertices comprising this Triangle.
+     * @param vertexes The vertexes comprising this Triangle.
      */
-    public Triangle(Vertex... vertices) {
-        super(vertices, GL_TRIANGLES);
-        if (vertices.length != 3) {
-            throw new IllegalArgumentException("Triangles must have 3 vertices.");
+    public Triangle(Vertex... vertexes) {
+        super(vertexes, GL_TRIANGLES);
+        if (vertexes.length != 3) {
+            throw new IllegalArgumentException("Triangles must have exactly 3 vertexes.");
         }
     }
 

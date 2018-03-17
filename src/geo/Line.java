@@ -15,7 +15,7 @@ public class Line extends Polygon {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Line with the given Colour and start and end Vertices.
+     * Constructs a Line with the given Colour and start and end Vertexes.
      *
      * @param colour The Colour of this Line.
      * @param start  The start Vertex of this Line.
@@ -24,7 +24,7 @@ public class Line extends Polygon {
     public Line(Vertex... vertexes) {
         super(vertexes, GL_LINES);
         if (vertexes.length != 2) {
-            throw new IllegalArgumentException("Lines must have 2 vertices.");
+            throw new IllegalArgumentException("Lines must have exactly 2 vertexes.");
         }
     }
 }

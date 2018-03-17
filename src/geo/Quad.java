@@ -15,14 +15,14 @@ public class Quad extends Polygon {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Quad with the given set of Vertices.
+     * Constructs a Quad with the given set of Vertexes.
      *
-     * @param vertices The vertices comprising this Quad.
+     * @param vertexes The vertexes comprising this Quad.
      */
-    public Quad(Vertex... vertices) {
-        super(vertices, GL_QUADS);
-        if (vertices.length != 4) {
-            throw new IllegalArgumentException("Quads must have 4 vertices.");
+    public Quad(Vertex... vertexes) {
+        super(vertexes, GL_QUADS);
+        if (vertexes.length != 4) {
+            throw new IllegalArgumentException("Quads must have exactly 4 vertexes.");
         }
     }
 }
