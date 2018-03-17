@@ -46,5 +46,4 @@ public class Top {
 
         Logger.info("Application terminated.");
     }
-
 }

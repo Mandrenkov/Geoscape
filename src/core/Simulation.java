@@ -47,7 +47,7 @@ public class Simulation {
         // Generate the BioMap characterizing the landscape of the World.
         BioMap biomap = new BioMap(size, size);
         biomap.setRect(0,                     0,                    biomap.getCols() - 1, biomap.getRows() - 1,       Biome.HILL);
-        biomap.setCloud(0,                    biomap.getRows()*2/3, biomap.getCols()/3,   biomap.getRows() - 1, 4, 4, Biome.PLAIN);
+        biomap.setCloud(0,                    biomap.getRows()*2/3, biomap.getCols()/3,   biomap.getRows() - 1, 4, 4, Biome.PLAINS);
         biomap.setCloud(biomap.getCols()*2/3, biomap.getRows()/2,   biomap.getCols() - 1, biomap.getRows() - 1, 4, 4, Biome.DESERT);
         biomap.setCloud(0,                    0,                    biomap.getCols()/4,   biomap.getRows()/3,   4, 4, Biome.TUNDRA);
         biomap.setCloud(biomap.getCols()/2,   0,                    biomap.getCols() - 1, biomap.getRows()/2,   4, 4, Biome.MOUNTAIN);

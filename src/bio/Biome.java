@@ -8,61 +8,47 @@ import env.Colour;
  * @since March 13, 2018
  * @version 1.1
  *
- * <p>The <b>Biome</b> class represents a natural biome.  In the context of this
- * application, a Biome is a set of common characteristics shared by a group of
- * BioVertexes.</p>
+ * <p>The <b>Biome</b> enumerations represent various natural biomes.  In the
+ * context of this application, a Biome is a set of common characteristics that
+ * is shared by a group of BioVertexes.</p>
  */
-public class Biome {
-
-    // Public members
+public enum Biome {
+    
+    // Enumerations
     // -------------------------------------------------------------------------
 
-    /**
-     * The Biome instance modelling a desert landform.
-     */
-    public static final Biome DESERT = new Biome("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.05f) {
+    DESERT("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.05f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.wave(10f, 0.05f, 200f, 0.001f*scalar);
         }
-    };
-
-    /**
-     * The Biome instance modelling a hill landform.
-     */
-    public static final Biome HILL = new Biome("Hill", new Colour(0.2f, 0.4f, 0.0f), 2.0f) {
+    },
+    HILL("Hill", new Colour(0.2f, 0.4f, 0.0f), 2.0f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.0005f*scalar);
             //biotex.getColour().shift(0.01f*scalar);
         }
-    };
-
-    /**
-     * The Biome instance modelling a mountain landform.
-     */
-    public static final Biome MOUNTAIN = new Biome("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
+    },
+    MOUNTAIN("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.005f*scalar);
         }
-    };
-    /**
-     * The Biome instance modelling a plains landform.
-     */
-    public static final Biome PLAIN = new Biome("Plains", new Colour(0.8f, 1.0f, 0.0f), 0.02f) {
+    },
+    PLAINS("Plains", new Colour(0.8f, 1.0f, 0.0f), 0.02f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.0001f*scalar);
             biotex.getColour().shift(0.01f*scalar);
         }
-    };
-
-    /**
-     * The Biome instance modelling a tundra landform.
-     */
-    public static final Biome TUNDRA = new Biome("Tundra", new Colour(1, 1, 1), 0.10f) {
+    },
+    TUNDRA("Tundra", new Colour(1, 1, 1), 0.10f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.0001f*scalar);
             biotex.getColour().shift(0.1f*scalar);
         }
     };
+
+
+    // Public members
+    // -------------------------------------------------------------------------
 
     /**
      * Returns the colour of this Biome.
