@@ -42,7 +42,7 @@ public class Simulation {
         Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
         this.world.add(platform);
 
-        int size = Top.DEBUG ? 300 : 300;
+        int size = Top.DEBUG ? 100 : 300;
 
         // Generate the BioMap characterizing the landscape of the World.
         BioMap biomap = new BioMap(size, size);
@@ -58,14 +58,10 @@ public class Simulation {
 
         // Declare the set of Lights which illuminate the World in this simulation.
         Light[] lights = new Light[]{
-            new Light(new Vertex(-3f, -3f, 3f))
+            new Light(new Vertex(-1f, -1f, 1f)),
+            new Light(new Vertex(-1f, 1f, 1f))
         };
-        this.world.add(lights);
-
-        // Use the Lights to illuminate the landscape Grid.
-        for (BioTriangle biogle : land.getTriangles()) {
-            biogle.illuminate(lights);
-        }
+        this.world.addLights(lights);
     }
 
     /**
@@ -119,6 +115,10 @@ public class Simulation {
 
             Camera camera = Camera.getInstance();
             camera.rotate(rotation, 0, 0, 1);
+
+            for (Light light : world.getLights()) {
+                light.glPosition();
+            }
 
             // Prepare for the next frame.
             glfwSwapBuffers(handle);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import bio.BioVertex;
 import core.Logger;
+import geo.Vector;
 import geo.Vertex;
 import bio.BioTriangle;
 import bio.BioMap;
@@ -87,6 +88,9 @@ public class Grid implements Drawable {
     public void draw() {
         glBegin(GL_TRIANGLES);
         for (BioTriangle biogle : this.biogles) {
+            Vector normal = biogle.getNormal();
+            normal.normalize();
+            glNormal3f(normal.getX(), normal.getY(), normal.getZ());
             biogle.getColour().glColour();
             for (Vertex vertex : biogle.getVertexes()) {
                 vertex.glVertex();

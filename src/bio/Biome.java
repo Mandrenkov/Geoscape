@@ -19,7 +19,7 @@ public enum Biome {
 
     DESERT("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.05f) {
         public void texturize(BioVertex biotex, float scalar) {
-            biotex.wave(10f, 0.05f, 200f, 0.001f*scalar);
+            biotex.wave(20f, 0.02f, 200f, 0.001f*scalar);
         }
     },
     HILL("Hill", new Colour(0.2f, 0.4f, 0.0f), 2.0f) {
@@ -31,6 +31,7 @@ public enum Biome {
     MOUNTAIN("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.005f*scalar);
+            //biotex.getColour().scale(1f + biotex.getZ()*5);
         }
     },
     PLAINS("Plains", new Colour(0.8f, 1.0f, 0.0f), 0.02f) {
@@ -42,7 +43,6 @@ public enum Biome {
     TUNDRA("Tundra", new Colour(1, 1, 1), 0.10f) {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.0001f*scalar);
-            biotex.getColour().shift(0.1f*scalar);
         }
     };
 

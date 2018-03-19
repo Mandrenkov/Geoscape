@@ -125,10 +125,12 @@ public class Window {
 
         // Apply a set of OpenGL flags.
         int[] glFlags = new int[] {
-            GL_DEPTH_TEST,
+            GL_COLOR_MATERIAL,
             GL_CULL_FACE,
-            GL_POLYGON_SMOOTH,
-            GL_MULT
+            GL_DEPTH_TEST,
+            GL_LIGHTING,
+            GL_MULT,
+            GL_POLYGON_SMOOTH
         };
         for (int flag : glFlags) {
             glEnable(flag);
@@ -168,5 +170,12 @@ public class Window {
         //   GL_LINE  - Render the outlines of each polygon.
         //   GL_FILL  - Render the faces of each polygon.
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        // Specify the ambient lighting to be applied to the OpenGL scene.
+        float[] ambient = {0.2f, 0.2f, 0.2f, 1};
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+        
+        // All materials in the scene are affected by ambient and diffuse lighting.
+        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     }
 }

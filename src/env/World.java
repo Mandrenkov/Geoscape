@@ -37,6 +37,7 @@ public class World implements Drawable {
         this.maxY = maxY;
 
         this.drawables = new ArrayList<>();
+        this.lights = new ArrayList<>();
 
         // Add Axes to the World for debugging purposes.
         if (Top.DEBUG) {
@@ -58,6 +59,16 @@ public class World implements Drawable {
     }
 
     /**
+     * Adds the given Light source to this World.
+     *
+     * @param light The Light to add.
+     */
+    public void addLights(Light... lights) {
+        this.lights.addAll(Arrays.asList(lights));
+        this.add(lights);
+    }
+
+    /**
      * Draws this World.
      */
     public void draw() {
@@ -75,6 +86,15 @@ public class World implements Drawable {
         return drawables.stream()
                         .mapToInt(drawable -> drawable.polygons())
                         .sum();
+    }
+
+    /**
+     * Returns the list of Lights in this World.
+     * 
+     * @return The Lights.
+     */
+    public ArrayList<Light> getLights() {
+        return this.lights;
     }
 
     /**
@@ -154,4 +174,9 @@ public class World implements Drawable {
      * The list of Drawable entities in this World.
      */
     private ArrayList<Drawable> drawables;
+
+    /**
+     * The list of Light sources in this World.
+     */
+    private ArrayList<Light> lights;
 }

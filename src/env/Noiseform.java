@@ -81,7 +81,7 @@ public class Noiseform {
      * Applies a Perlin noise transformation to the Grid associated with this Noiseform.
      */
     private void disturb() {
-        Logger.debug("Applying Perlin noise transformation to %s.", this.grid);
+        Logger.info("Applying Perlin noise transformation to %s.", this.grid);
 
         // Define a set of conversion ratios to convert a Grid coordinate into
         // a Perlin grid coordinate.  An epsilon is thrown in to avoid division
@@ -90,6 +90,11 @@ public class Noiseform {
         float colSize = this.grid.getWidth()/(this.cols - epsilon);
         float rowSize = this.grid.getHeight()/(this.rows - epsilon);
         float minSize = Math.min(colSize, rowSize);
+
+        // Display a progress message every |multiple| percent of progress.
+        int multiple = 10;
+        int milestone = 10;
+        int done = 0;
 
         for (int row = 0; row < this.grid.getRows(); ++row) {
             for (int col = 0; col < this.grid.getColumns(); ++col) {
@@ -155,8 +160,18 @@ public class Noiseform {
                     z *= Algebra.curve(2*minBorder/minSize);
                 }
                 biotex.setZ(z);
+
+                // Display a progress message if the next miletone has been reached.
+                ++done;
+                int progress = 100*done/(this.grid.getRows()*this.grid.getColumns());
+                if (progress >= milestone) {
+                    Logger.info("\tApplied Perlin noise transformation to %d%% of the current Grid.", milestone);
+                    milestone += multiple;
+                }
             }
         }
+
+        Logger.info("Finished applying Perlin noise transformation.");
     }
 
     /**

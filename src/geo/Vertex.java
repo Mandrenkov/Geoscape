@@ -272,6 +272,16 @@ public class Vertex {
     }
 
     /**
+     * Returns a float array representation of this Vertex.  This array has
+     * the following form: [x, y, z, 1].
+     * 
+     * @return The float array representation.
+     */
+    public float[] toArray() {
+        return new float[]{this.x, this.y, this.z, 1};
+    }
+
+    /**
      * Returns a String representation of this Vertex.
      *
      * @return The String representation.
