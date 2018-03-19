@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
+
 import core.Logger;
 import util.Algebra;
 
@@ -121,6 +123,20 @@ public class Colour {
         this.red   = Math.min(1f, this.red   + colour.red  );
         this.green = Math.min(1f, this.green + colour.green);
         this.blue  = Math.min(1f, this.blue  + colour.blue );
+    }
+
+    /**
+     * Illuminates this Colour by individually increasing each RGB component
+     * such that the new value of each component lies |weight| of the way between
+     * the original component value and 1.
+     * 
+     * @param weight The magnitude of the illumination.  This value should fall
+     *               in the range [0, 1].
+     */
+    public void illuminate(float weight) {
+        this.red   = Algebra.curve(Algebra.average(this.red,   1, weight));
+        this.green = Algebra.curve(Algebra.average(this.green, 1, weight));
+        this.blue  = Algebra.curve(Algebra.average(this.blue,  1, weight));
     }
 
     /**

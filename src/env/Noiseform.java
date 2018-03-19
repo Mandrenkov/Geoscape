@@ -204,14 +204,17 @@ public class Noiseform {
     }
 
     /**
-     * Apply the weighted texturing of each BioVertex.
+     * Apply the weighted texturing of each BioVertex.  The Colour of each
+     * BioVertex will also be increase proptional to its elevation.
      */
     private void texture() {
         Logger.debug("Applying textures to %s.", this.grid);
 
         for (int row = 0; row < this.grid.getRows(); ++row) {
             for (int col = 0; col < this.grid.getColumns(); ++col) {
-                this.grid.getVertex(row, col).texturize();
+                BioVertex biotex = this.grid.getVertex(row, col);
+                biotex.getColour().illuminate(biotex.getZ());
+                biotex.texturize();
             }
         }
     }
