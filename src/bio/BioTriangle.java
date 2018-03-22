@@ -53,6 +53,14 @@ public class BioTriangle extends Triangle {
         return this.colour;
     }
 
+    /**
+     * Updates the colour of this BioTriangle to reflect the current Colours of
+     * its BioVertexes.
+     */
+    public void updateColour() {
+        this.colour = BioVertex.averageColour(this.biotexes);
+    }
+
     // Private members
     // -------------------------------------------------------------------------
 

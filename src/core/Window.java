@@ -175,7 +175,11 @@ public class Window {
         float[] ambient = {0.2f, 0.2f, 0.2f, 1};
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
         
-        // All materials in the scene are affected by ambient and diffuse lighting.
+        // All materials in the OpenGL scene are affected by ambient and diffuse
+        // lighting.
         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+        // Each polygon in the OpenGL scene is shaded using one colour. 
+        glShadeModel(GL_FLAT);
     }
 }

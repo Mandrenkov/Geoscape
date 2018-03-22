@@ -1,6 +1,7 @@
 package env;
 
 import bio.Biomix;
+import bio.BioTriangle;
 import bio.BioVertex;
 import core.Logger;
 import geo.Vector;
@@ -231,6 +232,10 @@ public class Noiseform {
                 biotex.getColour().illuminate(biotex.getZ());
                 biotex.texturize();
             }
+        }
+
+        for (BioTriangle biogle : this.grid.getTriangles()) {
+            biogle.updateColour();
         }
     }
 }

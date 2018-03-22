@@ -1,5 +1,7 @@
 package geo;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * @author Mikhail Andrenkov
  * @since March 13, 2018
@@ -118,6 +120,15 @@ public class Vector {
      */
     public float getZ() {
         return this.z;
+    }
+
+    /**
+     * Adds this Vector to the GL buffer as a normal vector.
+     */
+    public void glNormal() {
+        Vector normal = new Vector(this.x, this.y, this.z);
+        normal.normalize();
+        glNormal3f(normal.x, normal.y, normal.z);
     }
 
     /**

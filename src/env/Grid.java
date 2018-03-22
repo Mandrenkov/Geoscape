@@ -71,9 +71,9 @@ public class Grid implements Drawable {
                 boolean forward = p % 2 == 0;
 
                 BioVertex[] biogle = new BioVertex[3];
-                biogle[0] = forward ? this.biotexes[row][col]     : this.biotexes[row + 1][col + 1];
-                biogle[1] = forward ? this.biotexes[row + 1][col] : this.biotexes[row][col + 1];
-                biogle[2] = forward ? this.biotexes[row][col + 1] : this.biotexes[row + 1][col];
+                biogle[0] = forward ? this.biotexes[row    ][col    ] : this.biotexes[row + 1][col    ];
+                biogle[1] = forward ? this.biotexes[row + 1][col    ] : this.biotexes[row + 1][col + 1];
+                biogle[2] = forward ? this.biotexes[row    ][col + 1] : this.biotexes[row    ][col + 1];
                 this.biogles.add(new BioTriangle(biogle));
             }
         }
@@ -86,17 +86,35 @@ public class Grid implements Drawable {
      * Draws this Grid.
      */
     public void draw() {
-        glBegin(GL_TRIANGLES);
-        for (BioTriangle biogle : this.biogles) {
-            Vector normal = biogle.getNormal();
-            normal.normalize();
-            glNormal3f(normal.getX(), normal.getY(), normal.getZ());
-            biogle.getColour().glColour();
-            for (Vertex vertex : biogle.getVertexes()) {
-                vertex.glVertex();
+        for (int row = 0; row < this.rows - 1; ++row) {
+            // GL_TRIANGLE_STRIP expects the Vertices to be ordered as follows
+            // in the OpenGL buffer:
+            //
+            //  0 --- 2 --- 4 --- 6
+            //  |   / |   / |   / |
+            //  |  /  |  /  |  /  |
+            //  | /   | /   | /   |
+            //  1 --- 3 --- 4 --- 5
+            glBegin(GL_TRIANGLE_STRIP);
+            this.biotexes[row][0].glVertex();
+            this.biotexes[row + 1][0].glVertex();
+            for (int v = 2; v < 2*this.cols; ++v) {
+                // Each row of the Grid contains 2 Biogles for every column in
+                // the Grid (except for the last column).
+                int t = row*2*(this.cols - 1) + (v - 2);
+                BioTriangle biogle = this.biogles.get(t);
+                biogle.getColour().glColour();
+                biogle.getNormal().glNormal();
+
+                // The row and column equations for the current Vertex can be
+                // derived by studying the ASCII depiction of the BioTriangles
+                // above. 
+                int r = row + (v % 2);
+                int c = v/2;
+                this.biotexes[r][c].glVertex();
             }
+            glEnd();
         }
-        glEnd();
     }
 
     /**
