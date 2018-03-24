@@ -3,9 +3,7 @@ package bio;
 import static org.lwjgl.opengl.GL11.*;
 
 import env.Colour;
-import env.Light;
 import geo.Triangle;
-import geo.Vector;
 import geo.Vertex;
 
 /**

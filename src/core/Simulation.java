@@ -3,7 +3,6 @@ package core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import bio.BioTriangle;
 import bio.BioMap;
 import bio.Biome;
 import env.Camera;

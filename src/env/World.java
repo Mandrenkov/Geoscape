@@ -7,7 +7,6 @@ import bio.BioMap;
 import core.Top;
 import geo.Line;
 import geo.Vertex;
-import util.Pair;
 
 /**
  * @author  Mikhail Andrenkov

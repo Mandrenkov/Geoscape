@@ -1,7 +1,5 @@
 package bio;
 
-import java.util.Arrays;
-
 /**
  * @author Mikhail Andrenkov
  * @since March 13, 2018

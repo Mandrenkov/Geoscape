@@ -5,12 +5,10 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 
 import bio.BioVertex;
-import core.Logger;
-import geo.Vector;
-import geo.Vertex;
 import bio.BioTriangle;
 import bio.BioMap;
 import bio.Biome;
+import core.Logger;
 
 /**
  * @author Mikhail Andrenkov
