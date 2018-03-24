@@ -44,7 +44,8 @@ public enum Biome {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.0001f*scalar);
         }
-    };
+    },
+    VOID("Void", new Colour(0.3f, 0.3f, 0.3f), 0) {};
 
 
     // Public members

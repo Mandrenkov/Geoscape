@@ -144,9 +144,4 @@ public class BioVertex extends Vertex {
      * The Biome influences on this BioVertex.
      */
     private Biomix biomix;
-
-    /**
-     * The colour of this BioVertex.
-     */
-    private Colour colour;
 }

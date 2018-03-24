@@ -25,7 +25,7 @@ public class BioMap {
         this.cols = cols;
 
         // Initialize the map with the default Biome.
-        Biome biome = Biome.HILL;
+        Biome biome = Biome.VOID;
         this.map = new Biome[this.rows][this.cols];
         for (int row = 0; row < this.rows; ++row) {
             for (int col = 0; col < this.cols; ++col) {
@@ -195,11 +195,10 @@ public class BioMap {
         String header = String.format("BioMap (%d x %d):", this.rows, this.cols);
         str.append(header + "\n");
 
-        for (Biome[] row : this.map) {
-            Character[] chars = Arrays.stream(row)
-                                      .map(biome -> biome.getName().charAt(0))
-                                      .toArray(Character[]::new);
-            str.append(chars);
+        for (int row = 0; row < this.rows; ++row) {
+            for (int col = 0; col < this.cols; ++col) {
+                str.append(this.map[row][col].getName().charAt(0));
+            }
             str.append('\n');
         }
         return str.toString();

@@ -31,13 +31,14 @@ public class Grid implements Drawable {
      * @param name   The name of this Grid.
      * @param rows   The number of rows in this Grid.
      * @param cols   The number of columns in this Grid.
+     * @param initZ  The initial elevation of all BioVertexes in this Grid.
      * @param minX   The minimum X-coordinate of this Grid.
      * @param minY   The minimum Y-coordinate of this Grid.
      * @param maxX   The maximum X-coordinate of this Grid.
      * @param maxY   The maximum Y-coordinate of this Grid.
      * @param biomap The BioMap representing the Biomes imposed on this Grid.
      */
-    public Grid(String name, int rows, int cols, float minX, float minY, float maxX, float maxY, BioMap biomap) {
+    public Grid(String name, int rows, int cols, float initZ, float minX, float minY, float maxX, float maxY, BioMap biomap) {
         Logger.debug("Creating Grid \"%s\" with %d rows and %d columns from (%.2f, %.2f) to (%.2f, %.2f).", name, rows, cols, minX, minY, maxX, maxY);
 
         this.name = name;
@@ -56,7 +57,7 @@ public class Grid implements Drawable {
             for (int col = 0 ; col < this.cols ; ++col) {
                 float x = this.minX + col*(this.maxX - this.minX)/(this.cols - 1);
                 float y = this.minY + row*(this.maxY - this.minY)/(this.rows - 1);
-                float z = 0.1f;
+                float z = initZ;
                 Biome biome = biomap.getBiome(row, col);
 
                 BioVertex biotex = new BioVertex(biome, x, y, z);

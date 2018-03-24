@@ -84,7 +84,7 @@ public class Window {
             new Pair<Integer, Integer>(GLFW_RESIZABLE,    1),
             new Pair<Integer, Integer>(GLFW_FOCUSED,      1),
             new Pair<Integer, Integer>(GLFW_REFRESH_RATE, 144),
-            new Pair<Integer, Integer>(GLFW_SAMPLES,      1)
+            new Pair<Integer, Integer>(GLFW_SAMPLES,      2)
         ));
         for (Pair<Integer, Integer> hint : glfwHints) {
             glfwWindowHint(hint.getFirst(), hint.getSecond());

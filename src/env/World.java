@@ -3,6 +3,7 @@ package env;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import bio.BioMap;
 import core.Top;
 import geo.Line;
 import geo.Vertex;
@@ -42,34 +43,8 @@ public class World implements Drawable {
 
         // Add a set of axes and a grid to the World for debugging purposes.
         if (Top.DEBUG) {
-            // Draw the X, Y, and Z axes.
-            float length = 1.1f;
-            Line xAxis = new Line(Vertex.ORIGIN, new Vertex(length, 0, 0, new Colour(1, 0, 0)));
-            Line yAxis = new Line(Vertex.ORIGIN, new Vertex(0, length, 0, new Colour(0, 1, 0)));
-            Line zAxis = new Line(Vertex.ORIGIN, new Vertex(0, 0, length, new Colour(0, 0, 1)));
-            this.drawables.addAll(Arrays.asList(xAxis, yAxis, zAxis));
-
-            // The overhang of the grid in each direction of the World.
-            float overhang = 2;
-            // The number of rows and columns in the grid.
-            int size = 17;
-            // The colour of the grid.
-            Colour gridColour = new Colour(0.3f, 0.3f, 0.3f); 
-
-            // Calculate the minimum, maximum, and step of the grid dimensions.
-            Pair<Float, Float> gridX = new Pair<>(minX - overhang, maxX + overhang);
-            Pair<Float, Float> gridY = new Pair<>(minY - overhang, maxY + overhang);
-            float stepX = (gridX.getSecond() - gridX.getFirst())/size;
-            float stepY = (gridY.getSecond() - gridY.getFirst())/size;
-
-            // Draw the grid.
-            for (float x = gridX.getFirst(); x <= gridX.getSecond(); x += stepX) {
-                for (float y = gridY.getFirst(); y <= gridY.getSecond(); y += stepY) {
-                    Line h = new Line(new Vertex(x, gridY.getFirst(), 0, gridColour), new Vertex(x, gridY.getSecond(), 0, gridColour));
-                    Line v = new Line(new Vertex(gridX.getFirst(), y, 0, gridColour), new Vertex(gridX.getSecond(), y, 0, gridColour));
-                    this.drawables.addAll(Arrays.asList(h, v));
-                }
-            }
+            this.addDebugAxes();
+            this.addDebugGrid();
         }
     }
 
@@ -203,4 +178,46 @@ public class World implements Drawable {
      * The list of Light sources in this World.
      */
     private ArrayList<Light> lights;
+
+    /**
+     * Adds the X, Y, and Z debug axes to the Drawable list of this World.
+     */
+    private void addDebugAxes() {
+        float length = 1.1f;
+        Line xAxis = new Line(Vertex.ORIGIN, new Vertex(length, 0, 0, new Colour(1, 0, 0)));
+        Line yAxis = new Line(Vertex.ORIGIN, new Vertex(0, length, 0, new Colour(0, 1, 0)));
+        Line zAxis = new Line(Vertex.ORIGIN, new Vertex(0, 0, length, new Colour(0, 0, 1)));
+        this.drawables.addAll(Arrays.asList(xAxis, yAxis, zAxis));
+    }
+
+    /**
+     * Adds the debug grid to the Drawable list of this World.
+     */
+    private void addDebugGrid() {
+        // The overhang of the grid in each direction of the World.
+        float overhang = 2;
+        // The number of rows and columns in the grid.
+        int size = 20;
+
+        BioMap biomap = new BioMap(size, size);
+        Grid grid = new Grid("Debug",
+                             size,
+                             size,
+                             0,
+                             this.minX - overhang,
+                             this.minY - overhang,
+                             this.maxX + overhang,
+                             this.maxY + overhang,
+                             biomap);
+
+        for (int row = 0; row < size; ++row){
+            for (int col = 0; col < size; ++col) {
+                Line h = new Line(grid.getVertex(row, 0), grid.getVertex(row, size - 1));
+                Line v = new Line(grid.getVertex(0, col), grid.getVertex(size - 1, col));
+                this.drawables.addAll(Arrays.asList(h, v));
+            }
+        }
+
+        System.out.println(biomap.toString());
+    }
 }

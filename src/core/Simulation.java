@@ -42,7 +42,7 @@ public class Simulation {
         Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
         this.world.add(platform);
 
-        int size = Top.DEBUG ? 300 : 300;
+        int size = Top.DEBUG ? 100 : 300;
 
         // Generate the BioMap characterizing the landscape of the World.
         BioMap biomap = new BioMap(size, size);
@@ -53,13 +53,12 @@ public class Simulation {
         biomap.setCloud(biomap.getCols()/2,   0,                    biomap.getCols() - 1, biomap.getRows()/2,   4, 4, Biome.MOUNTAIN);
 
         // Instantiate a Grid using the generated BioMap.
-        Grid land = new Grid("Land", size, size, minX, minY, maxX, maxY, biomap);
+        Grid land = new Grid("Land", size, size, 0.05f, minX, minY, maxX, maxY, biomap);
         this.world.add(land);
 
         // Declare the set of Lights which illuminate the World in this simulation.
         Light[] lights = new Light[]{
-            new Light(new Vertex(-1f, -1f, 1f)),
-            new Light(new Vertex(-1f, 1f, 1f))
+            new Light(new Vertex(-1f, -1f, 1f))
         };
         this.world.addLights(lights);
     }
@@ -110,7 +109,7 @@ public class Simulation {
             syncTime = now;
 
             // The target degree of rotation along the z-axis every second.
-            float rotationDelta = 30;
+            float rotationDelta = 20;
             float rotation = (float) (period*rotationDelta);
 
             Camera camera = Camera.getInstance();
