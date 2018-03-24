@@ -6,6 +6,7 @@ import java.util.Arrays;
 import core.Top;
 import geo.Line;
 import geo.Vertex;
+import util.Pair;
 
 /**
  * @author  Mikhail Andrenkov
@@ -39,13 +40,36 @@ public class World implements Drawable {
         this.drawables = new ArrayList<>();
         this.lights = new ArrayList<>();
 
-        // Add Axes to the World for debugging purposes.
+        // Add a set of axes and a grid to the World for debugging purposes.
         if (Top.DEBUG) {
+            // Draw the X, Y, and Z axes.
             float length = 1.1f;
             Line xAxis = new Line(Vertex.ORIGIN, new Vertex(length, 0, 0, new Colour(1, 0, 0)));
             Line yAxis = new Line(Vertex.ORIGIN, new Vertex(0, length, 0, new Colour(0, 1, 0)));
             Line zAxis = new Line(Vertex.ORIGIN, new Vertex(0, 0, length, new Colour(0, 0, 1)));
             this.drawables.addAll(Arrays.asList(xAxis, yAxis, zAxis));
+
+            // The overhang of the grid in each direction of the World.
+            float overhang = 2;
+            // The number of rows and columns in the grid.
+            int size = 17;
+            // The colour of the grid.
+            Colour gridColour = new Colour(0.3f, 0.3f, 0.3f); 
+
+            // Calculate the minimum, maximum, and step of the grid dimensions.
+            Pair<Float, Float> gridX = new Pair<>(minX - overhang, maxX + overhang);
+            Pair<Float, Float> gridY = new Pair<>(minY - overhang, maxY + overhang);
+            float stepX = (gridX.getSecond() - gridX.getFirst())/size;
+            float stepY = (gridY.getSecond() - gridY.getFirst())/size;
+
+            // Draw the grid.
+            for (float x = gridX.getFirst(); x <= gridX.getSecond(); x += stepX) {
+                for (float y = gridY.getFirst(); y <= gridY.getSecond(); y += stepY) {
+                    Line h = new Line(new Vertex(x, gridY.getFirst(), 0, gridColour), new Vertex(x, gridY.getSecond(), 0, gridColour));
+                    Line v = new Line(new Vertex(gridX.getFirst(), y, 0, gridColour), new Vertex(gridX.getSecond(), y, 0, gridColour));
+                    this.drawables.addAll(Arrays.asList(h, v));
+                }
+            }
         }
     }
 
