@@ -35,18 +35,27 @@ public class LocalMap {
 
         this.biotex = grid.getVertex(row, col);
 
-        float mandist = maxdist*Math.min(grid.getRows(), grid.getColumns());
+        // Convert the maximum distance parameter into its Manhattan and Euclidean
+        // equivalents.
+        int mandist = (int) (maxdist*Math.min(grid.getRows(), grid.getColumns()));
         float eucdist = maxdist*Math.min(grid.getWidth(), grid.getHeight());
 
         // Determine the bounding rows containing BioVertexes to be added to the map.
-        int minRow = (int) Math.max(0, row - mandist);
-        int maxRow = (int) Math.min(grid.getRows() - 1, row + mandist);
-
-        // Determine the bounding columns containing BioVertexes to be added to the map.
-        int minCol = (int) Math.max(0, col - mandist);
-        int maxCol = (int) Math.min(grid.getColumns() - 1, col + mandist);
+        int minRow = Math.max(0, row - mandist);
+        int maxRow = Math.min(grid.getRows() - 1, row + mandist);
 
         for (int r = minRow; r <= maxRow; ++r) {
+            // Calculate the Euclidean distance between the given row and the
+            // current row.
+            float height = Math.abs(r - row)*grid.getCellHeight();
+            // Calculate the Euclidian distance between the given column and the
+            // the column corresponding to the current row.
+            float width = (float) Math.sqrt(Math.pow(eucdist, 2) - Math.pow(height, 2));
+
+            // Determine the bounding column containing BioVertexes to be added to the map.
+            int coldist = (int) Math.ceil(width/grid.getCellWidth());
+            int minCol = (int) Math.max(0, col - coldist);
+            int maxCol = (int) Math.min(grid.getColumns() - 1, col + coldist);
             for (int c = minCol; c <= maxCol; ++c) {
                 BioVertex curtex = grid.getVertex(r, c);
 
