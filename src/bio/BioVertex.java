@@ -48,6 +48,15 @@ public class BioVertex extends Vertex {
     }
 
     /**
+     * Constructs a BioVertex that is a copy of the given BioVertex.
+     *
+     * @param biotex The BioVertex to copy.
+     */
+    public BioVertex(BioVertex biotex) {
+        this(biotex.biome, biotex.x, biotex.y, biotex.z);
+    }
+
+    /**
      * Returns the primary Biome associated with this BioVertex.
      *
      * @return The Biome.

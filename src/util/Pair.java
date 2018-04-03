@@ -13,7 +13,10 @@ public class Pair <F, S> {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Pointer object and initializes the buffer.
+     * Constructs a Pair with the given values.
+     * 
+     * @param first  The first value in the Pair.
+     * @param second The second value in the Pair.
      */
     public Pair(F first, S second) {
         this.first = first;
