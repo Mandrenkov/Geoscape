@@ -1,6 +1,9 @@
 package env;
 
 import bio.Biomix;
+
+import java.util.Map;
+
 import bio.BioTriangle;
 import bio.BioVertex;
 import core.Logger;
@@ -182,39 +185,26 @@ public class Noiseform {
     private void alias() {
         Logger.debug("Applying aliasing to %s.", this.grid);
 
-        int radius = 2;
-        int rows = this.grid.getRows();
-        int cols = this.grid.getColumns();
-
-        float[][] sum    = new float[rows][cols];
-        float[][] weight = new float[rows][cols];
-
         // Compute the weighted sum of the heights of nearby BioVertexes.
-        for (int row = 0; row < rows; ++row) {
-            for (int col = 0; col < cols; ++col) {
+        for (int row = 0; row < this.grid.getRows(); ++row) {
+            for (int col = 0; col < this.grid.getColumns(); ++col) {
                 BioVertex reftex = this.grid.getVertex(row, col);
 
-                for (int r = Math.max(0, row - radius); r <= Math.min(rows - 1, row + radius); ++r) {
-                    for (int c = Math.max(0, col - radius); c <= Math.min(cols - 1, col + radius); ++c) {
-                        BioVertex curtex = this.grid.getVertex(r, c);
+                LocalMap localMap = new LocalMap(this.grid, row, col, 0.05f);
+                Map<BioVertex, Float> map = localMap.getMap();
 
-                        // Verify that the current BioVertex is close to the reference BioVertex.
-                        float dist = reftex.distance(curtex);
-                        if (dist <= radius) {
-                            sum[r][c] += reftex.getZ()*dist;
-                            weight[r][c] += dist;
-                        }
-                    }
+                float avg = 0f;
+                for (BioVertex biotex : map.keySet()) {
+                    float weight = map.get(biotex);
+                    float z = biotex.getZ();
+                    avg += weight*z;
                 }
-            }
-        }
 
-        // Set the elevation of each Grid BioVertex to the average elevation of nearby BioVertexes.
-        for (int row = 0; row < rows; ++row) {
-            for (int col = 0; col < cols; ++col) {
-                float avg = sum[row][col]/weight[row][col];
-                BioVertex biotex = this.grid.getVertex(row, col);
-                biotex.setZ(avg);
+                float weightSum = map.values()
+                                     .stream()
+                                     .reduce(0f, (sum, weight) -> sum + weight);
+                avg /= weightSum;
+                reftex.setZ(avg);
             }
         }
     }

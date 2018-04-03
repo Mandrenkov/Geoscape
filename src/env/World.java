@@ -216,7 +216,5 @@ public class World implements Drawable {
                 this.drawables.addAll(Arrays.asList(h, v));
             }
         }
-
-        System.out.println(biomap.toString());
     }
 }

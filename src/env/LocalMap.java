@@ -106,6 +106,15 @@ public class LocalMap {
     }
 
     /**
+     * Returns the weighted average map associated with this LocalMap.
+     * 
+     * @return Ther weighted average map.
+     */
+    public Map<BioVertex, Float> getMap() {
+        return this.map;
+    }
+
+    /**
      * Returns the representative elevation scale of this LocalMap.
      *
      * @return The elevation scale.
