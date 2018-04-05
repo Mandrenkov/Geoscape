@@ -70,6 +70,10 @@ public class Simulation {
     public void start() {
         Logger.info("Rendering %s.", this.world);
         syncTime = glfwGetTime();
+
+        Camera camera = Camera.getInstance();
+        camera.rotate(-65, 1, 0, 0);
+
         loop();
     }
 
@@ -93,13 +97,20 @@ public class Simulation {
      * render Window.
      */
     private void loop() {
+        // The Camera is initially facing the positive Y-axis.
+        float angle = (float) Math.PI*2/3;
+        // The height of the Camera path.
+        float height = 0.6f;
+        // The origin of the Camera path.
+        Vertex origin = new Vertex(-0.1f, 0.1f, 0);
+        // The radius of the Camera path.
+        float radius = 1.0f;
+        
+        Camera camera = Camera.getInstance();
         long handle = Window.getInstance().getHandle();
         while (!glfwWindowShouldClose(handle)) {
             // Clear the GL buffers.
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            // Render the World.
-            world.draw();
 
             // Update the framerate synchronizer and rotate the viewport by a
             // factor that is proportional to the current frame period.
@@ -108,12 +119,22 @@ public class Simulation {
             syncTime = now;
 
             // The target degree of rotation along the z-axis every second.
-            float rotationDelta = 20;
+            float rotationDelta = 30;
             float rotation = (float) (period*rotationDelta);
-
-            Camera camera = Camera.getInstance();
             camera.rotate(rotation, 0, 0, 1);
+            angle += Math.toRadians(rotation);
 
+            // Compute the position of the Camera.
+            float x = (float) Math.cos(-angle)*radius + origin.getX();
+            float y = (float) Math.sin(-angle)*radius + origin.getY();
+            camera.setPosition(x, y, height);
+
+            camera.capture();
+
+            // Render the World.
+            world.draw();
+
+            // Reposition the Lights to adjust to the new Camera state.
             for (Light light : world.getLights()) {
                 light.glPosition();
             }

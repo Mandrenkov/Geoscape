@@ -2,8 +2,6 @@ package env;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import geo.Vertex;
-
 /**
  * @author Mikhail Andrenkov
  * @since March 13, 2018
@@ -38,6 +36,17 @@ public class Camera {
     }
 
     /**
+     * Apply the translation and rotation matrices of this Camera to the ModelView
+     * matrix.  All subsequent glVertex() calls will be translated by the position
+     * of this Camera and then rotated according to the angle of this Camera. 
+     */
+    public void capture() {
+        glLoadIdentity();
+        glMultMatrixf(rotationMatrix);
+        glMultMatrixf(translationMatrix);
+    }
+
+    /**
      * Rotates the Camera about the given Axis by the specified value in degrees.
      *
      * @param rotation The degree of CCW rotation about the Axis.
@@ -46,7 +55,11 @@ public class Camera {
      * @param z        The Z-component of the line.
      */
     public void rotate(float rotation, float x, float y, float z) {
-        glRotatef(rotation, x, y, z);
+        glPushMatrix();
+            glLoadMatrixf(rotationMatrix);
+            glRotatef(rotation, x, y, z);
+            glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+        glPopMatrix();
     }
 
     /**
@@ -57,10 +70,27 @@ public class Camera {
      * @param dz The amount to translate the Z-coordinate of this Camera.
      */
     public void translate(float dx, float dy, float dz) {
-        position.translate(dx, dy, dz);
-        glTranslatef(-dx, -dy, -dz);
+        glPushMatrix();
+            glLoadMatrixf(translationMatrix);
+            glTranslatef(-dx, -dy, -dz);
+            glGetFloatv(GL_MODELVIEW_MATRIX, translationMatrix);
+        glPopMatrix();
     }
 
+    /**
+     * Sets the position of this Camera.
+     *
+     * @param x The new X-coordinate of this Camera.
+     * @param y The new Y-coordinate of this Camera.
+     * @param z The new Z-coordinate of this Camera.
+     */
+    public void setPosition(float x, float y, float z) {
+        glPushMatrix();
+            glLoadIdentity();
+            glTranslatef(-x, -y, -z);
+            glGetFloatv(GL_MODELVIEW_MATRIX, translationMatrix);
+        glPopMatrix();
+    }
 
     // Private members
     // -------------------------------------------------------------------------
@@ -71,19 +101,25 @@ public class Camera {
     private static Camera singleton = null;
 
     /**
-     * The position of this Camera.
+     * The translation matrix representing the position of this Camera.
      */
-    private Vertex position;
+    private float[] translationMatrix;
 
     /**
-     * Constructs a new Camera that is oriented in a starting position.
+     * The rotation matrix representing the angle of this Camera.
+     */
+    private float[] rotationMatrix;
+
+    /**
+     * Constructs a new Camera at the origin facing down the positive Z-axis.
      */
     private Camera() {
-        this.position = new Vertex(Vertex.ORIGIN);
+        glLoadIdentity();
 
-        this.translate(0, 0, 1.5f);
-        //this.rotate(-45, 1, 0, 0);
-        this.rotate(-65, 1, 0, 0);
-        this.rotate(-135, 0, 0, 1);
+        translationMatrix = new float[16];
+        glGetFloatv(GL_MODELVIEW_MATRIX, translationMatrix);
+
+        rotationMatrix = new float[16];
+        glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
     }
 }

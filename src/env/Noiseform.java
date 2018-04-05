@@ -7,7 +7,6 @@ import java.util.Map;
 
 import bio.BioTriangle;
 import bio.BioVertex;
-import bio.Biome;
 import core.Logger;
 import geo.Vector;
 import util.Algebra;
