@@ -15,16 +15,24 @@ import env.Drawable;
  *
  * <pThe <b>Polygon</b> class represents a geometric polygon.</p>
  */
-public class Polygon implements Drawable {
+public abstract class Polygon implements Drawable {
 
     // Public members
     // -------------------------------------------------------------------------
+
+    /**
+     * Returns a Vector that is perpendicular to the face of this Polygon.
+     * 
+     * @return The normal Vector.
+     */
+    public abstract Vector getNormal();
 
     /**
      * Draws this Polygon.
      */
     public void draw() {
         glBegin(this.mode);
+        this.getNormal().glNormal();
         for (Vertex vertex : this.vertexes) {
             vertex.glColour();
             vertex.glVertex();

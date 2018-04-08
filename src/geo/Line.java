@@ -27,4 +27,15 @@ public class Line extends Polygon {
             throw new IllegalArgumentException("Lines must have exactly 2 vertexes.");
         }
     }
+
+    /**
+     * Returns a Vector that is perpendicular to this Line.
+     *
+     * @return The normal Vector.
+     */
+    public Vector getNormal() {
+        Vector v1 = new Vector(this.vertexes[0]);
+        Vector v2 = new Vector(this.vertexes[1]);
+        return new Vector(v1, v2);
+    }
 }
