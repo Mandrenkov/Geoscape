@@ -18,6 +18,8 @@
 | [misc/](misc)                                 |  Miscelleous assets    |
 ---
 ### Screenshots
+#### Time Point 7 - OpenGL Lighting
+![](misc/Timeline_7.png)
 #### Time Point 6 - Biome Textures
 ![](misc/Timeline_6.png)
 #### Time Point 5 - Lighting + Curved Biome Boundaries
