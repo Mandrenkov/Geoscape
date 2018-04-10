@@ -19,12 +19,15 @@ public class Light implements Drawable {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Light at the specified location.
+     * Constructs a Light at the specified location with the given Colour.
      *
      * @param location The location of this Light.
+     * @param colour   The colour of this Light.
      */
-    public Light(Vertex location) {
+    public Light(Vertex location, Colour colour) {
         this.location = location;
+        this.colour = colour;
+
         this.sphere = new Sphere(location, 0.03f);
 
         // The shared OpenGL light index variable must be accessed exclusively.
@@ -36,14 +39,14 @@ public class Light implements Drawable {
         } 
 
         // The intensity of the Light is described by the following equation:
-        //                  1
-        //     I =  -----------------
-        //           1 + 0*d + 1*d^2
-        glLightf(this.glIndex, GL_CONSTANT_ATTENUATION,   1);
-        glLightf(this.glIndex, GL_LINEAR_ATTENUATION,     0);
-        glLightf(this.glIndex, GL_QUADRATIC_ATTENUATION, 1f);
+        //                1
+        //     I =  --------------
+        //           0.05 + 2*d^2
+        glLightf(this.glIndex, GL_CONSTANT_ATTENUATION,  0.05f);
+        glLightf(this.glIndex, GL_LINEAR_ATTENUATION,    0);
+        glLightf(this.glIndex, GL_QUADRATIC_ATTENUATION, 2f);
 
-        glLightfv(this.glIndex, GL_DIFFUSE, Light.colour.toArray());
+        glLightfv(this.glIndex, GL_DIFFUSE,  colour.toArray());
         glLightfv(this.glIndex, GL_POSITION, location.toArray());
         glEnable(this.glIndex);
         
@@ -55,10 +58,8 @@ public class Light implements Drawable {
      */
     public void draw() {
         // The surface of a Light should emit the Colour of the Light.
-        Colour emission = new Colour(colour);
-        emission.scale(1.5f);
-        glMaterialfv(GL_FRONT, GL_EMISSION, emission.toArray());
-           //this.sphere.draw();
+        glMaterialfv(GL_FRONT, GL_EMISSION, this.colour.toArray());
+           this.sphere.draw();
         glMaterialfv(GL_FRONT, GL_EMISSION, Colour.GL_BLACK);
     }
 
@@ -102,11 +103,6 @@ public class Light implements Drawable {
     // -------------------------------------------------------------------------
 
     /**
-     * The Colour of the Lights.
-     */
-    private static Colour colour = new Colour(1f, 0.5f, 0f);
-
-    /**
      * The next OpenGL light index.
      */
     private static volatile int nextGLindex = GL_LIGHT0; 
@@ -115,6 +111,11 @@ public class Light implements Drawable {
      * The location of this Light.
      */
     private Vertex location;
+
+    /**
+     * The Colour of this Light.
+     */
+    private Colour colour;
 
     /**
      * The Sphere representing this Light.
