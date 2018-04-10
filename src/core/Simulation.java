@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import bio.BioMap;
 import bio.Biome;
 import env.Camera;
+import env.Colour;
 import env.Grid;
 import env.Light;
 import env.Platform;
@@ -57,7 +58,7 @@ public class Simulation {
 
         // Declare the set of Lights which illuminate the World in this simulation.
         Light[] lights = new Light[]{
-            new Light(new Vertex(0f, -0.8f, 0.8f))
+            new Light(new Vertex(0f, -0.8f, 0.75f), new Colour(1f, 0.5f, 0))
         };
         this.world.addLights(lights);
     }

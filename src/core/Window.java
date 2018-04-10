@@ -143,7 +143,7 @@ public class Window {
         glLoadIdentity();
 
         // The vertical FOV of the viewing frustrum.
-        float fov = 50f;
+        float fov = 40f;
         // The aspect ratio of the viewing frustrum.
         float ratio = 16f/9f;
         // The distance to the near Z-plane of the viewing frustrum.
