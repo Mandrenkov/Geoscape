@@ -45,7 +45,7 @@ public enum Biome {
             biotex.shift(0.0001f*scalar);
         }
     },
-    VOID("Void", new Colour(0.3f, 0.3f, 0.3f), 0) {};
+    VOID("Void", new Colour(0.2f, 0.2f, 0.2f), 0) {};
 
 
     // Public members

@@ -25,7 +25,7 @@ public class Light implements Drawable {
      */
     public Light(Vertex location) {
         this.location = location;
-        this.sphere = new Sphere(location, 0.1f);
+        this.sphere = new Sphere(location, 0.03f);
 
         // The shared OpenGL light index variable must be accessed exclusively.
         synchronized (Light.class) {
@@ -35,11 +35,18 @@ public class Light implements Drawable {
             }
         } 
 
-        float[] diffusion = {0.8f, 0.8f, 0.8f, 1.0f};
-        glLightfv(this.glIndex, GL_DIFFUSE, diffusion);
-        glLightfv(this.glIndex, GL_POSITION, location.toArray());
-        glEnable(this.glIndex);     
+        // The intensity of the Light is described by the following equation:
+        //                  1
+        //     I =  -----------------
+        //           1 + 0*d + 1*d^2
+        glLightf(this.glIndex, GL_CONSTANT_ATTENUATION,   1);
+        glLightf(this.glIndex, GL_LINEAR_ATTENUATION,     0);
+        glLightf(this.glIndex, GL_QUADRATIC_ATTENUATION, 1f);
 
+        glLightfv(this.glIndex, GL_DIFFUSE, Light.colour.toArray());
+        glLightfv(this.glIndex, GL_POSITION, location.toArray());
+        glEnable(this.glIndex);
+        
         Logger.debug("Created Light %d at (%.2f, %.2f, %.2f).", this.glIndex - GL_LIGHT0, location.getX(), location.getY(), location.getZ());
     }
 
@@ -47,7 +54,12 @@ public class Light implements Drawable {
      * Draws this Light.
      */
     public void draw() {
-        this.sphere.draw();
+        // The surface of a Light should emit the Colour of the Light.
+        Colour emission = new Colour(colour);
+        emission.scale(1.5f);
+        glMaterialfv(GL_FRONT, GL_EMISSION, emission.toArray());
+           //this.sphere.draw();
+        glMaterialfv(GL_FRONT, GL_EMISSION, Colour.GL_BLACK);
     }
 
     /**
@@ -88,6 +100,11 @@ public class Light implements Drawable {
 
     // Private members
     // -------------------------------------------------------------------------
+
+    /**
+     * The Colour of the Lights.
+     */
+    private static Colour colour = new Colour(1f, 0.5f, 0f);
 
     /**
      * The next OpenGL light index.

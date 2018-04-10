@@ -125,7 +125,6 @@ public class Window {
 
         // Apply a set of OpenGL flags.
         int[] glFlags = new int[] {
-            GL_COLOR_MATERIAL,
             GL_CULL_FACE,
             GL_DEPTH_TEST,
             GL_LIGHTING,
@@ -144,7 +143,7 @@ public class Window {
         glLoadIdentity();
 
         // The vertical FOV of the viewing frustrum.
-        float fov = 70f;
+        float fov = 50f;
         // The aspect ratio of the viewing frustrum.
         float ratio = 16f/9f;
         // The distance to the near Z-plane of the viewing frustrum.
@@ -169,15 +168,15 @@ public class Window {
         //   GL_POINT - Render the vertexes of each polygon.
         //   GL_LINE  - Render the outlines of each polygon.
         //   GL_FILL  - Render the faces of each polygon.
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT, GL_FILL);
 
-        // Specify the ambient lighting to be applied to the OpenGL scene.
+        // Set the ambient colour of the OpenGL scene.
         float[] ambient = {0.2f, 0.2f, 0.2f, 1};
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-        
-        // All materials in the OpenGL scene are affected by ambient and diffuse
-        // lighting.
+
+        // All materials in the OpenGL scene reflect ambient and diffuse light.
         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+        glEnable(GL_COLOR_MATERIAL);
 
         // Each polygon in the OpenGL scene is shaded using one colour. 
         glShadeModel(GL_FLAT);

@@ -27,13 +27,16 @@ public class Quad extends Polygon {
     }
 
     /**
-     * Returns a Vector that is perpendicular to the face of this Quad.
+     * Returns a normalized Vector that is perpendicular to the face of this Quad.
      *
      * @return The normal Vector.
      */
     public Vector getNormal() {
         Vector v1 = new Vector(this.vertexes[0]).to(new Vector(this.vertexes[2]));
         Vector v2 = new Vector(this.vertexes[0]).to(new Vector(this.vertexes[1]));
-        return new Vector(v1, v2);
+        
+        Vector normal = new Vector(v1, v2);
+        normal.normalize();
+        return normal;
     }
 }

@@ -36,13 +36,16 @@ public class Triangle extends Polygon {
     }
 
     /**
-     * Returns a normalized GeoVector that is perpendicular to the face of this Triangle.
+     * Returns a normalized Vector that is perpendicular to the face of this Triangle.
      *
-     * @return The normalized GeoVector.
+     * @return The normalized Vector.
      */
     public Vector getNormal() {
         Vector v1 = new Vector(this.vertexes[0]).to(new Vector(this.vertexes[2]));
         Vector v2 = new Vector(this.vertexes[0]).to(new Vector(this.vertexes[1]));
-        return new Vector(v1, v2);
+        
+        Vector normal = new Vector(v1, v2);
+        normal.normalize();
+        return normal;
     }
 }

@@ -22,6 +22,16 @@ public class Colour {
     // -------------------------------------------------------------------------
 
     /**
+     * The FP array representation of an opaque white OpenGL colour.
+     */
+    public static final float[] GL_WHITE = {1, 1, 1, 1};
+
+    /**
+     * The FP array representation of an opaque black OpenGL colour.
+     */
+    public static final float[] GL_BLACK = {0, 0, 0, 1};
+
+    /**
      * The set of options that constrain the generation of random Colours.
      */
     public static enum Option {
@@ -64,7 +74,7 @@ public class Colour {
         switch (option) {
             case LIGHT:
                 float clr = (float) Math.random()*0.3f + 0.7f;
-                return new Colour(clr, clr, clr);
+                return new Colour(clr, clr, clr, 0.5f);
             default:
                 return new Colour((float) Math.random(), (float) Math.random(), (float) Math.random());
         }
@@ -201,6 +211,15 @@ public class Colour {
         this.red   = Math.min(1f, Math.max(0f, rng + this.red));
         this.green = Math.min(1f, Math.max(0f, rng + this.green));
         this.blue  = Math.min(1f, Math.max(0f, rng + this.blue));
+    }
+
+    /**
+     * Returns an FP array representation of this Colour.
+     *
+     * @return The array representation.
+     */
+    public float[] toArray() {
+        return new float[]{this.red, this.green, this.blue, this.alpha};
     }
 
     /**

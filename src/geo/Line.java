@@ -29,13 +29,26 @@ public class Line extends Polygon {
     }
 
     /**
-     * Returns a Vector that is perpendicular to this Line.
+     * Draws this Line.
+     */
+    public void draw() {
+        // Lines do not have faces and should not be affected by lighting. 
+        glDisable(GL_LIGHTING);
+            super.draw();
+        glEnable(GL_LIGHTING);
+    }
+
+    /**
+     * Returns a normalized Vector that is perpendicular to this Line.
      *
      * @return The normal Vector.
      */
     public Vector getNormal() {
         Vector v1 = new Vector(this.vertexes[0]);
         Vector v2 = new Vector(this.vertexes[1]);
-        return new Vector(v1, v2);
+
+        Vector normal = new Vector(v1, v2);
+        normal.normalize();
+        return normal;
     }
 }

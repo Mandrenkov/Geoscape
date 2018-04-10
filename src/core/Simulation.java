@@ -36,12 +36,12 @@ public class Simulation {
         this.world = new World("Geoscape", minX, minY, maxX, maxY);
 
         // Create the Platform underneath the World.
-        float minZ = -0.30f;
+        float minZ = -0.15f;
         float maxZ =  0.00f;
         Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
         this.world.add(platform);
 
-        int size = Top.DEBUG ? 300 : 300;
+        int size = Top.DEBUG ? 100 : 300;
 
         // Generate the BioMap characterizing the landscape of the World.
         BioMap biomap = new BioMap(size, size);
@@ -57,7 +57,7 @@ public class Simulation {
 
         // Declare the set of Lights which illuminate the World in this simulation.
         Light[] lights = new Light[]{
-            new Light(new Vertex(-1f, -1f, 1f))
+            new Light(new Vertex(0f, -0.8f, 0.8f))
         };
         this.world.addLights(lights);
     }
@@ -73,6 +73,7 @@ public class Simulation {
 
         Camera camera = Camera.getInstance();
         camera.rotate(-65, 1, 0, 0);
+        camera.rotate(25, 0, 0, 1);
 
         loop();
     }
@@ -100,11 +101,11 @@ public class Simulation {
         // The Camera is initially facing the positive Y-axis.
         float angle = (float) Math.PI*2/3;
         // The height of the Camera path.
-        float height = 0.6f;
+        float height = 1.0f;
         // The origin of the Camera path.
-        Vertex origin = new Vertex(-0.1f, 0.1f, 0);
+        Vertex origin = new Vertex(0.2f, -0.2f, 0);
         // The radius of the Camera path.
-        float radius = 1.0f;
+        float radius = 2.5f;
         
         Camera camera = Camera.getInstance();
         long handle = Window.getInstance().getHandle();
@@ -131,13 +132,19 @@ public class Simulation {
 
             camera.capture();
 
-            // Render the World.
-            world.draw();
-
-            // Reposition the Lights to adjust to the new Camera state.
             for (Light light : world.getLights()) {
                 light.glPosition();
             }
+
+            // Reposition the Lights to adjust to the new Camera state.
+            //for (Light light : world.getLights()) {
+                //light.glPosition();
+            //}
+
+            // Render the World.
+            world.draw();
+
+            
 
             // Prepare for the next frame.
             glfwSwapBuffers(handle);

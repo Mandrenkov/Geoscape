@@ -127,8 +127,7 @@ public class Sphere extends Shape {
             }
 
             // Construct 4 new faces using the original Triangle's corners and midpoints.
-            newTriangles.add(new Triangle(midpoints[2], midpoints[0], corners[0]));
-            //newTriangles.add(new Triangle(corners[0], midpoints[0], midpoints[2]));
+            newTriangles.add(new Triangle(corners[0], midpoints[0], midpoints[2]));
             newTriangles.add(new Triangle(corners[1], midpoints[1], midpoints[0]));
             newTriangles.add(new Triangle(corners[2], midpoints[2], midpoints[1]));
             newTriangles.add(new Triangle(midpoints[0], midpoints[1], midpoints[2]));
