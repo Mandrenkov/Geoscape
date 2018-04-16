@@ -39,6 +39,7 @@ public class World implements Drawable {
 
         this.drawables = new ArrayList<>();
         this.lights = new ArrayList<>();
+        this.grids = new ArrayList<>();
 
         // Add a set of axes and a grid to the World for debugging purposes.
         if (Top.DEBUG) {
@@ -54,6 +55,16 @@ public class World implements Drawable {
      */
     public void add(Drawable... drawables) {
         this.drawables.addAll(Arrays.asList(drawables));
+    }
+
+    /**
+     * Adds the given Grid to this World.
+     *
+     * @param grid The Grid to add.
+     */
+    public void addGrids(Grid... grids) {
+        this.grids.addAll(Arrays.asList(grids));
+        this.add(grids);
     }
 
     /**
@@ -140,6 +151,17 @@ public class World implements Drawable {
         return String.format("World \"%s\" (%d polygons)", this.name, this.polygons());
     }
 
+    /**
+     * Updates all the Grids in this World using the given time.
+     * 
+     * @param time The uptime of the application (in seconds).
+     */
+    public void update(double time) {
+        for (Grid grid : this.grids) {
+            grid.update(time);
+        }
+    }
+
     // Private members
     // -------------------------------------------------------------------------
 
@@ -172,6 +194,11 @@ public class World implements Drawable {
      * The list of Drawable entities in this World.
      */
     private ArrayList<Drawable> drawables;
+
+    /**
+     * The list of Grids in this World.
+     */
+    private ArrayList<Grid> grids;
 
     /**
      * The list of Light sources in this World.

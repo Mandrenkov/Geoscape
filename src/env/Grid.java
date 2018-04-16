@@ -9,6 +9,7 @@ import bio.BioTriangle;
 import bio.BioMap;
 import bio.Biome;
 import core.Logger;
+import util.Pair;
 
 /**
  * @author Mikhail Andrenkov
@@ -49,10 +50,13 @@ public class Grid implements Drawable {
 
         this.biotexes = new BioVertex[this.rows][this.cols];
         this.biogles = new ArrayList<>();
+        this.indexes = new ArrayList<>(rows*cols);
 
         // Initialize the BioVertexes in this Grid.
         for (int row = 0 ; row < this.rows; ++row) {
             for (int col = 0 ; col < this.cols ; ++col) {
+                this.indexes.add(new Pair<>(row, col));
+
                 float x = this.minX + col*(this.maxX - this.minX)/(this.cols - 1);
                 float y = this.minY + row*(this.maxY - this.minY)/(this.rows - 1);
                 float z = initZ;
@@ -218,6 +222,10 @@ public class Grid implements Drawable {
         return this.getHeight()/this.rows;
     }
 
+    public ArrayList<Pair<Integer, Integer>> getIndexes() {
+        return this.indexes;
+    }
+
     /**
      * Returns the width of this Grid.
      *
@@ -237,6 +245,22 @@ public class Grid implements Drawable {
     }
 
     /**
+     * Updates all the BioVertexes in this Grid using the given time.
+     * 
+     * @param time   The uptime of the application (in seconds).
+     */
+    public void update(double time) {
+        indexes.parallelStream().forEach(pair -> {
+            int row = pair.getFirst();
+            int col = pair.getSecond();
+
+            BioVertex biotex = this.biotexes[row][col];
+            Biome biome = biotex.getBiome();
+            biome.update(biotex, time, 1f);
+        });
+    }
+
+    /**
      * Returns a String representation of this Grid.
      *
      * @return The String representation.
@@ -244,7 +268,6 @@ public class Grid implements Drawable {
     public String toString() {
         return String.format("Grid \"%s\" (%.2f, %.2f) to (%.2f, %.2f)", this.name, this.minX, this.minY, this.maxX, this.maxY);
     }
-
 
     // Private members
     // -------------------------------------------------------------------------
@@ -283,6 +306,11 @@ public class Grid implements Drawable {
      * The maximum Y-coordinate of this Grid.
      */
     private float maxY;
+
+    /**
+     * The list of indexes in this Grid.
+     */
+    private ArrayList<Pair<Integer, Integer>> indexes;
 
     /**
      * The matrix of BioVertexes that comprise the BioTriangles of this Grid.

@@ -212,6 +212,17 @@ public class Noiseform {
             }
         }
 
+        // Clamp the BioVertex along each edge of the Grid to the base height.
+        float base = 0;
+        for (int row = 0; row < rows; ++row) {
+            this.grid.getVertex(row, 0       ).setZ(base);
+            this.grid.getVertex(row, cols - 1).setZ(base);
+        }
+        for (int col = 0; col < cols; ++col) {
+            this.grid.getVertex(0,        col).setZ(base);
+            this.grid.getVertex(rows - 1, col).setZ(base);
+        }
+
         Logger.info("Finished applying Perlin noise transformation.");
     }
 
@@ -231,12 +242,7 @@ public class Noiseform {
         float[][] heights = new float[rows][cols];
 
         // Construct a list of all (row, column) indexes in the Grid.
-        ArrayList<Pair<Integer, Integer>> indexes = new ArrayList<>(rows*cols);
-        for (int row = 0; row < rows; ++row) {
-            for (int col = 0; col < cols; ++col) {
-                indexes.add(new Pair<>(row, col));
-            }
-        }
+        ArrayList<Pair<Integer, Integer>> indexes = this.grid.getIndexes();
 
         // Computing the Perlin transformation of each BioVertex in parallel
         // drastically improves performance.

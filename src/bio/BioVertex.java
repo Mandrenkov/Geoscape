@@ -42,6 +42,8 @@ public class BioVertex extends Vertex {
         super(x, y, z);
         this.biome = biome;
 
+        this.offset = new Vertex(0, 0, 0);
+
         this.colour = new Colour(biome.getColour());
         this.biomix = new Biomix();
         this.biomix.add(biome, 1f);
@@ -84,6 +86,17 @@ public class BioVertex extends Vertex {
     }
 
     /**
+     * Adds this BioVertex to the GL buffer.  The position of this BioVertex
+     * will be offset prior to the call to glVertex() and then subsequently
+     * restored to its original position.
+     */
+    public void glVertex() {
+        this.translate(this.offset.getX(), this.offset.getY(), this.offset.getZ());
+        super.glVertex();
+        this.translate(-this.offset.getX(), -this.offset.getY(), -this.offset.getZ());
+    }
+
+    /**
      * Sets the Biomix of this BioVertex to the given Biomix.
      *
      * @param biomix The new Biomix of this BioVertex.
@@ -99,6 +112,18 @@ public class BioVertex extends Vertex {
      */
     public void setColour(Colour colour) {
         this.colour = colour;
+    }
+
+    /**
+     * Sets the X-coordinate, Y-coordinate, and Z-coordinate offsets of this
+     * BioVertex.
+     * 
+     * @param x The offset of the X-coordinate.
+     * @param y The offset of the Y-coordinate.
+     * @param z The offset of the Z-coordinate.
+     */
+    public void setOffset(float x, float y, float z) {
+        this.offset = new Vertex(x, y, z);
     }
 
     /**
@@ -153,4 +178,9 @@ public class BioVertex extends Vertex {
      * The Biome influences on this BioVertex.
      */
     private Biomix biomix;
+
+    /**
+     * The rendering offset of this BioVertex.
+     */
+    private Vertex offset;
 }
