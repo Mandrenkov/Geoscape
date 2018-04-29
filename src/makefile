@@ -10,11 +10,19 @@
 #                   downloaded from: https://cygwin.com/install.html.
 
 BUILDPATH = bin
-DELETE = rm -rf
 LIBPATH = lib/native
 MAIN = core.Top
-SOURCES = $(wildcard */*.java)
+MKDIR = mkdir -p
+RM = rm -rf
 
+# Lists of Java source and target files.
+SOURCES = $(wildcard */*.java)
+CLASSES = $(patsubst %.java, $(BUILDPATH)/%.class, $(SOURCES))
+
+# List of Java source files destined for compilation.
+TARGETS =
+
+# Variables whose values depend on the current platform.
 ifeq ($(OS), Windows_NT)
 	CLASSPATH = ".;$(BUILDPATH);lib/*"
 else
@@ -28,13 +36,20 @@ run: build
 	@java -classpath $(CLASSPATH) $(MAIN)
 
 # Build the application.
-build: clean
-	@mkdir $(BUILDPATH)
+build: $(CLASSES)
+	@$(MKDIR) $(BUILDPATH)
 
-	@echo -n "Compiling Java source files..."
-	@javac -d $(BUILDPATH) -s $(BUILDPATH) -h $(BUILDPATH) -classpath $(CLASSPATH) $(SOURCES)
-	@echo "done."
+	@if [ -z "$(TARGETS)" ]; then \
+		echo "Skipping compilation: all targets are up-to-date." ; \
+	else \
+		echo "Compiling:$(TARGETS)." ; \
+		javac -d $(BUILDPATH) -s $(BUILDPATH) -h $(BUILDPATH) -classpath $(CLASSPATH) $(TARGETS) ; \
+	fi
+
+# Add the Java source file dependency to the compilation list.
+$(BUILDPATH)/%.class: %.java
+	$(eval TARGETS += $<)
 
 # Delete the build directory.
 clean:
-	@$(DELETE) $(BUILDPATH)
+	@$(RM) $(BUILDPATH)
