@@ -96,7 +96,7 @@ public class Simulation {
         syncTime = glfwGetTime();
 
         Camera camera = Camera.getInstance();
-        camera.rotate(-65, 1, 0, 0);
+        camera.rotate(-60, 1, 0, 0);
         camera.rotate(25, 0, 0, 1);
 
         loop();
@@ -125,11 +125,11 @@ public class Simulation {
         // The Camera is initially facing the positive Y-axis.
         float angle = (float) Math.PI*2/3;
         // The height of the Camera path.
-        float height = 1.2f;
+        float height = 1.7f;
         // The origin of the Camera path.
-        Vertex origin = new Vertex(0.2f, -0.2f, 0);
+        Vertex origin = new Vertex(0.1f, -0.1f, 0);
         // The radius of the Camera path.
-        float radius = 2.5f;
+        float radius = 3.0f;
         
         Camera camera = Camera.getInstance();
         long handle = Window.getInstance().getHandle();
