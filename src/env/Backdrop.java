@@ -23,7 +23,7 @@ public class Backdrop implements Drawable {
      * @param radius The radius of the Backdrop.
      */
     public Backdrop(Vertex origin, float radius) {
-        this.sphere = new Sphere(origin, radius, false, 4);
+        this.sphere = new Sphere(origin, radius, true, 4);
 
         // Set a random dark hue for each face of the Sphere. 
         for (Polygon face : this.sphere.getPolygons()) {

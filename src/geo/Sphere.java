@@ -25,19 +25,19 @@ public class Sphere extends Shape {
      * @param radius The radius of the Sphere.
      */
     public Sphere(Vertex origin, float radius) {
-        this(origin, radius, true, 3);
+        this(origin, radius, false, 3);
     }
 
     /**
      * Constructs a new Sphere with the given origin, radius, and concavity.
      *
-     * @param origin  The origin of the Sphere.
-     * @param radius  The radius of the Sphere.
-     * @param concave Determines whether the faces of the Sphere face towards
-     *                or away from the origin of the Sphere.
-     * @param refines The number of refinement iterations to perform.
+     * @param origin   The origin of the Sphere.
+     * @param radius   The radius of the Sphere.
+     * @param inverted Determines whether the Triangles that make up the Sphere
+     *                 face towards (or away from) the origin of the Sphere.
+     * @param refines  The number of refinement iterations to perform.
      */
-    public Sphere(Vertex origin, float radius, boolean concave, int refines) {
+    public Sphere(Vertex origin, float radius, boolean inverted, int refines) {
         this.origin = origin;
         this.radius = radius;
 
@@ -63,7 +63,7 @@ public class Sphere extends Shape {
         }
 
         // Reverse the concavity of the Triangles if necessary.
-        if (!concave) {
+        if (inverted) {
             for (Triangle triangle : faces) {
                 triangle.reverse();
             }
