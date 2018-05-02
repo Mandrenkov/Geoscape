@@ -17,7 +17,7 @@ public enum Biome {
     // Enumerations
     // -------------------------------------------------------------------------
 
-    DESERT("Desert", new Colour(0.600f, 0.300f, 0.000f), 0.05f) {
+    DESERT("Desert", new Colour(0.600f, 0.300f, 0.000f), 1f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.wave(20f, 0.02f, 200f, 0.002f*scalar);
@@ -33,7 +33,7 @@ public enum Biome {
     MOUNTAIN("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
-            biotex.shift(0.01f*scalar);
+            biotex.shift(0.005f*scalar);
         }
     },
     PLAINS("Plains", new Colour(0.8f, 1.0f, 0.0f), 0.1f) {

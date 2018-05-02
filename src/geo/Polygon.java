@@ -55,7 +55,7 @@ public abstract class Polygon implements Drawable {
      * @return The Colour of this Polygon.
      */
     public Colour getColour() {
-        return this.colour;
+        return this.vertexes[this.vertexes.length - 1].getColour();
     }
 
     /**
@@ -73,7 +73,9 @@ public abstract class Polygon implements Drawable {
      * @param colour The new Colour of this Polygon.
      */
     public void setColour(Colour colour) {
-        this.colour = colour;
+        for (Vertex vertex : this.vertexes) {
+            vertex.setColour(colour);
+        }
     }
 
     /**
@@ -102,11 +104,6 @@ public abstract class Polygon implements Drawable {
      * List of Vertexes comprising this Polygon.
      */
     protected Vertex[] vertexes;
-
-    /**
-     * The colour of this Polygon.
-     */
-    protected Colour colour;
 
     /**
      * The OpenGL drawing mode to be applied to this Polygon.

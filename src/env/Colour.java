@@ -36,6 +36,7 @@ public class Colour {
      */
     public static enum Option {
         LIGHT,
+        DARK,
         DEFAULT
     };
 
@@ -72,11 +73,17 @@ public class Colour {
      */
     public static Colour random(Option option) {
         switch (option) {
-            case LIGHT:
+            case LIGHT: {
                 float clr = (float) Math.random()*0.3f + 0.7f;
-                return new Colour(clr, clr, clr, 0.5f);
-            default:
+                return new Colour(clr, clr, clr);
+            }
+            case DARK: {
+                float clr = (float) Math.random()*0.1f + 0.15f;
+                return new Colour(clr, clr, clr);
+            }
+            default: {
                 return new Colour((float) Math.random(), (float) Math.random(), (float) Math.random());
+            }
         }
     }
 

@@ -25,12 +25,25 @@ public class Sphere extends Shape {
      * @param radius The radius of the Sphere.
      */
     public Sphere(Vertex origin, float radius) {
+        this(origin, radius, true, 3);
+    }
+
+    /**
+     * Constructs a new Sphere with the given origin, radius, and concavity.
+     *
+     * @param origin  The origin of the Sphere.
+     * @param radius  The radius of the Sphere.
+     * @param concave Determines whether the faces of the Sphere face towards
+     *                or away from the origin of the Sphere.
+     * @param refines The number of refinement iterations to perform.
+     */
+    public Sphere(Vertex origin, float radius, boolean concave, int refines) {
         this.origin = origin;
         this.radius = radius;
 
         // Create the Triangular faces of the Sphere.
         ArrayList<Triangle> faces = approximate();
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < refines; ++i) {
             faces = refine(faces);
         }
 
@@ -47,6 +60,13 @@ public class Sphere extends Shape {
         for (Vertex vertex : vertexes) {
             vertex.scale(radius);
             vertex.translate(origin.getX(), origin.getY(), origin.getZ());
+        }
+
+        // Reverse the concavity of the Triangles if necessary.
+        if (!concave) {
+            for (Triangle triangle : faces) {
+                triangle.reverse();
+            }
         }
 
         this.polygons = faces.stream().toArray(Polygon[]::new);

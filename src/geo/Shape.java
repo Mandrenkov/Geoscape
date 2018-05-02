@@ -24,6 +24,15 @@ public abstract class Shape implements Drawable {
     }
 
     /**
+     * Returns the Polygons that comprise this Shape.
+     *
+     * @return The Polygons.
+     */
+    public Polygon[] getPolygons() {
+        return this.polygons;
+    }
+
+    /**
      * Returns the number of Polygons in this Shape.
      *
      * @return The number of Polygons

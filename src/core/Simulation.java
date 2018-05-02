@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import bio.BioMap;
 import bio.Biome;
+import env.Backdrop;
 import env.Camera;
 import env.Colour;
 import env.Grid;
@@ -35,6 +36,12 @@ public class Simulation {
         float maxX =  0.8f;
         float maxY =  0.8f;
         this.world = new World("Geoscape", minX, minY, maxX, maxY);
+
+        /**
+         * Create the Backdrop behind the World.
+         */
+        Backdrop backdrop = new Backdrop(new Vertex(Vertex.ORIGIN), 5f);
+        this.world.add(backdrop);
 
         /**
          * Create the Platform underneath the World.

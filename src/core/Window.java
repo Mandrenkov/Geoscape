@@ -149,7 +149,7 @@ public class Window {
         // The distance to the near Z-plane of the viewing frustrum.
         float near = 0.01f;
         // The distance to the far Z-plane of the viewing frustrum.
-        float far = 10f;
+        float far = 100f;
 
         // Calculate the bounding box of the near plane in terms of the FOV and
         // aspect ratio.

@@ -48,4 +48,13 @@ public class Triangle extends Polygon {
         normal.normalize();
         return normal;
     }
+
+    /**
+     * Reverses the order of the Vertexes that comprise this Triangle.
+     */
+    public void reverse() {
+        Vertex vertex = this.vertexes[0];
+        this.vertexes[0] = this.vertexes[2];
+        this.vertexes[2] = vertex;
+    }
 }

@@ -221,7 +221,7 @@ public class World implements Drawable {
      */
     private void addDebugGrid() {
         // The overhang of the grid in each direction of the World.
-        float overhang = 2;
+        float overhang = 1;
         // The number of rows and columns in the grid.
         int size = 20;
 

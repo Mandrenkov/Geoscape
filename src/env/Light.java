@@ -66,7 +66,7 @@ public class Light implements Drawable {
     /**
      * Returns the number of Polygons in this Light.
      *
-     * @return The number of Polygons
+     * @return The number of Polygons.
      */
     public int polygons() {
         return this.sphere.polygons();
