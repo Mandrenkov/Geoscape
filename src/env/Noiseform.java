@@ -59,6 +59,7 @@ public class Noiseform {
         this.disturb();
         this.alias();
         this.texture();
+        this.ground();
     }
 
     // Private members
@@ -297,6 +298,22 @@ public class Noiseform {
 
         for (BioTriangle biogle : this.grid.getTriangles()) {
             biogle.updateColour();
+        }
+    }
+
+    /**
+     * Ties all BioVertexes that are below ground level (z = 0) to the ground.
+     * BioVertexes that are above ground level are ignored.
+     */
+    private void ground() {
+        Logger.debug("Ground the BioVertexes in %s.", this.grid);
+
+        for (int row = 0; row < this.grid.getRows(); ++row) {
+            for (int col = 0; col < this.grid.getColumns(); ++col) {
+                BioVertex biotex = this.grid.getVertex(row, col);
+                float z = Math.max(0, biotex.getZ());
+                biotex.setZ(z);
+            }
         }
     }
 }
