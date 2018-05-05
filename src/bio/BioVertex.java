@@ -6,9 +6,9 @@ import geo.Vertex;
 import util.Pair;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>BioVertex</b> class represents a Biome Vertex.</p>
  */

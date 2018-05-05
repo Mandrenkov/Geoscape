@@ -3,9 +3,9 @@ package geo;
 import env.Drawable;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <pThe <b>Shape</b> class represents a collection of Polygons.</p>
  */

@@ -1,9 +1,9 @@
 package util;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Pair</b> class represents a pair of values of types F and S.</p>
  */

@@ -3,9 +3,9 @@ package util;
 import java.nio.IntBuffer;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Pointer</b> class is an implementation of a thread-safe integer
  * pointer.</p>

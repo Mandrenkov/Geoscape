@@ -7,9 +7,9 @@ import java.util.Set;
 import env.Colour;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Sphere</b> class represents a sphere.</p>
  */

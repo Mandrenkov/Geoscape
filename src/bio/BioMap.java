@@ -1,9 +1,9 @@
 package bio;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>BioMap</b> class stores and manipulates the 2D distribution of Biomes.</p>
  */

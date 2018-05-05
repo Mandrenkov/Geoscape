@@ -8,9 +8,9 @@ import java.util.Map;
 import util.Pair;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Biomix</b> class represents a mixture of Biomes.</p>
  */

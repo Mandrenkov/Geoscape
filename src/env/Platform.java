@@ -5,9 +5,9 @@ import geo.Prism;
 import geo.Vertex;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Platform</b> class represents the platform beneath the landscape.</p>
  */

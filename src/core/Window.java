@@ -13,9 +13,9 @@ import java.util.Arrays;
 import util.Pair;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <i>Window</i> class represents the application GLFW window.</p>
  */

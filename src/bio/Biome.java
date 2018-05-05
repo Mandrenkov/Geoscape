@@ -4,9 +4,9 @@ import core.Logger;
 import env.Colour;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Biome</b> enumerations represent various natural biomes.  In the
  * context of this application, a Biome is a set of common characteristics that

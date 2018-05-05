@@ -10,9 +10,9 @@ import core.Logger;
 import util.Algebra;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <i>Colour</i> class represents an RGBA colour.</p>
  */

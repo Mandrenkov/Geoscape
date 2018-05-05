@@ -3,9 +3,9 @@ package geo;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * @author Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @author  Mikhail Andrenkov
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <i>Vector</i> class represents a geometric vector in R3 Cartesian space.</p>
  */

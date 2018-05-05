@@ -15,8 +15,8 @@ import util.Pointer;
 
 /**
  * @author  Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Noiseform</b> class represents a noise transform that is applied
  * to Grid objects.  Specifically, this class uses Perlin noise to distort

@@ -2,8 +2,8 @@ package util;
 
 /**
  * @author  Mikhail Andrenkov
- * @since March 13, 2018
- * @version 1.1
+ * @since   May 5, 2018
+ * @version 1.2
  *
  * <p>The <b>Algebra</b> class contains a set of Linear Algebra functions.</p>
  */
