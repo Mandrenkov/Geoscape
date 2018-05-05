@@ -16,7 +16,7 @@ public class Top {
     /**
      * Toggles debug parameters and the display of logged messages.
      */
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     /**
      * Execution entry point.

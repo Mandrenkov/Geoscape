@@ -74,7 +74,7 @@ public class Colour {
     public static Colour random(Option option) {
         switch (option) {
             case LIGHT: {
-                float clr = (float) Math.random()*0.3f + 0.7f;
+                float clr = (float) Math.random()*0.2f + 0.7f;
                 return new Colour(clr, clr, clr);
             }
             case DARK: {

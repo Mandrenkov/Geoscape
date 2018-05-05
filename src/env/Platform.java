@@ -25,28 +25,57 @@ public class Platform implements Drawable {
      * @param maxX The maximum X constraint.
      * @param maxY The maximum Y constraint.
      * @param maxZ The maximum Z constraint.
+     * @param rows The number of stalactite rows in this Platform.
+     * @param cols The number of stalactite columns in this Platform.
      */
-    public Platform(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+    public Platform(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, int rows, int cols) {
         this.minX = minX;
         this.minY = minY;
         this.minZ = minZ;
         this.maxX = maxX;
         this.maxY = maxY;
         this.maxZ = maxZ;
+        this.rows = rows;
+        this.cols = cols;
 
-        Vertex low = new Vertex(minX, minY, minZ);
-        Vertex high = new Vertex(maxX, maxY, maxZ);
-        Colour clr = new Colour(0.3f, 0.3f, 0.3f);
-        this.prism = new Prism(clr, low, high);
+        // Compute the width of the stalactite Prisms along the X and Y dimensions.
+        float dx = (maxX - minX)/cols;
+        float dy = (maxY - minY)/rows;
 
-        Logger.debug("Creating Platform from (%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f).", minX, minY, minZ, maxX, maxY, maxZ);
+        // The range of stalactite Prism heights.
+        float range = (maxZ - minZ)*0.60f;
+
+        this.prisms = new Prism[rows][cols];
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                // The lower X, Y, and Z corner of the stalactite Prism.
+                float lowX = minX + col*dx;
+                float lowY = minY + row*dy;
+                float lowZ = minZ + (float) Math.random()*range;
+                Vertex low = new Vertex(lowX, lowY, lowZ);
+
+                // The upper X, Y, and Z corner of the stalactite Prism.
+                float highX = lowX + dx;
+                float highY = lowY + dy;
+                Vertex high = new Vertex(highX, highY, maxZ);
+
+                Colour clr = Colour.random(Colour.Option.LIGHT);
+
+                this.prisms[row][col] = new Prism(clr, low, high);
+            }
+        }
+        Logger.debug("Created Platform from (%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f) with (%d x %d) stalactites.", minX, minY, minZ, maxX, maxY, maxZ, rows, cols);
     }
 
     /**
      * Draws this Platform.
      */
     public void draw() {
-        this.prism.draw();
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                this.prisms[row][col].draw();
+            }
+        }
     }
 
     /**
@@ -55,7 +84,13 @@ public class Platform implements Drawable {
      * @return The number of Polygons
      */
     public int polygons() {
-        return this.prism.polygons();
+        int polygons = 0;
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                polygons += this.prisms[row][col].polygons();
+            }
+        }
+        return polygons;
     }
 
     /**
@@ -102,7 +137,17 @@ public class Platform implements Drawable {
     private float maxZ;
 
     /**
-     * The Prism representing the Platform.
+     * The number of stalactite rows in this Platform.
      */
-    private Prism prism;
+    private int rows;
+
+    /**
+     * The number of stalactite columns in this Platform.
+     */
+    private int cols;
+
+    /**
+     * The stalactite Prisms that compose this Platform.
+     */
+    private Prism[][] prisms;
 }

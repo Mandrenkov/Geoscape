@@ -46,9 +46,10 @@ public class Simulation {
         /**
          * Create the Platform underneath the World.
          */
-        float minZ = -0.15f;
-        float maxZ =  0.00f;
-        Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ);
+        float minZ = -0.200f;
+        float maxZ =  0.003f;
+        int platformSize = 10;
+        Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ, platformSize, platformSize);
         this.world.add(platform);
 
         /**
