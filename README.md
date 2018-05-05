@@ -18,11 +18,13 @@
 | [misc/](misc)                                 |  Miscelleous assets    |
 ---
 ### Screenshots
-#### Time Point 7 - OpenGL Lighting + Water Biome
+#### Time Point 8 - Backdrop and Platform 
+![](misc/Timeline_8.png)
+#### Time Point 7 - OpenGL Lighting and Water Biome
 ![](misc/Timeline_7.png)
 #### Time Point 6 - Biome Textures
 ![](misc/Timeline_6.png)
-#### Time Point 5 - Lighting + Curved Biome Boundaries
+#### Time Point 5 - Lighting and Curved Biome Boundaries
 ![](misc/Timeline_5.png)
 #### Time Point 4 - Point-Based Biomes
 ![](misc/Timeline_4.png)
