@@ -4,7 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import bio.BioMap;
-import bio.Biome;
+import bio.BioMapFactory;
 import env.Backdrop;
 import env.Camera;
 import env.Colour;
@@ -37,50 +37,34 @@ public class Simulation {
         float maxY =  0.8f;
         this.world = new World("Geoscape", minX, minY, maxX, maxY);
 
-        /**
-         * Create the Backdrop behind the World.
-         */
+        // Create the Backdrop behind the World.
         Backdrop backdrop = new Backdrop(new Vertex(Vertex.ORIGIN), 5f);
         this.world.add(backdrop);
 
-        /**
-         * Create the Platform underneath the World.
-         */
+        // Create the Platform underneath the World.
         float minZ = -0.200f;
         float maxZ =  0.003f;
         int platformSize = 10;
         Platform platform = new Platform(minX, minY, minZ, maxX, maxY, maxZ, platformSize, platformSize);
         this.world.add(platform);
 
-        /**
-         * Create the Grid representing the landscape in the World.
-         */
-        int landSize = Top.DEBUG ? 100 : 300;
+        // Create the landscape of the World.
+        {
+            int size = Top.DEBUG ? 100 : 300;
+            BioMap biomap = BioMapFactory.create(BioMapFactory.Type.LAND, size, size);
+            Grid land = new Grid("Land", size, size, 0.08f, minX, minY, maxX, maxY, biomap);
+            this.world.addGrids(land);
+        }
 
-        BioMap landMap = new BioMap(landSize, landSize);
-        landMap.setRect(0,                      landMap.getRows()/3,   landMap.getCols() - 1, landMap.getRows() - 1,       Biome.HILL);
-        landMap.setCloud(0,                     landMap.getRows()*2/3, landMap.getCols()/3,   landMap.getRows() - 1, 4, 4, Biome.PLAINS);
-        landMap.setCloud(landMap.getCols()*2/3, landMap.getRows()*2/3, landMap.getCols() - 1, landMap.getRows() - 1, 4, 4, Biome.DESERT);
-        landMap.setCloud(0,                     0,                     landMap.getCols()/4,   landMap.getRows()/3,   4, 4, Biome.TUNDRA);
-        landMap.setCloud(landMap.getCols()*2/3, landMap.getRows()/4,   landMap.getCols() - 1, landMap.getRows()*2/3, 4, 4, Biome.MOUNTAIN);
+        // Create the water in the World.
+        {
+            int size = Top.DEBUG ? 100 : 150;
+            BioMap biomap = BioMapFactory.create(BioMapFactory.Type.WATER, size, size);
+            Grid water = new Grid("Water", size, size, 0.02f, minX, minY, maxX, maxY, biomap);
+            this.world.addGrids(water);
+        }
 
-        Grid land = new Grid("Land", landSize, landSize, 0.08f, minX, minY, maxX, maxY, landMap);
-        this.world.addGrids(land);
-
-        /**
-         * Create the Grid representing the water in the World.
-         */
-        int waterSize = Top.DEBUG ? 100 : 150;
-
-        BioMap waterMap = new BioMap(waterSize, waterSize);
-        waterMap.setRect(5, 0, waterMap.getCols() - 1, waterMap.getRows() - 6, Biome.WATER);
-
-        Grid water = new Grid("Water", waterSize, waterSize, 0.02f, minX, minY, maxX, maxY, waterMap);
-        this.world.addGrids(water);
-
-        /**
-         * Create a set of Lights to illuminate the World.
-         */
+        // Create a set of Lights to illuminate the World.
         Light[] lights = new Light[]{
             new Light(new Vertex(0f, -0.7f, 0.7f), new Colour(1f, 0.5f, 0))
         };

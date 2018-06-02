@@ -36,7 +36,7 @@ public enum Biome {
             biotex.shift(0.005f*scalar);
         }
     },
-    PLAINS("Plains", new Colour(0.8f, 1.0f, 0.0f), 0.1f) {
+    PLAINS("Plains", new Colour(0.6f, 1.0f, 0.0f), 0.001f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.0005f*scalar);
