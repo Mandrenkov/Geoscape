@@ -171,7 +171,7 @@ public class Window {
         glPolygonMode(GL_FRONT, GL_FILL);
 
         // Set the ambient colour of the OpenGL scene.
-        float[] ambient = {0.2f, 0.2f, 0.2f, 1};
+        float[] ambient = {0.4f, 0.4f, 0.4f, 1};
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 
         // All materials in the OpenGL scene reflect ambient and diffuse light.

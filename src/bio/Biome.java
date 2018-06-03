@@ -17,36 +17,60 @@ public enum Biome {
     // Enumerations
     // -------------------------------------------------------------------------
 
-    DESERT("Desert", new Colour(0.600f, 0.300f, 0.000f), 1f) {
+    ALPINE("Alpine", new Colour(0.6f, 0.6f, 0.6f), 15.0f) {
+        @Override
+        public void texturize(BioVertex biotex, float scalar) {
+            biotex.shift(0.005f*scalar);
+            biotex.getColour().shift(0.1f*scalar);
+        }
+    },
+    BARREN("Barren", new Colour(0.7f, 0.6f, 0.4f), 0.75f) {
+        @Override
+        public void texturize(BioVertex biotex, float scalar) {
+            biotex.shift(0.001f*scalar);
+        }
+    },
+    DECIDUOUS("Deciduous", new Colour(0.4f, 0.5f, 0f), 1.0f) {
+        @Override
+        public void texturize(BioVertex biotex, float scalar) {
+            biotex.shift(0.001f*scalar);
+        }
+    },
+    DESERT("Desert", new Colour(0.7f, 0.5f, 0.3f), 0.4f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.wave(20f, 0.02f, 200f, 0.002f*scalar);
         }
     },
-    HILL("Hill", new Colour(0.2f, 0.4f, 0.0f), 2.0f) {
+    GRASSLANDS("Grasslands", new Colour(0.35f, 0.45f, 0), 0.75f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
-            biotex.shift(0.0015f*scalar);
-            //biotex.getColour().shift(0.01f*scalar);
-        }
-    },
-    MOUNTAIN("Mountain", new Colour(0.150f, 0.100f, 0.000f), 15.0f) {
-        @Override
-        public void texturize(BioVertex biotex, float scalar) {
-            biotex.shift(0.005f*scalar);
-        }
-    },
-    PLAINS("Plains", new Colour(0.6f, 1.0f, 0.0f), 0.001f) {
-        @Override
-        public void texturize(BioVertex biotex, float scalar) {
-            biotex.shift(0.0005f*scalar);
             biotex.getColour().shift(0.01f*scalar);
         }
     },
-    TUNDRA("Tundra", new Colour(1, 1, 1), 1f) {
+    MOUNTAIN("Mountain", new Colour(0.45f, 0.3f, 0), 15.0f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
-            biotex.shift(0.0001f*scalar);
+            biotex.shift(0.005f*scalar);
+            biotex.getColour().shift(0.05f*scalar);
+        }
+    },
+    SHRUBLANDS("Shrublands", new Colour(0.3f, 0.4f, 0.25f), 2f) {
+        @Override
+        public void texturize(BioVertex biotex, float scalar) {
+            biotex.getColour().shift(0.01f*scalar);
+        }
+    },
+    TAIGA("Taiga", new Colour(0.8f, 1f, 1f), 2f) {
+        @Override
+        public void texturize(BioVertex biotex, float scalar) {
+            // Do nothing.
+        }
+    },
+    TROPICAL("Tropical", new Colour(0.0f, 0.4f, 0), 0.4f) {
+        @Override
+        public void texturize(BioVertex biotex, float scalar) {
+            biotex.shift(0.001f*scalar);
         }
     },
     WATER("Water", new Colour(0, 0.5f, 1), 0.001f) {

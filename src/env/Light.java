@@ -59,7 +59,7 @@ public class Light implements Drawable {
     public void draw() {
         // The surface of a Light should emit the Colour of the Light.
         glMaterialfv(GL_FRONT, GL_EMISSION, this.colour.toArray());
-           this.sphere.draw();
+            this.sphere.draw();
         glMaterialfv(GL_FRONT, GL_EMISSION, Colour.GL_BLACK);
     }
 
