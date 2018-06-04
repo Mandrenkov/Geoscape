@@ -81,7 +81,7 @@ public class Grid implements Drawable {
             }
         }
 
-        Noiseform noiseform = new Noiseform(this, 10, 10);
+        Noiseform noiseform = new Noiseform(this, 8, 8);
         noiseform.apply();
     }
 

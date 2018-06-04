@@ -7,6 +7,7 @@ import java.util.Map;
 
 import bio.BioTriangle;
 import bio.BioVertex;
+import bio.Biome;
 import core.Logger;
 import geo.Vector;
 import util.Algebra;
@@ -292,7 +293,12 @@ public class Noiseform {
             for (int col = 0; col < this.grid.getColumns(); ++col) {
                 BioVertex biotex = this.grid.getVertex(row, col);
                 biotex.getColour().illuminate(biotex.getZ());
-                biotex.texturize();
+
+                for (Pair<Biome, Float> biomePair : biotex.getBiomix()) {
+                    Biome biome = biomePair.getFirst();
+                    float scalar = (float) biomePair.getSecond();
+                    biome.texturize(this.grid, row, col, scalar);
+                }
             }
         }
 

@@ -52,6 +52,17 @@ public class BioTriangle extends Triangle {
     }
 
     /**
+     * Sets the Colour of this BioTriangle to the given colour.
+     *
+     * @param colour The new Colour of the BioTriangle.
+     */
+    public void setColour(Colour colour) {
+        for (BioVertex biotex : this.biotexes) {
+            biotex.setColour(colour);
+        }
+    }
+
+    /**
      * Updates the colour of this BioTriangle to reflect the current Colours of
      * its BioVertexes.
      */

@@ -1,9 +1,9 @@
 package bio;
 
 import java.util.Arrays;
+
 import env.Colour;
 import geo.Vertex;
-import util.Pair;
 
 /**
  * @author  Mikhail Andrenkov
@@ -124,17 +124,6 @@ public class BioVertex extends Vertex {
      */
     public void setOffset(float x, float y, float z) {
         this.offset = new Vertex(x, y, z);
-    }
-
-    /**
-     * Applies the textures of the Biomes that influence this BioVertex.
-     */
-    public void texturize() {
-        for (Pair<Biome, Float> biomePair : this.biomix) {
-            Biome biome = biomePair.getFirst();
-            float scalar = (float) biomePair.getSecond();
-            biome.texturize(this, scalar);
-        }
     }
 
     /**
