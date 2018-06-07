@@ -104,7 +104,7 @@ public enum Biome {
 
             if (bush) {
                 // Calculate the height of the bush.
-                float minHeight = 0.005f;
+                float minHeight = 0.006f;
                 float maxHeight = 0.010f;
                 float range = maxHeight - minHeight;
 
@@ -117,10 +117,31 @@ public enum Biome {
             }
         }
     },
-    DECIDUOUS("Deciduous", new Colour(0.4f, 0.5f, 0f), 1.0f) {
+    DECIDUOUS("Deciduous", new Colour(0.10f, 0.25f, 0f), 1.0f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
+
+            // Determine if this BioVertex should be converted into a tree.
+            boolean threshold = scalar > 0.8f;
+            boolean lucky = Math.random() < 0.05;
+            boolean bush = threshold && lucky;
+
+            if (bush) {
+                // Calculate the height of the tree.
+                float minHeight = 0.03f;
+                float maxHeight = 0.05f;
+                float range = maxHeight - minHeight;
+
+                float height = (float) Math.random()*range + minHeight;
+                biotex.setOffset(0, 0, height);
+
+                // The colour of this BioVertex is independent of its BiomeMix.
+                float red = (float) Math.random()*0.7f;
+                float green = (float) Math.random()*0.7f;
+                Colour colour = new Colour(red, green, 0);
+                biotex.setColour(colour);
+            }
         }
     },
     DESERT("Desert", new Colour(0.7f, 0.5f, 0.3f), 0.4f) {
