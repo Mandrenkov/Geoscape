@@ -147,7 +147,8 @@ public enum Biome {
     DESERT("Desert", new Colour(0.7f, 0.5f, 0.3f), 0.4f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
-            biotex.wave(20f, 0.02f, 200f, 0.002f*scalar);
+            biotex.wave(15f, 0.035f, 20f, 0.015f*scalar);
+            biotex.wave(20f, 0.025f, 330f, 0.0008f*scalar);
         }
     },
     GRASSLANDS("Grasslands", new Colour(0.35f, 0.45f, 0), 0.75f) {
