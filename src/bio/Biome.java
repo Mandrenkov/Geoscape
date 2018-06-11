@@ -157,11 +157,12 @@ public enum Biome {
             biotex.getColour().shift(0.01f*scalar);
         }
     },
-    MOUNTAIN("Mountain", new Colour(0.45f, 0.3f, 0), 10.0f) {
+    MOUNTAIN("Mountain", new Colour(0.2f, 0.1f, 0), 10.0f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
-            biotex.shift(0.005f*scalar);
-            biotex.getColour().shift(0.05f*scalar);
+            float range = 0.012f*scalar*biotex.getZ();
+            biotex.shift(range);
+            biotex.getColour().shift(0.02f*scalar);
         }
     },
     SHRUBLANDS("Shrublands", new Colour(0.3f, 0.4f, 0.25f), 2f) {
