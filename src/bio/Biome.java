@@ -155,6 +155,24 @@ public enum Biome {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.getColour().shift(0.01f*scalar);
+
+            // Determine whether this BioVertex should represent tall grass.
+            boolean threshold = scalar > 0.8f;
+            boolean lucky = Math.random() < 0.2;
+            boolean tall = threshold && lucky;
+            if (tall) {
+                // Tall grass is actually quite short.
+                float minHeight = scalar*0.01f;
+                float maxHeight = scalar*0.015f;
+                biotex.raise(minHeight, maxHeight);
+
+                // The colour of the grass should be similar to the base Biome colour.
+                float minR = 0.35f, maxR = 0.38f;
+                float minG = 0.45f, maxG = 0.50f;
+                float minB = 0.05f, maxB = 0.05f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
+                biotex.setColour(colour);
+            }
         }
     },
     MOUNTAIN("Mountain", new Colour(0.2f, 0.1f, 0), 10.0f) {

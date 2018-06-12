@@ -88,6 +88,25 @@ public class Colour {
     }
 
     /**
+     * Returns a random opaque Colour that satisfies the given component constraints.
+     * 
+     * @param minR The minimum value of the red component.
+     * @param maxR The maximum value of the red component.
+     * @param minG The minimum value of the green component.
+     * @param maxG The maximum value of the green component.
+     * @param minB The minimum value of the blue component.
+     * @param maxB The maximum value of the blue component.
+     * 
+     * @return The random Colour.
+     */
+    public static Colour random(float minR, float maxR, float minG, float maxG, float minB, float maxB) {
+        float red   = Algebra.random(minR, maxR);
+        float green = Algebra.random(minG, maxG);
+        float blue  = Algebra.random(minB, maxB);
+        return new Colour(red, green, blue);
+    }
+
+    /**
      * Constructs an opaque black Colour.
      */
     public Colour() {

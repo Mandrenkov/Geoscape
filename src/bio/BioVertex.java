@@ -59,6 +59,18 @@ public class BioVertex extends Vertex {
     }
 
     /**
+     * Raises the elevation of this BioVertex by a value within the given range.
+     * 
+     * @param minHeight The minimum height to raise this BioVertex.
+     * @param maxHeight The maximum height to raise this BioVertex.
+     */
+    public void raise(float minHeight, float maxHeight) {
+        float range = maxHeight - minHeight;
+        float height = (float) Math.random()*range + minHeight;
+        this.offset.translate(0, 0, height);
+    }
+
+    /**
      * Returns the primary Biome associated with this BioVertex.
      *
      * @return The Biome.
