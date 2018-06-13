@@ -97,22 +97,21 @@ public enum Biome {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
 
-            // Determine if this BioVertex should be converted into a bush.
+            // Determine whether this BioVertex should represent a bush.
             boolean threshold = scalar > 0.8f;
             boolean lucky = Math.random() < 0.01;
             boolean bush = threshold && lucky;
-
             if (bush) {
-                // Calculate the height of the bush.
+                // Bushes are short.
                 float minHeight = 0.006f;
                 float maxHeight = 0.010f;
-                float range = maxHeight - minHeight;
+                biotex.raise(minHeight, maxHeight);
 
-                float height = (float) Math.random()*range + minHeight;
-                biotex.setOffset(0, 0, height);
-
-                // The colour of this BioVertex is independent of its BiomeMix.
-                Colour colour = new Colour(0, 0.15f, 0);
+                // It is assumed that bushes have a dark green hue.
+                float minR = 0.0f, maxR = 0.0f;
+                float minG = 0.1f, maxG = 0.15f;
+                float minB = 0.0f, maxB = 0.0f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
                 biotex.setColour(colour);
             }
         }
@@ -122,24 +121,21 @@ public enum Biome {
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
 
-            // Determine if this BioVertex should be converted into a tree.
+            // Determine whether this BioVertex should represent a tree.
             boolean threshold = scalar > 0.8f;
             boolean lucky = Math.random() < 0.05;
-            boolean bush = threshold && lucky;
-
-            if (bush) {
-                // Calculate the height of the tree.
+            boolean tree = threshold && lucky;
+            if (tree) {
+                // Similar tree heights give the illusion of a canopy.
                 float minHeight = 0.03f;
                 float maxHeight = 0.05f;
-                float range = maxHeight - minHeight;
+                biotex.raise(minHeight, maxHeight);
 
-                float height = (float) Math.random()*range + minHeight;
-                biotex.setOffset(0, 0, height);
-
-                // The colour of this BioVertex is independent of its BiomeMix.
-                float red = (float) Math.random()*0.7f;
-                float green = (float) Math.random()*0.7f;
-                Colour colour = new Colour(red, green, 0);
+                // The leaves of a tree can vary from green to yellow to red.
+                float minR = 0.0f, maxR = 0.7f;
+                float minG = 0.0f, maxG = 0.7f;
+                float minB = 0.0f, maxB = 0.0f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
                 biotex.setColour(colour);
             }
         }
@@ -163,12 +159,12 @@ public enum Biome {
             if (tall) {
                 // Tall grass is actually quite short.
                 float minHeight = scalar*0.01f;
-                float maxHeight = scalar*0.015f;
+                float maxHeight = scalar*0.012f;
                 biotex.raise(minHeight, maxHeight);
 
                 // The colour of the grass should be similar to the base Biome colour.
-                float minR = 0.35f, maxR = 0.38f;
-                float minG = 0.45f, maxG = 0.50f;
+                float minR = 0.3f,  maxR = 0.3f;
+                float minG = 0.4f,  maxG = 0.5f;
                 float minB = 0.05f, maxB = 0.05f;
                 Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
                 biotex.setColour(colour);
