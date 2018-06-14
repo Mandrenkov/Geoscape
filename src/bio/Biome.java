@@ -188,9 +188,7 @@ public enum Biome {
     },
     TAIGA("Taiga", new Colour(0.15f, 0.2f, 0), 2f) {
         @Override
-        public void texturize(Grid grid, int row, int col, float scalar) {
-            BioVertex biotex = grid.getVertex(row, col);
-
+        public void texturize(BioVertex biotex, float scalar) {
             // Determine whether this BioVertex should represent a tree.
             boolean threshold = scalar > 0.6f;
             boolean lucky = Math.random() < 0.12*Math.pow(scalar, 4);
