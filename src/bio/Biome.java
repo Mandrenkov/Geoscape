@@ -9,6 +9,7 @@ import env.Grid;
 import geo.Triangle;
 import geo.Vector;
 import util.Algebra;
+import util.Perlin;
 
 /**
  * @author  Mikhail Andrenkov
@@ -126,7 +127,7 @@ public enum Biome {
             boolean lucky = Math.random() < 0.05;
             boolean tree = threshold && lucky;
             if (tree) {
-                // Similar tree heights give the illusion of a canopy.
+                // A range of tree heights suggest dissimilar trees.
                 float minHeight = 0.03f;
                 float maxHeight = 0.05f;
                 biotex.raise(minHeight, maxHeight);
@@ -185,10 +186,29 @@ public enum Biome {
             biotex.getColour().shift(0.01f*scalar);
         }
     },
-    TAIGA("Taiga", new Colour(0.8f, 1f, 1f), 2f) {
+    TAIGA("Taiga", new Colour(0.15f, 0.2f, 0), 2f) {
         @Override
-        public void texturize(BioVertex biotex, float scalar) {
-            // Do nothing.
+        public void texturize(Grid grid, int row, int col, float scalar) {
+            BioVertex biotex = grid.getVertex(row, col);
+
+            // Determine whether this BioVertex should represent a tree.
+            boolean threshold = scalar > 0.6f;
+            boolean lucky = Math.random() < 0.12*Math.pow(scalar, 4);
+            boolean above = biotex.getZ() > 0.03f;
+            boolean tree = threshold && lucky && above;
+            if (tree) {
+                // Similar tree heights give the illusion of a canopy.
+                float minHeight = 0.050f;
+                float maxHeight = 0.055f;
+                biotex.raise(minHeight, maxHeight);
+
+                // Evergreen trees are virtually all hunter green.
+                float minR = 0.30f, maxR = 0.35f;
+                float minG = 0.35f, maxG = 0.40f;
+                float minB = 0.0f,  maxB = 0.0f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
+                biotex.setColour(colour);
+            }
         }
     },
     TROPICAL("Tropical", new Colour(0.0f, 0.4f, 0), 0.4f) {
@@ -225,7 +245,6 @@ public enum Biome {
             biotex.setZ(z);
         }
     };
-
 
     // Public members
     // -------------------------------------------------------------------------
