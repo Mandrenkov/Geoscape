@@ -9,7 +9,6 @@ import env.Grid;
 import geo.Triangle;
 import geo.Vector;
 import util.Algebra;
-import util.Perlin;
 
 /**
  * @author  Mikhail Andrenkov
@@ -154,13 +153,13 @@ public enum Biome {
             biotex.getColour().shift(0.01f*scalar);
 
             // Determine whether this BioVertex should represent tall grass.
-            boolean threshold = scalar > 0.8f;
-            boolean lucky = Math.random() < 0.2;
+            boolean threshold = scalar > 0.4f;
+            boolean lucky = Math.random() < 0.2*scalar*scalar;
             boolean tall = threshold && lucky;
             if (tall) {
                 // Tall grass is actually quite short.
-                float minHeight = scalar*0.01f;
-                float maxHeight = scalar*0.012f;
+                float minHeight = scalar*scalar*0.01f;
+                float maxHeight = scalar*scalar*0.012f;
                 biotex.raise(minHeight, maxHeight);
 
                 // The colour of the grass should be similar to the base Biome colour.
@@ -180,10 +179,28 @@ public enum Biome {
             biotex.getColour().shift(0.02f*scalar);
         }
     },
-    SHRUBLANDS("Shrublands", new Colour(0.3f, 0.4f, 0.25f), 2f) {
+    PRAIRIE("Prairie", new Colour(0.55f, 0.50f, 0), 0.75f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.getColour().shift(0.01f*scalar);
+
+            // Determine whether this BioVertex should represent wheat.
+            boolean threshold = scalar > 0.4f;
+            boolean lucky = Math.random() < 0.35*scalar*scalar;
+            boolean wheat = threshold && lucky;
+            if (wheat) {
+                // Wheat plants are effectively the same height.
+                float minHeight = scalar*scalar*0.018f;
+                float maxHeight = scalar*scalar*0.019f;
+                biotex.raise(minHeight, maxHeight);
+
+                // The colour of wheat is a little richer than the base Biome colour.
+                float minR = 0.77f, maxR = 0.77f;
+                float minG = 0.70f, maxG = 0.70f;
+                float minB = 0.00f, maxB = 0.00f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
+                biotex.setColour(colour);
+            }
         }
     },
     TAIGA("Taiga", new Colour(0.15f, 0.2f, 0), 2f) {
@@ -202,7 +219,7 @@ public enum Biome {
 
                 // Evergreen trees are virtually all hunter green.
                 float minR = 0.30f, maxR = 0.35f;
-                float minG = 0.35f, maxG = 0.40f;
+                float minG = 0.35f, maxG = 0.50f;
                 float minB = 0.0f,  maxB = 0.0f;
                 Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
                 biotex.setColour(colour);
