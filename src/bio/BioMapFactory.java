@@ -62,7 +62,7 @@ public class BioMapFactory {
      */
     private static BioMap createLandMap(int rows, int cols) {
         BioMap biomap = new BioMap(rows, cols);
-
+        
         // Generate a moisture map using a Perlin noise distribution.
         Perlin moistMap = new Perlin(rows, cols, 5, 5);
         moistMap.transform();
@@ -93,11 +93,11 @@ public class BioMapFactory {
      *       1.00 +----------+----------+----------+----------+----------+----------+
      *   E        |                  Mountain                 |        Alpine       |
      *   l   0.60 |----------+----------+----------+----------+----------+----------|
-     *   e        |  Barren  |           Shrubland            |        Taiga        |
+     *   e        |  Barren  |           Grasslands           |        Taiga        |
      *   v   0.53 |----------+----------+----------+----------+----------+----------|
-     *   a        |  Barren  |      Grasslands     |            Deciduous           |
+     *   a        |  Barren  |       Prairie       |            Deciduous           |
      *   t   0.47 |----------+----------+----------+----------+----------+----------|
-     *   i        |  Desert  |  Barren  |      Grasslands     |       Tropical      |
+     *   i        |  Desert  |  Barren  |       Prairie        |       Tropical      |
      *   o   0.40 +----------+----------+----------+----------+----------+----------+
      *   n        |                               Void                              |
      *       0.00 +----------+----------+----------+----------+----------+----------+
@@ -120,16 +120,16 @@ public class BioMapFactory {
             else                  return Biome.ALPINE;
         } else if (elevation > 0.53f) {
             if (moisture < 0.4f)       return Biome.BARREN;
-            else if (moisture < 0.53f) return Biome.SHRUBLANDS;
+            else if (moisture < 0.53f) return Biome.GRASSLANDS;
             else                       return Biome.TAIGA;
         } else if (elevation > 0.47f) {
             if (moisture < 0.4f)      return Biome.BARREN;
-            else if (moisture < 0.5f) return Biome.GRASSLANDS;
+            else if (moisture < 0.5f) return Biome.PRAIRIE;
             else                      return Biome.DECIDUOUS;
         } else if (elevation > 0.4f) {
             if (moisture < 0.4f)       return Biome.DESERT;
             else if (moisture < 0.47f) return Biome.BARREN;
-            else if (moisture < 0.53f) return Biome.GRASSLANDS;
+            else if (moisture < 0.53f) return Biome.PRAIRIE;
             else                       return Biome.TROPICAL;
         } else {
             return Biome.VOID;
