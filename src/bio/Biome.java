@@ -122,17 +122,17 @@ public enum Biome {
             biotex.shift(0.001f*scalar);
 
             // Determine whether this BioVertex should represent a tree.
-            boolean threshold = scalar > 0.8f;
-            boolean lucky = Math.random() < 0.05;
+            boolean threshold = scalar > 0.5f;
+            boolean lucky = Math.random() < 0.08*scalar*scalar;
             boolean tree = threshold && lucky;
             if (tree) {
                 // A range of tree heights suggest dissimilar trees.
-                float minHeight = 0.03f;
-                float maxHeight = 0.05f;
+                float minHeight = scalar*scalar*0.035f;
+                float maxHeight = scalar*scalar*0.040f;
                 biotex.raise(minHeight, maxHeight);
 
                 // The leaves of a tree can vary from green to yellow to red.
-                float minR = 0.0f, maxR = 0.7f;
+                float minR = 0.0f, maxR = 0.5f;
                 float minG = 0.0f, maxG = 0.7f;
                 float minB = 0.0f, maxB = 0.0f;
                 Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
@@ -226,10 +226,39 @@ public enum Biome {
             }
         }
     },
-    TROPICAL("Tropical", new Colour(0.0f, 0.4f, 0), 0.4f) {
+    TROPICAL("Tropical", new Colour(0.1f, 0.2f, 0), 0.4f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
+
+            // Determine whether this BioVertex should represent a tree, a puddle,
+            // or neither.
+            boolean threshold = scalar > 0.4f;
+            boolean treeLuck = Math.random() < 0.2*scalar*scalar;
+            boolean tree = threshold && treeLuck;
+            boolean puddleLuck = Math.random() < 0.05*scalar*scalar;
+            boolean puddle = threshold && puddleLuck;
+            if (tree) {
+                // Close tree heights eliminate sharp edges from the canopy.
+                float minHeight = scalar*scalar*0.035f;
+                float maxHeight = scalar*scalar*0.040f;
+                biotex.raise(minHeight, maxHeight);
+
+                // The trunks and branches of trees are assumed to be hidden by
+                // their leaves.
+                float minR = 0.0f, maxR = 0.0f;
+                float minG = 0.0f, maxG = 0.5f;
+                float minB = 0.0f, maxB = 0.0f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
+                biotex.setColour(colour);
+            } else if (puddle) {
+                // Naturally, puddles are predominantly blue.
+                float minR = 0.0f, maxR = 0.0f;
+                float minG = 0.1f, maxG = 0.3f;
+                float minB = 0.5f, maxB = 1.0f;
+                Colour colour = Colour.random(minR, maxR, minG, maxG, minB, maxB);
+                biotex.setColour(colour);
+            }
         }
     },
     WATER("Water", new Colour(0, 0.5f, 1), 0.001f) {

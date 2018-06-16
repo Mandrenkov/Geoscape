@@ -95,9 +95,9 @@ public class BioMapFactory {
      *   l   0.60 |----------+----------+----------+----------+----------+----------|
      *   e        |  Barren  |           Grasslands           |        Taiga        |
      *   v   0.53 |----------+----------+----------+----------+----------+----------|
-     *   a        |  Barren  |       Prairie       |            Deciduous           |
+     *   a        |  Barren  |       Prairie       |           Deciduous            |
      *   t   0.47 |----------+----------+----------+----------+----------+----------|
-     *   i        |  Desert  |  Barren  |       Prairie        |       Tropical      |
+     *   i        |  Desert  |  Barren  |            Prairie             | Tropical |
      *   o   0.40 +----------+----------+----------+----------+----------+----------+
      *   n        |                               Void                              |
      *       0.00 +----------+----------+----------+----------+----------+----------+
@@ -129,7 +129,7 @@ public class BioMapFactory {
         } else if (elevation > 0.4f) {
             if (moisture < 0.4f)       return Biome.DESERT;
             else if (moisture < 0.47f) return Biome.BARREN;
-            else if (moisture < 0.53f) return Biome.PRAIRIE;
+            else if (moisture < 0.6f)  return Biome.PRAIRIE;
             else                       return Biome.TROPICAL;
         } else {
             return Biome.VOID;
