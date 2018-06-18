@@ -2,6 +2,9 @@ package bio;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import env.Colour;
 import geo.Triangle;
 import geo.Vertex;
@@ -27,6 +30,15 @@ public class BioTriangle extends Triangle {
         super((Vertex[]) biotexes);
         this.biotexes = biotexes;
         this.colour = BioVertex.averageColour(biotexes);
+
+        // Returns the highlight of the given BioVertex.
+        Function<BioVertex, Colour> getHighlight = biotex -> biotex.getBiome().getHighlight();
+
+        // The highlight of the BioTriangle is the average highlights of its
+        // constituent BioVertexes.
+        this.highlight = Colour.average(Stream.of(biotexes)
+                                              .map(getHighlight)
+                                              .toArray(Colour[]::new));
     }
 
     /**
@@ -49,6 +61,15 @@ public class BioTriangle extends Triangle {
      */
     public Colour getColour() {
         return this.colour;
+    }
+
+    /**
+     * Returns the specular highlight of this BioTriangle.
+     *
+     * @return The highlight.
+     */
+    public Colour getHighlight() {
+        return this.highlight;
     }
 
     /**
@@ -82,4 +103,9 @@ public class BioTriangle extends Triangle {
      * The colour of this BioTriangle.
      */
     private Colour colour;
+
+    /**
+     * The specular highlight of this BioTriangle.
+     */
+    private Colour highlight;
 }

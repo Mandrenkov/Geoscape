@@ -60,7 +60,7 @@ public class Simulation {
         {
             int size = Top.DEBUG ? 100 : 150;
             BioMap biomap = BioMapFactory.create(BioMapFactory.Type.WATER, size, size);
-            Grid water = new Grid("Water", size, size, 0.02f, minX, minY, maxX, maxY, biomap);
+            Grid water = new Grid("Water", size, size, 0.015f, minX, minY, maxX, maxY, biomap);
             this.world.addGrids(water);
         }
 

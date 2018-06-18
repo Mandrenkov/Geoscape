@@ -47,6 +47,7 @@ public class Light implements Drawable {
         glLightf(this.glIndex, GL_QUADRATIC_ATTENUATION, 2f);
 
         glLightfv(this.glIndex, GL_DIFFUSE,  colour.toArray());
+        glLightfv(this.glIndex, GL_SPECULAR, colour.toArray());
         glLightfv(this.glIndex, GL_POSITION, location.toArray());
         glEnable(this.glIndex);
         

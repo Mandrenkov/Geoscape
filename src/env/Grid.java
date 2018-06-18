@@ -89,6 +89,10 @@ public class Grid implements Drawable {
      * Draws this Grid.
      */
     public void draw() {
+        // By default, the BioTriangles that compose this Grid are pretty shiny.
+        int shininess = 100;
+        glMateriali(GL_FRONT, GL_SHININESS, shininess);
+
         for (int row = 0; row < this.rows - 1; ++row) {
             // GL_TRIANGLE_STRIP expects the Vertices to be ordered as follows
             // in the OpenGL buffer:
@@ -106,8 +110,14 @@ public class Grid implements Drawable {
                 // the Grid (except for the last column).
                 int t = row*2*(this.cols - 1) + (v - 2);
                 BioTriangle biogle = this.biogles.get(t);
+
+                // Apply the colour of the BioVertex and update the OpenGL normal.
                 biogle.getColour().glColour();
                 biogle.getNormal().glNormal();
+
+                // Apply the specular highlights of the BioTriangle.
+                float[] highlight = biogle.getHighlight().toArray();
+                glMaterialfv(GL_FRONT, GL_SPECULAR, highlight);
 
                 // The row and column equations for the current Vertex can be
                 // derived by studying the ASCII depiction of the BioTriangles
@@ -118,6 +128,9 @@ public class Grid implements Drawable {
             }
             glEnd();
         }
+
+        // Restore the specular highlight settings.
+        glMaterialfv(GL_FRONT, GL_SPECULAR, Colour.GL_BLACK);
     }
 
     /**

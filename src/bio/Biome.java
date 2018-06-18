@@ -24,7 +24,7 @@ public enum Biome {
     // Enumerations
     // -------------------------------------------------------------------------
 
-    ALPINE("Alpine", new Colour(0, 0, 0), 15.0f) {
+    ALPINE("Alpine", new Colour(), new Colour(), 15.0f) {
         @Override
         public void texturize(Grid grid, int row, int col, float scalar) {
             BioVertex biotex = grid.getVertex(row, col);
@@ -92,7 +92,7 @@ public enum Biome {
             biotex.shift(0.003f*scalar);
         }
     },
-    BARREN("Barren", new Colour(0.7f, 0.6f, 0.4f), 0.75f) {
+    BARREN("Barren", new Colour(0.7f, 0.6f, 0.4f), new Colour(), 0.75f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
@@ -116,7 +116,7 @@ public enum Biome {
             }
         }
     },
-    DECIDUOUS("Deciduous", new Colour(0.10f, 0.25f, 0f), 1.0f) {
+    DECIDUOUS("Deciduous", new Colour(0.10f, 0.25f, 0f), new Colour(), 1.0f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
@@ -140,14 +140,14 @@ public enum Biome {
             }
         }
     },
-    DESERT("Desert", new Colour(0.7f, 0.5f, 0.3f), 0.4f) {
+    DESERT("Desert", new Colour(0.7f, 0.5f, 0.3f), new Colour(), 0.4f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.wave(15f, 0.035f, 20f, 0.015f*scalar);
             biotex.wave(20f, 0.025f, 330f, 0.0008f*scalar);
         }
     },
-    GRASSLANDS("Grasslands", new Colour(0.35f, 0.45f, 0), 0.75f) {
+    GRASSLANDS("Grasslands", new Colour(0.35f, 0.45f, 0), new Colour(), 0.75f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.getColour().shift(0.01f*scalar);
@@ -171,7 +171,7 @@ public enum Biome {
             }
         }
     },
-    MOUNTAIN("Mountain", new Colour(0.2f, 0.1f, 0), 10.0f) {
+    MOUNTAIN("Mountain", new Colour(0.2f, 0.1f, 0), new Colour(), 10.0f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             float range = 0.012f*scalar*biotex.getZ();
@@ -179,7 +179,7 @@ public enum Biome {
             biotex.getColour().shift(0.02f*scalar);
         }
     },
-    PRAIRIE("Prairie", new Colour(0.55f, 0.50f, 0), 0.75f) {
+    PRAIRIE("Prairie", new Colour(0.55f, 0.50f, 0), new Colour(), 0.75f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.getColour().shift(0.01f*scalar);
@@ -203,7 +203,7 @@ public enum Biome {
             }
         }
     },
-    TAIGA("Taiga", new Colour(0.15f, 0.2f, 0), 2f) {
+    TAIGA("Taiga", new Colour(0.15f, 0.2f, 0), new Colour(), 2f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             // Determine whether this BioVertex should represent a tree.
@@ -226,7 +226,7 @@ public enum Biome {
             }
         }
     },
-    TROPICAL("Tropical", new Colour(0.1f, 0.2f, 0), 0.4f) {
+    TROPICAL("Tropical", new Colour(0.1f, 0.2f, 0), new Colour(), 0.4f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.shift(0.001f*scalar);
@@ -261,7 +261,7 @@ public enum Biome {
             }
         }
     },
-    WATER("Water", new Colour(0, 0.5f, 1), 0.001f) {
+    WATER("Water", new Colour(0, 0.5f, 1), new Colour(1f, 1f, 1f), 0.001f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.getColour().shift(0.02f*scalar);
@@ -280,7 +280,7 @@ public enum Biome {
             biotex.setOffset(0, 0, dz);
         }
     },
-    VOID("Void", new Colour(0.2f, 0.2f, 0.2f), 0) {
+    VOID("Void", new Colour(0.2f, 0.2f, 0.2f), new Colour(), 0) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             // Tie the BioVertex elevation to 0.
@@ -318,6 +318,15 @@ public enum Biome {
      */
     public float getScale() {
         return this.scale;
+    }
+
+    /**
+     * Returns the specular highlight of this Biome.
+     *
+     * @return The highlight.
+     */
+    public Colour getHighlight() {
+        return this.highlight;
     }
 
     /**
@@ -380,6 +389,11 @@ public enum Biome {
     private Colour colour;
 
     /**
+     * The specular highlight of this Biome.
+     */
+    private Colour highlight;
+
+    /**
      * The name of this Biome.
      */
     private String name;
@@ -392,13 +406,15 @@ public enum Biome {
     /**
      * Constructs a Biome object with the specified parameters.
      *
-     * @param name   The name of this Biome.
-     * @param colour The base colour of this Biome.
-     * @param scale  The elevation scaling factor of this Biome.
+     * @param name      The name of this Biome.
+     * @param colour    The base colour of this Biome.
+     * @param highlight The specular highlight of this Biome.
+     * @param scale     The elevation scaling factor of this Biome.
      */
-    private Biome(String name, Colour colour, float scale) {
+    private Biome(String name, Colour colour, Colour highlight, float scale) {
         this.name = name;
         this.colour = colour;
+        this.highlight = highlight;
         this.scale = scale;
     }
 }

@@ -123,6 +123,15 @@ public class Colour {
     }
 
     /**
+     * Constructs an opaque monochromatic Colour with the given RGB components.
+     *
+     * @param rgb The RGB components of this Colour.
+     */
+    public Colour(float rgb) {
+        this(rgb, rgb, rgb, 1f);
+    }
+
+    /**
      * Constructs an opaque Colour object with the given RGB components.
      *
      * @param red   The red RGBA component.
