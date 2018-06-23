@@ -13,6 +13,7 @@ import geo.Vector;
 import util.Algebra;
 import util.Pair;
 import util.Pointer;
+import util.Progress;
 import util.RNG;
 
 /**
@@ -91,7 +92,7 @@ public class Noiseform {
      * Applies a Perlin noise transformation to the Grid associated with this Noiseform.
      */
     private void disturb() {
-        Logger.info("Applying Perlin noise transformation to %s.", this.grid);
+        Logger.info("Applying Perlin noise transformations to %s.", this.grid);
 
         // Define a set of conversion ratios to convert a Grid coordinate into
         // a Perlin grid coordinate.  An epsilon is thrown in to avoid division
@@ -119,10 +120,8 @@ public class Noiseform {
             }
         }
 
-        // Display a progress message every |multiple| percent of progress.
-        Pointer multiple = new Pointer(10);
-        Pointer milestone = new Pointer(10);
-        Pointer done = new Pointer(0);
+        // Track the progress of the Perlin transformations.
+        Progress progress = new Progress("Applied a Perlin noise transformation to %d%% of the current Grid.", 10, rows*cols);
                 
         // Computing the Perlin transformation of each BioVertex in parallel
         // drastically improves performance.
@@ -191,16 +190,10 @@ public class Noiseform {
             }
             biotex.setZ(z);
 
-            // Display a progress message if the next miletone has been reached.
-            // The counter pointers must be accessed in an exclusive manner.
-            synchronized(this) {
-                done.increment();
-                int progress = 100*done.get()/(this.grid.getRows()*this.grid.getColumns());
-                if (progress >= milestone.get()) {
-                    Logger.info(1, "Applied Perlin noise transformation to %d%% of the current Grid.", milestone.get());
-                    milestone.add(multiple.get());
-                }
-            }
+            // Update the progress tracker and display a message when a new
+            // milestone is reached.
+            progress.increment();
+            progress.display();
         });
 
         // Apply the BioVertex transformations to the Grid BioVertexes.
@@ -234,7 +227,7 @@ public class Noiseform {
      * elevations of nearby BioVertexes.
      */
     private void alias() {
-        Logger.debug("Applying aliasing to %s.", this.grid);
+        Logger.info("Applying an aliasing transformation to %s.", this.grid);
 
         int rows = this.grid.getRows();
         int cols = this.grid.getColumns();
@@ -246,6 +239,9 @@ public class Noiseform {
 
         // Construct a list of all (row, column) indexes in the Grid.
         ArrayList<Pair<Integer, Integer>> indexes = this.grid.getIndexes();
+
+        // Track the progress of the alias transformations.
+        Progress progress = new Progress("Applied an aliasing transformation to %d%% of the current Grid.", 10, rows*cols);
 
         // Computing the Perlin transformation of each BioVertex in parallel
         // drastically improves performance.
@@ -272,6 +268,11 @@ public class Noiseform {
                                  .stream()
                                  .reduce(0f, (sum, weight) -> sum + weight);
             heights[row][col] = zSum/weightSum;
+
+            // Update the progress tracker and display a message when a new
+            // milestone is reached.
+            progress.increment();
+            progress.display();
         });
 
         // Apply the aliasing transformations to the Grid BioVertexes.

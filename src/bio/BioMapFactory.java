@@ -98,6 +98,7 @@ public class BioMapFactory {
             }
         }
 
+        // Display a summary of the Biome diversity of the BioMap.
         for (Biome biome : biomeCounter.keySet()) {
             String name = biome.getName();
             int counter = biomeCounter.get(biome);
@@ -105,7 +106,6 @@ public class BioMapFactory {
             int percent = 100*counter/total;
             Logger.info(2, "%-10s : %5d/%d (%d%%).", name, counter, total, percent);
         }
-
         return biomap;
     }
 
