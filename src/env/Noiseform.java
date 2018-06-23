@@ -197,7 +197,7 @@ public class Noiseform {
                 done.increment();
                 int progress = 100*done.get()/(this.grid.getRows()*this.grid.getColumns());
                 if (progress >= milestone.get()) {
-                    Logger.info("\tApplied Perlin noise transformation to %d%% of the current Grid.", milestone.get());
+                    Logger.info(1, "Applied Perlin noise transformation to %d%% of the current Grid.", milestone.get());
                     milestone.add(multiple.get());
                 }
             }

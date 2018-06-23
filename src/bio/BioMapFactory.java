@@ -3,6 +3,8 @@ package bio;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 import core.Logger;
@@ -44,7 +46,7 @@ public class BioMapFactory {
             case WATER:
                 return createWaterMap(rows, cols);
             default:
-                Logger.error("Failed to create BioMap: Unknown type \"%s\".", type.toString());
+                Logger.error("Failed to create BioMap: unknown type \"%s\".", type.toString());
                 return null;
         }
     }
@@ -62,18 +64,27 @@ public class BioMapFactory {
      * @return The landscape BioMap.
      */
     private static BioMap createLandMap(int rows, int cols) {
+        Logger.info("Creating a landscape BioMap with %d rows and %d columns.", rows, cols);
         BioMap biomap = new BioMap(rows, cols);
         
         // Generate a moisture map using a Perlin noise distribution.
-        Perlin moistMap = new Perlin(rows, cols, 5, 5);
+        int moistRows = 5, moistCols = 5;
+        Logger.info(1, "Initializing the moisture map with %d rows and %d columns.", moistRows, moistCols);
+        Perlin moistMap = new Perlin(rows, cols, moistRows, moistCols);
         moistMap.transform();
 
         // Generate an elevation map using a Perlin noise distribution.
-        Perlin heightMap = new Perlin(rows, cols, 3, 3);
+        int heightRows = 3, heightCols = 3;
+        Logger.info(1, "Initializing the elevation map with %d rows and %d columns.", heightRows, heightCols);
+        Perlin heightMap = new Perlin(rows, cols, heightRows, heightCols);
         heightMap.transform();
 
         // Generate a list of BioRegions using the moisture and elevation maps.
-        List<BioRegion> bioRegions = createRegions(moistMap, heightMap, 50, rows, cols);
+        int regions = 30;
+        Logger.info(1, "Partitioning the BioMap into %d BioRegions:", regions);
+        List<BioRegion> bioRegions = BioMapFactory.createRegions(moistMap, heightMap, regions, rows, cols);
+
+        Map<Biome, Integer> biomeCounter = new TreeMap<>();
 
         // Apply the Biome of each BioRegion to their respective BioVertexes.
         for (int row = 0; row < rows; ++row) {
@@ -81,8 +92,20 @@ public class BioMapFactory {
                 BioRegion region = closestRegion(bioRegions, row, col);
                 Biome biome = region.getBiome();
                 biomap.set(row, col, biome);
+
+                int counter = biomeCounter.getOrDefault(biome, 0) + 1;
+                biomeCounter.put(biome, counter);
             }
         }
+
+        for (Biome biome : biomeCounter.keySet()) {
+            String name = biome.getName();
+            int counter = biomeCounter.get(biome);
+            int total = rows*cols;
+            int percent = 100*counter/total;
+            Logger.info(2, "%-10s : %5d/%d (%d%%).", name, counter, total, percent);
+        }
+
         return biomap;
     }
 
@@ -96,7 +119,7 @@ public class BioMapFactory {
      *   l   0.60 |----------+----------+----------+----------+----------+----------|
      *   e        |  Barren  |           Grasslands           |        Taiga        |
      *   v   0.53 |----------+----------+----------+----------+----------+----------|
-     *   a        |  Barren  |       Prairie       |           Deciduous            |
+     *   a        |  Barren  | Prairie  |      Grasslands     |      Deciduous      |
      *   t   0.47 |----------+----------+----------+----------+----------+----------|
      *   i        |  Desert  |  Barren  |            Prairie             | Tropical |
      *   o   0.40 +----------+----------+----------+----------+----------+----------+
@@ -120,17 +143,18 @@ public class BioMapFactory {
             if (moisture < 0.53f) return Biome.MOUNTAIN;
             else                  return Biome.ALPINE;
         } else if (elevation > 0.53f) {
-            if (moisture < 0.4f)       return Biome.BARREN;
+            if      (moisture < 0.40f) return Biome.BARREN;
             else if (moisture < 0.53f) return Biome.GRASSLANDS;
             else                       return Biome.TAIGA;
         } else if (elevation > 0.47f) {
-            if (moisture < 0.4f)      return Biome.BARREN;
-            else if (moisture < 0.5f) return Biome.PRAIRIE;
-            else                      return Biome.DECIDUOUS;
+            if      (moisture < 0.40f) return Biome.BARREN;
+            else if (moisture < 0.47f) return Biome.PRAIRIE;
+            else if (moisture < 0.53f) return Biome.GRASSLANDS;
+            else                       return Biome.DECIDUOUS;
         } else if (elevation > 0.4f) {
             if (moisture < 0.4f)       return Biome.DESERT;
             else if (moisture < 0.47f) return Biome.BARREN;
-            else if (moisture < 0.6f)  return Biome.PRAIRIE;
+            else if (moisture < 0.60f) return Biome.PRAIRIE;
             else                       return Biome.TROPICAL;
         } else {
             return Biome.VOID;
@@ -147,6 +171,7 @@ public class BioMapFactory {
      * @return The water BioMap.
      */
     private static BioMap createWaterMap(int rows, int cols) {
+        Logger.info("Creating water BioMap with %d rows and %d columns.", rows, cols);
         BioMap biomap = new BioMap(rows, cols);
         biomap.setRect(0, 0, cols - 1, rows - 1, Biome.WATER);
         return biomap;

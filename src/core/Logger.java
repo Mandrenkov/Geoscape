@@ -39,6 +39,23 @@ public class Logger {
     }
 
     /**
+     * Logs an information message to stdout.
+     *
+     * @param level The indentation level of the message.
+     * @param msg   The message to display.
+     * @param args  The arguments to be substituted into the message.
+     */
+    public static void info(int level, String msg, Object ... args) {
+        String indent = "";
+        for (int i = 0; i < level; ++i) {
+            indent += "  ";
+        }
+
+        msg = indent + msg;
+        print("Info", indent + msg, args);
+    }
+
+    /**
      * Logs a warning message to stdout.
      *
      * @param msg  The message to display.
