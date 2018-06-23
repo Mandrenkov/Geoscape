@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import env.Camera;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -25,6 +26,7 @@ public class Top {
      */
     public static void main(String[] args) {
         Logger.info("Launching %s", Build.getVersionString());
+        Logger.info("The following seed was used to initialize the RNG: %d.", RNG.getSeed());
 
         try {
             // Initialize the Window and Camera singletons.

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import env.Colour;
 import geo.Vertex;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -65,8 +66,7 @@ public class BioVertex extends Vertex {
      * @param maxHeight The maximum height to raise this BioVertex.
      */
     public void raise(float minHeight, float maxHeight) {
-        float range = maxHeight - minHeight;
-        float height = (float) Math.random()*range + minHeight;
+        float height = RNG.random(minHeight, maxHeight);
         this.offset.translate(0, 0, height);
     }
 

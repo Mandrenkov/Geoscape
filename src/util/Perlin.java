@@ -31,7 +31,7 @@ public class Perlin {
 
         for (int row = 0; row < gradientRows; ++row) {
             for (int col = 0; col < gradientCols; ++col) {
-                double angle = 2*Math.PI*Math.random();
+                double angle = 2*Math.PI*RNG.random();
                 float x = (float) Math.cos(angle);
                 float y = (float) Math.sin(angle);
                 this.gradients[row][col] = new Vector(x, y);

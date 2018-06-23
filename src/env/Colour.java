@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import core.Logger;
 import util.Algebra;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -74,15 +75,15 @@ public class Colour {
     public static Colour random(Option option) {
         switch (option) {
             case LIGHT: {
-                float clr = (float) Math.random()*0.2f + 0.7f;
+                float clr = RNG.random(0.7f, 0.9f);
                 return new Colour(clr, clr, clr);
             }
             case DARK: {
-                float clr = (float) Math.random()*0.1f + 0.15f;
+                float clr = RNG.random(0.15f, 0.25f);
                 return new Colour(clr, clr, clr);
             }
             default: {
-                return new Colour((float) Math.random(), (float) Math.random(), (float) Math.random());
+                return new Colour(RNG.random(), RNG.random(), RNG.random());
             }
         }
     }
@@ -100,9 +101,9 @@ public class Colour {
      * @return The random Colour.
      */
     public static Colour random(float minR, float maxR, float minG, float maxG, float minB, float maxB) {
-        float red   = Algebra.random(minR, maxR);
-        float green = Algebra.random(minG, maxG);
-        float blue  = Algebra.random(minB, maxB);
+        float red   = RNG.random(minR, maxR);
+        float green = RNG.random(minG, maxG);
+        float blue  = RNG.random(minB, maxB);
         return new Colour(red, green, blue);
     }
 
@@ -242,7 +243,7 @@ public class Colour {
      * @param magnitude The maximum magnitude of the change in the components.
      */
     public void shift(float magnitude) {
-        float rng  = Algebra.random(magnitude);
+        float rng  = RNG.random(magnitude);
         this.red   = Math.min(1f, Math.max(0f, rng + this.red));
         this.green = Math.min(1f, Math.max(0f, rng + this.green));
         this.blue  = Math.min(1f, Math.max(0f, rng + this.blue));

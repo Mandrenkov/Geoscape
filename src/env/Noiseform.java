@@ -13,6 +13,7 @@ import geo.Vector;
 import util.Algebra;
 import util.Pair;
 import util.Pointer;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -45,7 +46,7 @@ public class Noiseform {
         this.gradients = new Vector[rows + 1][cols + 1];
         for (int row = 0; row <= rows; ++row) {
             for (int col = 0; col <= cols; ++col) {
-                double angle = 2*Math.PI*Math.random();
+                double angle = 2*Math.PI*RNG.random();
                 float x = (float) Math.cos(angle);
                 float y = (float) Math.sin(angle);
                 this.gradients[row][col] = new Vector(x, y);

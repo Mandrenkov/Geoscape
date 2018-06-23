@@ -9,6 +9,7 @@ import env.Grid;
 import geo.Triangle;
 import geo.Vector;
 import util.Algebra;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -99,7 +100,7 @@ public enum Biome {
 
             // Determine whether this BioVertex should represent a bush.
             boolean threshold = scalar > 0.8f;
-            boolean lucky = Math.random() < 0.01;
+            boolean lucky = RNG.random() < 0.01;
             boolean bush = threshold && lucky;
             if (bush) {
                 // Bushes are short.
@@ -123,7 +124,7 @@ public enum Biome {
 
             // Determine whether this BioVertex should represent a tree.
             boolean threshold = scalar > 0.5f;
-            boolean lucky = Math.random() < 0.08*scalar*scalar;
+            boolean lucky = RNG.random() < 0.08*scalar*scalar;
             boolean tree = threshold && lucky;
             if (tree) {
                 // A range of tree heights suggest dissimilar trees.
@@ -154,7 +155,7 @@ public enum Biome {
 
             // Determine whether this BioVertex should represent tall grass.
             boolean threshold = scalar > 0.4f;
-            boolean lucky = Math.random() < 0.2*scalar*scalar;
+            boolean lucky = RNG.random() < 0.2*scalar*scalar;
             boolean tall = threshold && lucky;
             if (tall) {
                 // Tall grass is actually quite short.
@@ -186,7 +187,7 @@ public enum Biome {
 
             // Determine whether this BioVertex should represent wheat.
             boolean threshold = scalar > 0.4f;
-            boolean lucky = Math.random() < 0.35*scalar*scalar;
+            boolean lucky = RNG.random() < 0.35*scalar*scalar;
             boolean wheat = threshold && lucky;
             if (wheat) {
                 // Wheat plants are effectively the same height.
@@ -208,7 +209,7 @@ public enum Biome {
         public void texturize(BioVertex biotex, float scalar) {
             // Determine whether this BioVertex should represent a tree.
             boolean threshold = scalar > 0.6f;
-            boolean lucky = Math.random() < 0.12*Math.pow(scalar, 4);
+            boolean lucky = RNG.random() < 0.12*Math.pow(scalar, 4);
             boolean above = biotex.getZ() > 0.03f;
             boolean tree = threshold && lucky && above;
             if (tree) {
@@ -234,9 +235,9 @@ public enum Biome {
             // Determine whether this BioVertex should represent a tree, a puddle,
             // or neither.
             boolean threshold = scalar > 0.4f;
-            boolean treeLuck = Math.random() < 0.2*scalar*scalar;
+            boolean treeLuck = RNG.random() < 0.2*scalar*scalar;
             boolean tree = threshold && treeLuck;
-            boolean puddleLuck = Math.random() < 0.05*scalar*scalar;
+            boolean puddleLuck = RNG.random() < 0.05*scalar*scalar;
             boolean puddle = threshold && puddleLuck;
             if (tree) {
                 // Close tree heights eliminate sharp edges from the canopy.

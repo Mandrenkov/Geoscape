@@ -8,6 +8,7 @@ import java.util.function.Function;
 import core.Logger;
 import geo.Vertex;
 import util.Perlin;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -180,8 +181,8 @@ public class BioMapFactory {
         List<BioRegion> regions = new ArrayList<>();
         for (int i = 0; i < numRegions; ++i) {
             // The center of the BioRegion can appear anywhere on the BioMap.
-            float x = (float) Math.random()*cols;
-            float y = (float) Math.random()*rows;
+            float x = RNG.random(0, cols);
+            float y = RNG.random(0, rows);
             Vertex center = new Vertex(x, y, 0);
 
             // The Biome associated with the BioRegion is determined by the

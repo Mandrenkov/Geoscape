@@ -3,6 +3,7 @@ package env;
 import core.Logger;
 import geo.Prism;
 import geo.Vertex;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -51,7 +52,7 @@ public class Platform implements Drawable {
                 // The lower X, Y, and Z corner of the stalactite Prism.
                 float lowX = minX + col*dx;
                 float lowY = minY + row*dy;
-                float lowZ = minZ + (float) Math.random()*range;
+                float lowZ = RNG.random(minZ, minZ + range);
                 Vertex low = new Vertex(lowX, lowY, lowZ);
 
                 // The upper X, Y, and Z corner of the stalactite Prism.

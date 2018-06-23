@@ -3,7 +3,7 @@ package geo;
 import static org.lwjgl.opengl.GL11.*;
 
 import env.Colour;
-import util.Algebra;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -255,7 +255,7 @@ public class Vertex {
      * @param magnitude The maximum magnitude of the change in elevation.
      */
     public void shift(float magnitude) {
-        this.z += Algebra.random(magnitude);
+        this.z += RNG.random(magnitude);
     }
 
     /**

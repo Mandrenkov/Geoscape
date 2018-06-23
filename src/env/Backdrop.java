@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import geo.Polygon;
 import geo.Sphere;
 import geo.Vertex;
-import util.Algebra;
+import util.RNG;
 
 /**
  * @author  Mikhail Andrenkov
@@ -47,7 +47,7 @@ public class Backdrop implements Drawable {
             //     /       \
             //     \       /
             //      \ ___ /
-            float z = Algebra.random(radius);
+            float z = RNG.random(radius);
 
             // Select a Vertex from the horizontal cross-section on the Sphere.
             //        ___ 
@@ -55,7 +55,7 @@ public class Backdrop implements Drawable {
             //     /   .   \
             //     \    \  /
             //      \ ___X
-            double angle = Math.random()*2*Math.PI;
+            double angle = RNG.random()*2*Math.PI;
             float r = (float) Math.sqrt(radius*radius - z*z) - 0.1f;
             float x = (float) Math.cos(angle)*r;
             float y = (float) Math.sin(angle)*r;
