@@ -35,7 +35,7 @@ public class Logger {
      * @param args The arguments to be substituted into the message.
      */
     public static void info(String msg, Object ... args) {
-        print("Info", msg, args);
+        Logger.info(0, msg, args);
     }
 
     /**
@@ -46,13 +46,18 @@ public class Logger {
      * @param args  The arguments to be substituted into the message.
      */
     public static void info(int level, String msg, Object ... args) {
-        String indent = "";
+        // Declare the unit of indentation.
+        String tab = "    ";
+
+        // Appending to a StringBuilder object is much more efficient than
+        // concatenating Strings.
+        int size = level*tab.length();
+        StringBuilder indent = new StringBuilder(size);
         for (int i = 0; i < level; ++i) {
-            indent += "  ";
+            indent.append(tab);
         }
 
-        msg = indent + msg;
-        print("Info", indent + msg, args);
+        print("Info", indent.toString() + msg, args);
     }
 
     /**

@@ -80,7 +80,7 @@ public class BioMapFactory {
         heightMap.transform();
 
         // Generate a list of BioRegions using the moisture and elevation maps.
-        int regions = 30;
+        int regions = 25;
         Logger.info(1, "Partitioning the BioMap into %d BioRegions:", regions);
         List<BioRegion> bioRegions = BioMapFactory.createRegions(moistMap, heightMap, regions, rows, cols);
 

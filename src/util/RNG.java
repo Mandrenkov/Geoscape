@@ -76,7 +76,7 @@ public class RNG {
     /**
      * The seed that is used to initialize the random number generator.
      */
-    private static final long SEED = 2;
+    private static final long SEED = (long) (123456789*Math.random());
 
     /**
      * The Random instance that is seeded and used to perform the random number
