@@ -64,7 +64,6 @@ public class Window {
      */
     private Window() {
         initGLFW();
-        initCallbacks();
         initGL();
     }
 
@@ -100,21 +99,19 @@ public class Window {
 
         int vsync = GL_TRUE;
         glfwSwapInterval(vsync);
+
+        glfwSetWindowSizeCallback(this.handle, this::windowSizeCallback);
     }
 
     /**
-     * Initializes the callbacks of this Window.
+     * Adjusts the OpenGL viewport to match the given Window dimensions.
+     * 
+     * @param window The handle to the GLFW Window.
+     * @param width  The width of the window.
+     * @param height The height of the window.
      */
-    private void initCallbacks() {
-        // Ensure the OpenGL viewport matches the Window dimensions.
-        glfwSetWindowSizeCallback(this.handle, (localWindow, newWidth, newHeight) -> {
-            glViewport(0, 0, newWidth, newHeight);
-        });
-
-        //glfwSetKeyCallback(this.handle, (localWindow, key, scancode, action, mods) -> {
-        //    if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-        //        glfwSetWindowShouldClose(localWindow, true);
-        //});
+    private void windowSizeCallback(long window, int width, int height) {
+        glViewport(0, 0, width, height);
     }
 
     /**

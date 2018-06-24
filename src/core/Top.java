@@ -33,11 +33,12 @@ public class Top {
             Window.getInstance();
             Camera.getInstance();
 
-            Simulation simulation = new Simulation();
+            long handle = Window.getInstance().getHandle();
+
+            Simulation simulation = new Simulation(handle);
             simulation.start();
 
             // Free the window callbacks and destroy the window.
-            long handle = Window.getInstance().getHandle();
             glfwFreeCallbacks(handle);
             glfwDestroyWindow(handle);
         } finally {

@@ -11,6 +11,7 @@ import env.Colour;
 import env.Grid;
 import env.Light;
 import env.Platform;
+import env.Viewer;
 import env.World;
 import geo.Vertex;
 
@@ -27,9 +28,13 @@ public class Simulation {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Simulation object.
+     * Constructs a Simulation object with the given Window handle.
+     * 
+     * @param handle The handle to the GLFW Window that hosts this Simulation.
      */
-    public Simulation() {
+    public Simulation(long handle) {
+        this.viewer = new Viewer(handle);
+
         // Instantiate the World representing this Simulation.
         float minX = -0.8f;
         float minY = -0.8f;
@@ -102,43 +107,28 @@ public class Simulation {
     private double syncTime;
 
     /**
+     * The Viewer that manipulates the state of the Camera.
+     */
+    private Viewer viewer;
+
+    /**
      * Continuously renders the World of this Simulation by controlling the
      * high-level graphics pipeline flow and synchronizing the framerate of the
      * render Window.
      */
     private void loop() {
-        // The Camera is initially facing the positive Y-axis.
-        float angle = (float) Math.PI*2/3;
-        // The height of the Camera path.
-        float height = 1.7f;
-        // The origin of the Camera path.
-        Vertex origin = new Vertex(0.1f, -0.1f, 0);
-        // The radius of the Camera path.
-        float radius = 3.0f;
-        
         Camera camera = Camera.getInstance();
         long handle = Window.getInstance().getHandle();
         while (!glfwWindowShouldClose(handle)) {
             // Clear the GL buffers.
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Update the framerate synchronizer and rotate the viewport by a
-            // factor that is proportional to the current frame period.
+            // TODO: Update the FPS counter using the framerate synchronizer time.
             double now = glfwGetTime();
-            double period = now - syncTime;
             syncTime = now;
 
-            // The target degree of rotation along the z-axis every second.
-            float rotationDelta = 30;
-            float rotation = (float) (period*rotationDelta);
-            camera.rotate(rotation, 0, 0, 1);
-            angle += Math.toRadians(rotation);
-
-            // Compute the position of the Camera.
-            float x = (float) Math.cos(-angle)*radius + origin.getX();
-            float y = (float) Math.sin(-angle)*radius + origin.getY();
-            camera.setPosition(x, y, height);
-
+            // Update the state of the Camera singleton.
+            viewer.update();
             camera.capture();
 
             // Update the position of the Lights with respect to the new

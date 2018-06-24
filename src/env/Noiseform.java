@@ -12,7 +12,6 @@ import core.Logger;
 import geo.Vector;
 import util.Algebra;
 import util.Pair;
-import util.Pointer;
 import util.Progress;
 import util.RNG;
 

@@ -206,8 +206,8 @@ public class BioMapFactory {
         List<BioRegion> regions = new ArrayList<>();
         for (int i = 0; i < numRegions; ++i) {
             // The center of the BioRegion can appear anywhere on the BioMap.
-            float x = RNG.random(0, cols);
-            float y = RNG.random(0, rows);
+            float x = RNG.random(0, cols - 1);
+            float y = RNG.random(0, rows - 1);
             Vertex center = new Vertex(x, y, 0);
 
             // The Biome associated with the BioRegion is determined by the

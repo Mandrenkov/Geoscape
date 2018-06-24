@@ -73,6 +73,17 @@ public class Vector {
     }
 
     /**
+     * Adds the given Vector to this Vector.
+     * 
+     * @param vector The Vector to add.
+     */
+    public void add(Vector vector) {
+        this.x += vector.x;
+        this.y += vector.y;
+        this.z += vector.z;
+    }
+
+    /**
      * Returns the angle between this Vector and the given Vector.
      *
      * @param vector The Vector which forms the desired angle.
