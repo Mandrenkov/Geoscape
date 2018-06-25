@@ -92,6 +92,17 @@ public class Camera {
         glPopMatrix();
     }
 
+    /**
+     * Sets the rotation of this Camera.
+     */
+    public void setRotation(float rotation, float x, float y, float z) {
+        glPushMatrix();
+            glLoadIdentity();
+            glRotatef(rotation, x, y, z);
+            glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+        glPopMatrix();
+    }
+
     // Private members
     // -------------------------------------------------------------------------
 

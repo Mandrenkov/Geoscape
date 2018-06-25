@@ -101,6 +101,9 @@ public class Window {
         glfwSwapInterval(vsync);
 
         glfwSetWindowSizeCallback(this.handle, this::windowSizeCallback);
+
+        // Hide the mouse cursor when the Geoscape window is in focus.
+        glfwSetInputMode(this.handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     /**

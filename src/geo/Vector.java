@@ -143,6 +143,15 @@ public class Vector {
     }
 
     /**
+     * Returns true if this Vector is the zero Vector.
+     * 
+     * @return True if this Vector is the zero Vector.
+     */
+    public boolean isZero() {
+        return this.x == 0 && this.y == 0 && this.z == 0;
+    }
+
+    /**
      * Returns the magnitude of this Vector.
      *
      * @return The magnitude.
@@ -156,9 +165,18 @@ public class Vector {
      */
     public void normalize() {
         float magnitude = this.magnitude();
-        this.x /= magnitude;
-        this.y /= magnitude;
-        this.z /= magnitude;
+        this.scale(1/magnitude);
+    }
+
+    /**
+     * Scales this Vector according to the given scalar.
+     * 
+     * @param scalar The scalar to apply to this Vector.
+     */
+    public void scale(float scalar) {
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar; 
     }
 
     /**

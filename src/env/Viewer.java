@@ -5,6 +5,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import core.Logger;
 import env.Camera;
 import geo.Vector;
+import util.Pair;
 
 /**
  * The Viewer class adjusts the location and rotation of the Camera singleton.
@@ -21,7 +22,20 @@ public class Viewer {
      */
     public Viewer(long handle) {
         this.velocity = new Vector(0, 0, 0);
+        this.cursor = null;
+
+        // Set the initial rotation of the Viewer.
+        this.pitch = 30f;
+        this.yaw = -45f;
+        this.rotate();
+
+        // Set the initial state of the Camera.
+        Camera camera = Camera.getInstance();
+        camera.translate(-2, -2, 1.5f);
+        
+
         glfwSetKeyCallback(handle, this::keyCallback);
+        glfwSetCursorPosCallback(handle, this::cursorCallback);
     }
 
     /**
@@ -38,10 +52,10 @@ public class Viewer {
             case GLFW_KEY_ESCAPE:
                 this.escapeCallback(window, action);
                 break;
-            case GLFW_KEY_UP:
-            case GLFW_KEY_DOWN:
-            case GLFW_KEY_LEFT:
-            case GLFW_KEY_RIGHT:
+            case GLFW_KEY_W:
+            case GLFW_KEY_S:
+            case GLFW_KEY_A:
+            case GLFW_KEY_D:
             case GLFW_KEY_SPACE:
             case GLFW_KEY_LEFT_CONTROL:
                 this.moveCallback(key, action);
@@ -51,26 +65,97 @@ public class Viewer {
                 Logger.debug("The '%s' key does not have any registered callbacks.", name);
         }
     }
+
+    public void cursorCallback(long window, double x, double y) {
+        if (this.cursor == null) {
+            this.cursor = new Pair<>(x, y);
+            return;
+        }
+        
+        // Calculate the displacement of the mouse cursor.
+        float dx = (float) (x - this.cursor.getFirst());
+        float dy = (float) (y - this.cursor.getSecond());
+
+        float sensitivity = 0.15f;
+
+        // The change in the yaw of the Viewer is proportional to the magnitude
+        // of the horizontal mouse displacement.
+        this.yaw += sensitivity*dx;
+
+        // The change in the pitch of the Viewer is proportional to the magnitude
+        // of the vertical mouse displacement.
+        float fov = 160;
+        float maxPitch =  fov/2;
+        float minPitch = -fov/2;
+        float rawPitch = this.pitch + sensitivity*dy;
+        this.pitch = Math.max(minPitch, Math.min(maxPitch, rawPitch));
+
+        // Update the rotation angle of the Camera.
+        this.rotate();
+
+        // Update the internal position of the Cursor.
+        this.cursor.set(x, y);
+
+        System.err.printf("%.2f Yaw and %.2f Pitch.\n", this.yaw, this.pitch);
+    }
     
     /**
      * Adjusts the state of the Camera singleton according to the state of this Viewer.
      */
     public void update() {
-        float dx = this.velocity.getX()/10;
-        float dy = this.velocity.getY()/10;
-        float dz = this.velocity.getZ()/10;
+        // The forward velocity is encoded in the X-component of the velocity Vector.
+        float angle = (float) Math.toRadians(-this.yaw);
+        float forward = this.velocity.getX(); 
+        float forwardX = (float) Math.sin(angle)*forward;
+        float forwardY = (float) Math.cos(angle)*forward;
+
+        // The right velocity is encoded in the Y-component of the velocity Vector.
+        float rightAngle = angle - (float) Math.PI/2;
+        float right = this.velocity.getY(); 
+        float rightX = (float) Math.sin(rightAngle)*right;
+        float rightY = (float) Math.cos(rightAngle)*right;
+
+        // Generate the displacement Vector.
+        float dx = forwardX + rightX;
+        float dy = forwardY + rightY;
+        float dz = this.velocity.getZ();
+        Vector displacement = new Vector(dx, dy, dz);
+
+        // Normalize the Vector according to the velocity of this Viewer.
+        float velocity = 0.04f;
+        if (!displacement.isZero()) {
+            float magnitude = displacement.magnitude();
+            displacement.scale(velocity/magnitude);
+        }
         
+        // Translate the Camera according to the computed displacement.
         Camera camera = Camera.getInstance();
-        camera.translate(dx, dy, dz);
+        camera.translate(displacement.getX(), displacement.getY(), displacement.getZ());
     }
 
+    
     // Private members
     // -------------------------------------------------------------------------
 
     /**
-     * The current velocity of this Viewer.
+     * The current velocity of the Viewer.
      */
     private Vector velocity;
+
+    /**
+     * The last known position of the mouse cursor.
+     */
+    private Pair<Double, Double> cursor;
+
+    /**
+     * The pitch of the Viewer.
+     */
+    private float pitch;
+
+    /**
+     * The yaw of the Viewer.
+     */
+    private float yaw;
 
     /**
      * Closes the given GLFW window if the ESCAPE key is released.
@@ -98,10 +183,10 @@ public class Viewer {
         // Compute the direction associated with the given key.
         Vector direction = new Vector(0, 0, 0);
         switch (key) {
-            case GLFW_KEY_UP:           direction = new Vector(+1,  0,  0); break;
-            case GLFW_KEY_DOWN:         direction = new Vector(-1,  0,  0); break;
-            case GLFW_KEY_RIGHT:        direction = new Vector( 0, +1,  0); break;
-            case GLFW_KEY_LEFT:         direction = new Vector( 0, -1,  0); break;
+            case GLFW_KEY_W:            direction = new Vector(+1,  0,  0); break;
+            case GLFW_KEY_S:            direction = new Vector(-1,  0,  0); break;
+            case GLFW_KEY_D:            direction = new Vector( 0, +1,  0); break;
+            case GLFW_KEY_A:            direction = new Vector( 0, -1,  0); break;
             case GLFW_KEY_SPACE:        direction = new Vector( 0,  0, +1); break;
             case GLFW_KEY_LEFT_CONTROL: direction = new Vector( 0,  0, -1); break;
             default:
@@ -120,5 +205,15 @@ public class Viewer {
         
         // Adjust the velocity of this Viewer according to the key event.
         this.velocity.add(direction);
+    }
+
+    /**
+     * Updates the rotation of the Camera singleton according to the yaw and
+     * pitch of this Viewer.
+     */
+    private void rotate() {
+        Camera camera = Camera.getInstance();
+        camera.setRotation(-90 + this.pitch, 1, 0, 0);
+        camera.rotate(this.yaw, 0, 0, -1);
     }
 }

@@ -84,11 +84,6 @@ public class Simulation {
     public void start() {
         Logger.info("Rendering %s.", this.world);
         syncTime = glfwGetTime();
-
-        Camera camera = Camera.getInstance();
-        camera.rotate(-60, 1, 0, 0);
-        camera.rotate(25, 0, 0, 1);
-
         loop();
     }
 

@@ -42,6 +42,17 @@ public class Pair <F, S> {
     }
 
     /**
+     * Sets the values of this Pair.
+     * 
+     * @param first  The new value of |first|.
+     * @param second The new value of |second|.
+     */
+    public void set(F first, S second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    /**
      * Sets the first value of this Pair.
      *
      * @param first The new value of |first|.
