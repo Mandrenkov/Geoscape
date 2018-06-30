@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import bio.BioMap;
+import bio.BioVertex;
 import core.Top;
 import geo.Line;
 import geo.Vertex;
@@ -236,8 +237,12 @@ public class World implements Drawable {
                              this.maxY + overhang,
                              biomap);
 
+        Colour colour = new Colour(0.5f, 0.5f, 0.5f);
         for (int row = 0; row < size; ++row){
             for (int col = 0; col < size; ++col) {
+                BioVertex biotex = grid.getVertex(row, col);
+                biotex.setColour(colour);
+
                 Line h = new Line(grid.getVertex(row, 0), grid.getVertex(row, size - 1));
                 Line v = new Line(grid.getVertex(0, col), grid.getVertex(size - 1, col));
                 this.drawables.addAll(Arrays.asList(h, v));

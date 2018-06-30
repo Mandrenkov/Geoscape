@@ -95,8 +95,6 @@ public class Viewer {
 
         // Update the internal position of the Cursor.
         this.cursor.set(x, y);
-
-        System.err.printf("%.2f Yaw and %.2f Pitch.\n", this.yaw, this.pitch);
     }
     
     /**
@@ -122,7 +120,7 @@ public class Viewer {
         Vector displacement = new Vector(dx, dy, dz);
 
         // Normalize the Vector according to the velocity of this Viewer.
-        float velocity = 0.04f;
+        float velocity = 0.01f;
         if (!displacement.isZero()) {
             float magnitude = displacement.magnitude();
             displacement.scale(velocity/magnitude);

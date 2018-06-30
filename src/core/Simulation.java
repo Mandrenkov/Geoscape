@@ -83,6 +83,16 @@ public class Simulation {
      */
     public void start() {
         Logger.info("Rendering %s.", this.world);
+
+        Logger.info("Controls:");
+        Logger.info("        W : Translate the camera forwards.");
+        Logger.info("        S : Translate the camera backwards.");
+        Logger.info("        A : Translate the camera leftwards.");
+        Logger.info("        D : Translate the camera rightwards.");
+        Logger.info("    SPACE : Translate the camera upwards.");
+        Logger.info("    LCTRL : Translate the camera downwards.");
+        Logger.info("    MOUSE : Rotate the camera.");
+
         syncTime = glfwGetTime();
         loop();
     }
