@@ -1,11 +1,9 @@
 # Geoscape
 
-### Author: Mikhail Andrenkov
-
 ---
 
 #### About
-<p> Geoscape is a simple application that uses OpenGL to generate a psuedo-random landscape with Perlin noise.</p>
+<p> Geoscape is a Java application that renders psuedorandom landscapes using OpenGL.</p>
 
 ---
 
