@@ -83,11 +83,8 @@ public class Simulation {
      */
     public void start() {
         Logger.info("Rendering %s.", this.world);
-
         // Ideally, the Geoscape controls should be displayed on the screen.  Oh well.
         Viewer.logControls();
-
-        syncTime = glfwGetTime();
         loop();
     }
 
@@ -101,11 +98,6 @@ public class Simulation {
     private World world;
 
     /**
-     * The time used to synchronize the framerate during each loop iteration.
-     */
-    private double syncTime;
-
-    /**
      * The Viewer that manipulates the state of the Camera.
      */
     private Viewer viewer;
@@ -116,15 +108,19 @@ public class Simulation {
      * render Window.
      */
     private void loop() {
+        Window window = Window.getInstance();
         Camera camera = Camera.getInstance();
-        long handle = Window.getInstance().getHandle();
+
+        long handle = window.getHandle();
+        FPS fps = new FPS(window, 0.5);
+
         while (!glfwWindowShouldClose(handle)) {
             // Clear the GL buffers.
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // TODO: Update the FPS counter using the framerate synchronizer time.
+            // Update the FPS counter.
             double now = glfwGetTime();
-            syncTime = now;
+            fps.update(now);
 
             // Update the state of the Camera singleton.
             this.viewer.update();

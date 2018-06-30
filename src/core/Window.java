@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import core.Build;
 import util.Pair;
 
 /**
@@ -45,6 +46,34 @@ public class Window {
         return this.handle;
     }
 
+    /**
+     * Returns the base title of this Window.
+     * 
+     * @return The base title.
+     */
+    public String getBaseTitle() {
+        return this.baseTitle;
+    }
+
+    /**
+     * Returns the title of this Window.
+     * 
+     * @return The title.
+     */
+    public String getTitle() {
+        return this.title;
+    }
+
+    /**
+     * Sets the title of this Window to the specified value.
+     * 
+     * @param title The new title of this Window.
+     */
+    public void setTitle(String title) {
+        this.title = title;
+        glfwSetWindowTitle(this.handle, title);
+    }
+
 
     // Private members
     // -------------------------------------------------------------------------
@@ -58,6 +87,16 @@ public class Window {
      * Internal reference to the GLFW window.
      */
     private long handle = NULL;
+
+    /**
+     * The base title of this Window.
+     */
+    private String baseTitle = String.format("Geoscape %d.%d", Build.getMajorVersion(), Build.getMinorVersion());
+
+    /**
+     * The current title of this Window.
+     */
+    private String title = baseTitle;
 
     /**
      * Constructs a Window object.
@@ -89,7 +128,7 @@ public class Window {
             glfwWindowHint(hint.getFirst(), hint.getSecond());
         }
 
-        this.handle = glfwCreateWindow(1600, 900, "Geoscape", NULL, NULL);
+        this.handle = glfwCreateWindow(1600, 900, this.title, NULL, NULL);
         if (this.handle == NULL) {
             throw new IllegalStateException("Failed to create GLFW window.");
         }
