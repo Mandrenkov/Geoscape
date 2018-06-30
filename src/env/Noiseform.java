@@ -309,17 +309,31 @@ public class Noiseform {
     }
 
     /**
-     * Ties all BioVertexes that are below ground level (z = 0) to the ground.
-     * BioVertexes that are above ground level are ignored.
+     * Ties all the BioVertexes that satisfy at least one of the following criteria
+     * to ground level (z = 0):
+     *    1. The BioVertex is located beneath the ground.
+     *    2. The BioVertex is on the edge of the platform.
      */
     private void ground() {
-        Logger.debug("Ground the BioVertexes in %s.", this.grid);
+        Logger.debug("Grounded the BioVertexes in %s.", this.grid);
 
-        for (int row = 0; row < this.grid.getRows(); ++row) {
-            for (int col = 0; col < this.grid.getColumns(); ++col) {
+        // Cache the dimensions of the Grid.
+        int rows = this.grid.getRows();
+        int cols = this.grid.getColumns();
+
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
                 BioVertex biotex = this.grid.getVertex(row, col);
-                float z = Math.max(0, biotex.getZ());
-                biotex.setZ(z);
+
+                // Determine whether the current BioVertex should be grounded.
+                boolean below = biotex.getZ() < 0;
+                boolean edge = row == 0 || row == rows - 1 || col == 0 || col == cols - 1;
+                boolean ground = below || edge;
+
+                if (ground) {
+                    biotex.setZ(0);
+                    biotex.setOffset(0, 0, 0);
+                }
             }
         }
     }

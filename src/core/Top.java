@@ -15,7 +15,7 @@ import util.RNG;
  */
 public class Top {
     /**
-     * Toggles debug parameters and the display of logged messages.
+     * Toggles debug parameters and the logging verbosity.
      */
     public static boolean DEBUG = false;
 
