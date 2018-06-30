@@ -32,7 +32,6 @@ public class Viewer {
         // Set the initial state of the Camera.
         Camera camera = Camera.getInstance();
         camera.translate(-2, -2, 1.5f);
-        
 
         glfwSetKeyCallback(handle, this::keyCallback);
         glfwSetCursorPosCallback(handle, this::cursorCallback);
@@ -52,12 +51,12 @@ public class Viewer {
             case GLFW_KEY_ESCAPE:
                 this.escapeCallback(window, action);
                 break;
-            case GLFW_KEY_W:
-            case GLFW_KEY_S:
-            case GLFW_KEY_A:
-            case GLFW_KEY_D:
+            case GLFW_KEY_W:            case GLFW_KEY_UP:
+            case GLFW_KEY_S:            case GLFW_KEY_DOWN:
+            case GLFW_KEY_A:            case GLFW_KEY_LEFT:
+            case GLFW_KEY_D:            case GLFW_KEY_RIGHT:
             case GLFW_KEY_SPACE:
-            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_LEFT_CONTROL: case GLFW_KEY_RIGHT_CONTROL:
                 this.moveCallback(key, action);
                 break;
             default:
@@ -66,6 +65,13 @@ public class Viewer {
         }
     }
 
+    /**
+     * Performs an action in response to a cursor event.
+     * 
+     * @param window   The handle of the GLFW Window that generated the cursor event.
+     * @param x        The current X position of the cursor.
+     * @param y        The current Y position of the cursor.
+     */
     public void cursorCallback(long window, double x, double y) {
         if (this.cursor == null) {
             this.cursor = new Pair<>(x, y);
@@ -181,12 +187,12 @@ public class Viewer {
         // Compute the direction associated with the given key.
         Vector direction = new Vector(0, 0, 0);
         switch (key) {
-            case GLFW_KEY_W:            direction = new Vector(+1,  0,  0); break;
-            case GLFW_KEY_S:            direction = new Vector(-1,  0,  0); break;
-            case GLFW_KEY_D:            direction = new Vector( 0, +1,  0); break;
-            case GLFW_KEY_A:            direction = new Vector( 0, -1,  0); break;
-            case GLFW_KEY_SPACE:        direction = new Vector( 0,  0, +1); break;
-            case GLFW_KEY_LEFT_CONTROL: direction = new Vector( 0,  0, -1); break;
+            case GLFW_KEY_W:            case GLFW_KEY_UP:            direction = new Vector(+1,  0,  0); break;
+            case GLFW_KEY_S:            case GLFW_KEY_DOWN:          direction = new Vector(-1,  0,  0); break;
+            case GLFW_KEY_D:            case GLFW_KEY_RIGHT:         direction = new Vector( 0, +1,  0); break;
+            case GLFW_KEY_A:            case GLFW_KEY_LEFT:          direction = new Vector( 0, -1,  0); break;
+            case GLFW_KEY_SPACE:                                     direction = new Vector( 0,  0, +1); break;
+            case GLFW_KEY_LEFT_CONTROL: case GLFW_KEY_RIGHT_CONTROL: direction = new Vector( 0,  0, -1); break;
             default:
                 String name = glfwGetKeyName(key, 0);
                 Logger.error("The '%s' key is not associated with a direction.", name);

@@ -237,7 +237,7 @@ public class World implements Drawable {
                              this.maxY + overhang,
                              biomap);
 
-        Colour colour = new Colour(0.5f, 0.5f, 0.5f);
+        Colour colour = new Colour(0.3f);
         for (int row = 0; row < size; ++row){
             for (int col = 0; col < size; ++col) {
                 BioVertex biotex = grid.getVertex(row, col);
