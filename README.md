@@ -1,8 +1,5 @@
 # Geoscape
 
----
-
-#### About
 <p> Geoscape is a Java application that renders psuedorandom landscapes using OpenGL.</p>
 
 ---
