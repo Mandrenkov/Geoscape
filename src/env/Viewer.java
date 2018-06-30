@@ -16,6 +16,28 @@ public class Viewer {
     // -------------------------------------------------------------------------
 
     /**
+     * Logs a description of the controls that are accepted by Viewer objects.
+     */
+    public static void logControls() {
+        // The format of a line resembles the following:
+        //     Key 1      Key 2      Description
+        // ^   ^          ^          ^
+        // Where ^ represents a synchronization position.
+        String format = "%-11s    %-11s    %s";
+        String empty = "-";
+ 
+        Logger.info("Controls:");
+        Logger.info(1, format, "Esc", empty, "Quit");
+        Logger.info(1, format, "W", "Up Arrow", "Move forward");
+        Logger.info(1, format, "S", "Down Arrow", "Move backward");
+        Logger.info(1, format, "A", "Left Arrow", "Strafe left");
+        Logger.info(1, format, "D", "Right Arrow", "Strafe right");
+        Logger.info(1, format, "Space", empty, "Ascend");
+        Logger.info(1, format, "Left Ctrl", "Right Ctrl", "Descend");
+        Logger.info(1, format, "Mouse", empty, "Look around");
+    }
+
+    /**
      * Constructs a Viewer object using the given Window handle.
      * 
      * @param handle The handle of the GLFW Window associated with this Viewer.

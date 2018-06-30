@@ -104,7 +104,7 @@ public class BioMapFactory {
             int counter = biomeCounter.get(biome);
             int total = rows*cols;
             int percent = 100*counter/total;
-            Logger.info(2, "%-10s : %5d/%d (%d%%).", name, counter, total, percent);
+            Logger.info(2, "%-10s    %5d/%d    %3d%%", name, counter, total, percent);
         }
         return biomap;
     }

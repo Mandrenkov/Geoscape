@@ -84,16 +84,8 @@ public class Simulation {
     public void start() {
         Logger.info("Rendering %s.", this.world);
 
-        // Ideally, these controls should be displayed on the screen.  Oh well.
-        Logger.info("Controls:");
-        Logger.info("    Esc       : Exit the application.");
-        Logger.info("    W / Up    : Translate the camera forwards.");
-        Logger.info("    S / Down  : Translate the camera backwards.");
-        Logger.info("    A / Left  : Translate the camera leftwards.");
-        Logger.info("    D / Right : Translate the camera rightwards.");
-        Logger.info("    Space     : Translate the camera upwards.");
-        Logger.info("    Ctrl      : Translate the camera downwards.");
-        Logger.info("    Mouse     : Rotate the camera.");
+        // Ideally, the Geoscape controls should be displayed on the screen.  Oh well.
+        Viewer.logControls();
 
         syncTime = glfwGetTime();
         loop();
@@ -135,7 +127,7 @@ public class Simulation {
             syncTime = now;
 
             // Update the state of the Camera singleton.
-            viewer.update();
+            this.viewer.update();
             camera.capture();
 
             // Update the position of the Lights with respect to the new
