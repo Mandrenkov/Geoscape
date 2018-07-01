@@ -4,11 +4,19 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import javax.imageio.ImageIO;
 
 import core.Build;
 import util.Pair;
@@ -136,6 +144,9 @@ public class Window {
         glfwMakeContextCurrent(this.handle);
         glfwShowWindow(this.handle);
 
+        String iconPath = "../assets/icon.png";
+        this.setIcon(iconPath);
+
         int vsync = GL_TRUE;
         glfwSwapInterval(vsync);
 
@@ -143,6 +154,92 @@ public class Window {
 
         // Hide the mouse cursor when the Geoscape window is in focus.
         glfwSetInputMode(this.handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    /**
+     * Sets the icon of this Window to the image located at the given path.
+     * 
+     * @param path The path to the icon.
+     */
+    private void setIcon(String path) {
+        // Load the icon into a BufferedImage object.
+        BufferedImage icon = this.readImage(path);
+        if (icon == null) {
+            return;
+        }
+
+        // Convert the BufferedImage object into a ByteBuffer object.
+        ByteBuffer buffer = this.copyImageToBuffer(icon);
+
+        // Create a GLFW icon from the icon ByteBuffer.
+        GLFWImage glfwIcon = GLFWImage.malloc();
+        glfwIcon.set(icon.getWidth(), icon.getHeight(), buffer);
+
+        // Create a GLFW image buffer to store the GLFW icon.
+        GLFWImage.Buffer glfwIcons = GLFWImage.malloc(1);
+        glfwIcons.put(0, glfwIcon);
+    
+        // Set the icon of the GLFW window to the lone icon in the GLFW image buffer.
+        glfwSetWindowIcon(this.handle, glfwIcons);
+
+        // Free the memory occupied by the GLFW icon and image buffer.
+        glfwIcons.free();
+        glfwIcon.free();
+    }
+
+    /**
+     * Reads the image located at the given path into a BufferedImage object.
+     * 
+     * @param path The path where the image is located.
+     * 
+     * @return The BufferedImage representation of the image.
+     */
+    private BufferedImage readImage(String path) {
+        try {
+            File file = new File(path);
+            return ImageIO.read(file);
+        } catch (IOException e) {
+            Logger.error("Failed to read image at '%s': %s", path, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Copies the contents of the given BufferedImage object into a ByteBuffer.
+     * 
+     * @param image The BufferedImage object to copy.
+     * 
+     * @return The ByteBuffer representation of the given image.
+     */
+    private ByteBuffer copyImageToBuffer(BufferedImage image) {
+        // The number of bytes in the ByteBuffer is the number of pixels in the
+        // image multiplied by the number of bytes needed to represent an RGBA value.
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int capacity = 4*width*height;
+
+        ByteBuffer buffer = BufferUtils.createByteBuffer(capacity);
+        for (int row = 0; row < height; ++row) {
+            for (int col = 0; col < width; ++col) {
+                int offset = 4*(row*width + col);
+
+                // The RGBA value of a BufferedImage pixel is encoded as 0xAARRGGBB.
+                int pixel = image.getRGB(col, row);
+                byte a = (byte) (pixel >> 24);
+                byte r = (byte) (pixel >> 16);
+                byte g = (byte) (pixel >> 8);
+                byte b = (byte) (pixel >> 0);
+
+                // The RGBA value of a GLFW pixel is encoded as 0xRRGGBBAA.
+                buffer.put(offset + 0, r);
+                buffer.put(offset + 1, g);
+                buffer.put(offset + 2, b);
+                buffer.put(offset + 3, a);
+            }
+        }
+        // The buffer must be flipped to toggle between reading and writing.
+        buffer.flip();
+        return buffer;
     }
 
     /**
