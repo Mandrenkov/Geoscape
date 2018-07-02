@@ -24,8 +24,8 @@ public class Control {
      * @param callback    The callback function to call during a key event match.
      */
     public Control(int primary, int secondary, String description, BiConsumer<Integer, Integer> callback) {
-        this.primaryKey = primary;
-        this.secondaryKey = secondary;
+        this.primary = primary;
+        this.secondary = secondary;
         this.description = description;
         this.callback = callback;
     }
@@ -36,7 +36,7 @@ public class Control {
      * @return The GLFW code.
      */
     public int getPrimaryKey() {
-        return this.primaryKey;
+        return this.primary;
     }
 
     /**
@@ -45,7 +45,7 @@ public class Control {
      * @return The GLFW code.
      */
     public int getSecondaryKey() {
-        return this.secondaryKey;
+        return this.secondary;
     }
 
     /**
@@ -64,8 +64,8 @@ public class Control {
      */
     public String toString() {
         // Derive the names of the keys that are bound to this Control.
-        String first = Control.nameMap.get(this.primaryKey);
-        String second = Control.nameMap.get(this.secondaryKey);
+        String first = Control.nameMap.get(this.primary);
+        String second = Control.nameMap.get(this.secondary);
         return String.format("%-11s    %-11s    %s", first, second, this.description);
     }
 
@@ -81,12 +81,12 @@ public class Control {
     /**
      * The GLFW code of the primary key bound to this Control.
      */
-    private int primaryKey;
+    private int primary;
 
     /**
      * The GLFW code of the secondary key bound to this Control.
      */
-    private int secondaryKey;
+    private int secondary;
 
     /**
      * The description of this Control.
@@ -103,10 +103,12 @@ public class Control {
      */
     static {
         nameMap = new HashMap<>();
-        nameMap.put(GLFW_KEY_UNKNOWN,       "-");
+        nameMap.put(GLFW_KEY_UNKNOWN,       "");
         nameMap.put(GLFW_KEY_ESCAPE,        "Esc");
         nameMap.put(GLFW_KEY_P,             "P");
         nameMap.put(GLFW_KEY_V,             "V");
+        nameMap.put(GLFW_KEY_KP_ADD,        "+");
+        nameMap.put(GLFW_KEY_KP_SUBTRACT,   "-");
         nameMap.put(GLFW_KEY_W,             "W");
         nameMap.put(GLFW_KEY_S,             "S");
         nameMap.put(GLFW_KEY_A,             "A");
