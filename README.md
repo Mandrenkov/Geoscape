@@ -1,5 +1,5 @@
-<h1 align="left">
-  <img src="assets/icon.png" height="48" /> Geoscape
+<h1>
+  <img src="assets/icon.png" height=24px/> Geoscape
 </h1>
 
 Geoscape is a Java application that renders psuedorandom landscapes using OpenGL.
@@ -11,8 +11,10 @@ Geoscape is a Java application that renders psuedorandom landscapes using OpenGL
 
 | **Directory**                                 |  **Description**       |
 | :--------:                                    | :--------:             |
+| [assets/](assets)                             |  Asset files           |
+| [misc/](misc)                                 |  Timeline photos       |
 | [src/](src)                                   |  Source code           |
-| [misc/](misc)                                 |  Miscelleous assets    |
+
 ---
 ### Screenshots
 #### Time Point 9 - Randomized Landscape and More Biomes
