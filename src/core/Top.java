@@ -7,11 +7,7 @@ import env.Camera;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <i>Top</i> class is the execution entry point.</p>
+ * The Top class is the execution entry point.
  */
 public class Top {
     /**

@@ -7,11 +7,7 @@ import geo.Vertex;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>BioVertex</b> class represents a Biome Vertex.</p>
+ * The BioVertex class represents a Biome Vertex.
  */
 public class BioVertex extends Vertex {
 

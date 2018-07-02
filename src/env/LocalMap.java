@@ -9,11 +9,7 @@ import bio.BioVertex;
 import util.Algebra;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <pThe <b>LocalMap</b> class represents a weighted set of nearby BioVertexes.</p>
+ * The LocalMap class represents a weighted set of nearby BioVertexes.
  */
 public class LocalMap {
 

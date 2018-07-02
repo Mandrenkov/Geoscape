@@ -3,11 +3,7 @@ package geo;
 import env.Drawable;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <pThe <b>Shape</b> class represents a collection of Polygons.</p>
+ * The Shape class represents a collection of Polygons.
  */
 public abstract class Shape implements Drawable {
 

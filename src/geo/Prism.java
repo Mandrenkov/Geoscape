@@ -5,11 +5,7 @@ import java.util.function.Function;
 import env.Colour;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Prism</b> class represents a rectangular prism.</p>
+ * The Prism class represents a rectangular prism.
  */
 public class Prism extends Shape {
 

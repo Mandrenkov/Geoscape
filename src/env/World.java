@@ -10,12 +10,8 @@ import geo.Line;
 import geo.Vertex;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <i>World</i> class represents a virtual world.  Specifically, this class
- * holds the Drawable entities of such a world.</p>
+ * The World class represents a virtual world.  Specifically, this class
+ * holds the Drawable entities of such a world.
  */
 public class World implements Drawable {
 

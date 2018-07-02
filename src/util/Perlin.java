@@ -3,7 +3,7 @@ package util;
 import geo.Vector;
 
 /**
- * <p>The <b>Perlin</b> class represents a matrix with a Perlin noise transformation.</p>
+ * The Perlin class represents a matrix with a Perlin noise transformation.
  */
 public class Perlin {
 

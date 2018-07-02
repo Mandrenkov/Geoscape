@@ -4,7 +4,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * The <b>Build</b> class represents the current build.
+ * The Build class represents the current build.
  */
 public class Build {
 

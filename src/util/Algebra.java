@@ -1,11 +1,7 @@
 package util;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Algebra</b> class contains a set of Linear Algebra functions.</p>
+ * The Algebra class contains a set of Linear Algebra functions.
  */
 public class Algebra {
 

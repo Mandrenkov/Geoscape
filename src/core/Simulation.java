@@ -16,11 +16,7 @@ import env.World;
 import geo.Vertex;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Simulation</b> class represents the Geoscape simulation.</p>
+ * The Simulation class represents the Geoscape simulation.
  */
 public class Simulation {
 

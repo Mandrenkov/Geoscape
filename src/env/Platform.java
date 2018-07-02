@@ -6,11 +6,7 @@ import geo.Vertex;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Platform</b> class represents the platform beneath the landscape.</p>
+ * The Platform class represents the platform beneath the landscape.
  */
 public class Platform implements Drawable {
 

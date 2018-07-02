@@ -9,11 +9,7 @@ import env.Colour;
 import env.Drawable;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <pThe <b>Polygon</b> class represents a geometric polygon.</p>
+ * The Polygon class represents a geometric polygon.
  */
 public abstract class Polygon implements Drawable {
 

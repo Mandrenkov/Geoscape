@@ -3,8 +3,8 @@ package bio;
 import geo.Vertex;
 
 /**
- * <p>The <b>BioRegion</b> class represents a region of a BioMap.
- *    Each BioVertex in a BioRegion shares the same Biome.</p>
+ * The BioRegion class represents a region of a BioMap.  Each BioVertex in a
+ * BioRegion shares the same Biome.
  */
 public class BioRegion {
 

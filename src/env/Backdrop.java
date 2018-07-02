@@ -10,11 +10,7 @@ import geo.Vertex;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Backdrop</b> class represents a World backdrop.</p>
+ * The Backdrop class represents a World backdrop.
  */
 public class Backdrop implements Drawable {
 

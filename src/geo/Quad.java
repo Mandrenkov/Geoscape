@@ -3,11 +3,7 @@ package geo;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Quad</b> class represents a quadrilateral.</p>
+ * The Quad class represents a quadrilateral.
  */
 public class Quad extends Polygon {
 

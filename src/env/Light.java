@@ -7,11 +7,7 @@ import geo.Sphere;
 import geo.Vertex;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Light</b> class represents a light source.</p>
+ * The Light class represents a light source.
  */
 public class Light implements Drawable {
 

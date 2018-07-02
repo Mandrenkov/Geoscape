@@ -3,11 +3,7 @@ package geo;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Line</b> class represents a line.</p>
+ * The Line class represents a line.
  */
 public class Line extends Polygon {
 

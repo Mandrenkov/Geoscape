@@ -12,13 +12,9 @@ import util.Algebra;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Biome</b> enumerations represent various natural biomes.  In the
- * context of this application, a Biome is a set of common characteristics that
- * is shared by a group of BioVertexes.</p>
+ * The Biome enumerations represent various natural biomes.  In the context of
+ * Geoscape, a Biome is a set of common characteristics that is shared by a group
+ * of BioVertexes.
  */
 public enum Biome {
     

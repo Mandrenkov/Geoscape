@@ -12,11 +12,7 @@ import core.Logger;
 import util.Pair;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Grid</b> class represents the surface of a landscape.</p>
+ * The Grid class represents the surface of a landscape.
  */
 public class Grid implements Drawable {
 

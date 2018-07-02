@@ -13,11 +13,7 @@ import util.Perlin;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>BioMapFactory</b> class creates BioMaps of various sizes.</p>
+ * The BioMapFactory class creates BioMaps of various sizes.
  */
 public class BioMapFactory {
 

@@ -8,11 +8,7 @@ import java.util.Map;
 import util.Pair;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Biomix</b> class represents a mixture of Biomes.</p>
+ * The Biomix class represents a mixture of Biomes.
  */
 public class Biomix implements Iterable<Pair<Biome, Float>> {
 

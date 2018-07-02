@@ -6,11 +6,7 @@ import env.Colour;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <pThe <b>Vertex</b> class represents a geometric point in R3 Cartesian space.</p>
+ * The Vertex class represents a geometric point in R3 Cartesian space.
  */
 public class Vertex {
 

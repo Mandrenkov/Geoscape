@@ -10,11 +10,7 @@ import geo.Triangle;
 import geo.Vertex;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>BioTriangle</b> class represents a Biome Triangle.</p>
+ * The BioTriangle class represents a Biome Triangle.
  */
 public class BioTriangle extends Triangle {
 

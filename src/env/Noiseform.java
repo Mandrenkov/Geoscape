@@ -16,14 +16,10 @@ import util.Progress;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Noiseform</b> class represents a noise transform that is applied
- * to Grid objects.  Specifically, this class uses Perlin noise to distort
- * a given Grid and then texturizes the BioVertexes of the given Grid to reflect
- * the influence of nearby Biomes.</p>
+ * The Noiseform class represents a noise transform that is applied to Grid objects.
+ * Specifically, this class uses Perlin noise to distort a given Grid and then
+ * texturizes the BioVertexes of the given Grid to reflect the influence of nearby
+ * Biomes.
  */
 public class Noiseform {
 

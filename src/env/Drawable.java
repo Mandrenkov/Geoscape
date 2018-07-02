@@ -1,12 +1,8 @@
 package env;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>Classes that implement the <b>Drawable</b> interface represent objects that
- * can be rendered to the screen.</p>
+ * Classes that implement the Drawable interface represent objects that can be
+ * rendered to the screen.
  */
 public interface Drawable {
 

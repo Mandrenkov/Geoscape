@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,11 +21,7 @@ import core.Build;
 import util.Pair;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <i>Window</i> class represents the application GLFW window.</p>
+ * The Window class represents the application GLFW window.
  */
 public class Window {
 

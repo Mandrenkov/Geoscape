@@ -3,11 +3,7 @@ package geo;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <b>Triangle</b> class represents a geometric triangle.</p>
+ * The Triangle class represents a geometric triangle.
  */
 public class Triangle extends Polygon {
 

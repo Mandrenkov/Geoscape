@@ -11,11 +11,7 @@ import util.Algebra;
 import util.RNG;
 
 /**
- * @author  Mikhail Andrenkov
- * @since   May 5, 2018
- * @version 1.2
- *
- * <p>The <i>Colour</i> class represents an RGBA colour.</p>
+ * The Colour class represents an RGBA colour.
  */
 public class Colour {
 
