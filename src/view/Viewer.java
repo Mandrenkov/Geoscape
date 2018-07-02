@@ -26,6 +26,8 @@ public class Viewer {
      */
     public Viewer(Window window) {
         this.window = window;
+
+        this.speed = 0.4f;
         this.velocity = new Vector(0, 0, 0);
         this.cursor = null;
         this.paused = false;
@@ -39,6 +41,8 @@ public class Viewer {
         this.controls.add(new Control(GLFW_KEY_D,            GLFW_KEY_RIGHT,         "Strafe right",  this::moveCallback));
         this.controls.add(new Control(GLFW_KEY_SPACE,        GLFW_KEY_UNKNOWN,       "Ascend",        this::moveCallback));
         this.controls.add(new Control(GLFW_KEY_LEFT_CONTROL, GLFW_KEY_RIGHT_CONTROL, "Descend",       this::moveCallback));
+        this.controls.add(new Control(GLFW_KEY_KP_ADD,       GLFW_KEY_UNKNOWN,       "Speed up",      this::speedCallback));
+        this.controls.add(new Control(GLFW_KEY_KP_SUBTRACT,  GLFW_KEY_UNKNOWN,       "Slow down",     this::speedCallback));
         this.controls.add(new Control(GLFW_MOUSE_BUTTON_1,   GLFW_KEY_UNKNOWN,       "Look around",   null));
         this.controls.add(new Control(GLFW_KEY_V,            GLFW_KEY_UNKNOWN,       "Toggle Vsync",  this::vsyncCallback)); 
 
@@ -180,14 +184,13 @@ public class Viewer {
                                             .orElse(1);
         averageFPS = Math.max(averageFPS, 1);
 
-        // Determine the velocity that applies to the current frame.
-        float velocity = 0.3f;
-        float frameVelocity = velocity/averageFPS;
+        // Determine the speed that applies to the current frame.
+        float speed = this.speed/averageFPS;
 
         // Normalize the displacement Vector according to the current frame velocity.
         if (!displacement.isZero()) {
             float magnitude = displacement.magnitude();
-            float scalar = frameVelocity/magnitude;
+            float scalar = speed/magnitude;
             displacement.scale(scalar);
         }
         
@@ -206,9 +209,14 @@ public class Viewer {
     private Window window;
 
     /**
-     * The current velocity of the Viewer.
+     * The direction of the current velocity of the Viewer.
      */
     private Vector velocity;
+
+    /**
+     * The current speed of the Viewer.
+     */
+    private float speed;
 
     /**
      * The last known position of the mouse cursor.
@@ -260,10 +268,10 @@ public class Viewer {
     }
 
     /**
-     * Toggles the Vsync state of the given GLFW window if the given key is released.
+     * Toggles the Vsync state of this Viewer in response to a key event.
      * 
      * @param key    The key associated with the key event.
-     * @param action The action applied to the V key.
+     * @param action The action associated with the key event.
      */
     private void vsyncCallback(int key, int action) {
         if (action == GLFW_RELEASE) {
@@ -272,6 +280,27 @@ public class Viewer {
 
             String verb = vsync ? "enabled" : "disabled";
             Logger.info("Vsync %s.", verb);
+        }
+    }
+
+    /**
+     * Accelerates this Viewer in response to a key event.
+     * 
+     * @param key    The key associated with the key event.
+     * @param action The action associated with the key event.
+     */
+    private void speedCallback(int key, int action) {
+        boolean pressed = action == GLFW_PRESS || action == GLFW_REPEAT;
+        if (pressed) {
+            if (key != GLFW_KEY_KP_ADD && key != GLFW_KEY_KP_SUBTRACT) {
+                String name = glfwGetKeyName(key, 0);
+                Logger.error("Key '%s' was not expected in the speed callback.", name);
+            }
+
+            float magnitude = 0.1f;
+            float acceleration = key == GLFW_KEY_KP_ADD ? magnitude : -magnitude;
+            this.speed = Math.max(magnitude, this.speed + acceleration);
+            Logger.info("Velocity is %.2f u/s.", this.speed);
         }
     }
 
