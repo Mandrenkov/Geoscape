@@ -219,7 +219,7 @@ public class Colour {
      * Sets the GL colour to this Colour.
      */
     public void glColour() {
-        glColor3f(this.red, this.green, this.blue);
+        glColor4f(this.red, this.green, this.blue, this.alpha);
     }
 
     /**

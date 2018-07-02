@@ -258,7 +258,7 @@ public enum Biome {
             }
         }
     },
-    WATER("Water", new Colour(0, 0.5f, 1), new Colour(1f, 1f, 1f), 0.001f) {
+    WATER("Water", new Colour(0, 0.5f, 1, 0.97f), new Colour(1, 1, 1), 0.001f) {
         @Override
         public void texturize(BioVertex biotex, float scalar) {
             biotex.getColour().shift(0.02f*scalar);

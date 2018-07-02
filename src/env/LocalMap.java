@@ -2,6 +2,7 @@ package env;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import bio.Biome;
 import bio.Biomix;
@@ -88,17 +89,25 @@ public class LocalMap {
      * @return The Colour.
      */
     public Colour getColour() {
-        Colour average = new Colour(0, 0, 0);
-        for (BioVertex biotex : this.map.keySet()) {
-            // The Biome Colour must be cloned to localize the scaling done in
-            // this loop.
-            Colour colour = new Colour(biotex.getBiome().getColour());
-            float weight = this.map.get(biotex);
-            float scalar = weight/this.weightSum;
-            colour.scale(scalar);
-            average.add(colour);
-        }
-        return average;
+        // Returns the average value of the given Colour component.  The average
+        // is calculated with respect to the weights in the weighted average map.
+        Function<Function<Colour, Float>, Float> average = (Function<Colour, Float> supplier) -> {
+            float component = 0;
+            for (BioVertex biotex : this.map.keySet()) {
+                Colour colour = biotex.getBiome().getColour();
+                float weight = this.map.get(biotex);
+                float scalar = weight/this.weightSum;
+                component += supplier.apply(colour)*scalar;
+            }
+            return component;
+        };
+
+        return new Colour(
+            average.apply(Colour::getRed),
+            average.apply(Colour::getGreen),
+            average.apply(Colour::getBlue),
+            average.apply(Colour::getAlpha)
+        );
     }
 
     /**

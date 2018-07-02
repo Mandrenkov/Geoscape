@@ -256,6 +256,7 @@ public class Window {
 
         // Apply a set of OpenGL flags.
         int[] glFlags = new int[] {
+            GL_BLEND,
             GL_CULL_FACE,
             GL_DEPTH_TEST,
             GL_LIGHTING,
@@ -268,6 +269,9 @@ public class Window {
 
         // Set the background colour of the Window.
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+
+        // Specify the canonical blending function.
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // Load the OpenGL projection matrix to set the viewing frustrum.
         glMatrixMode(GL_PROJECTION);
