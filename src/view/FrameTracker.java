@@ -1,4 +1,4 @@
-package core;
+package view;
 
 import static org.lwjgl.glfw.GLFW.*;
 

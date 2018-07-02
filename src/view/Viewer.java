@@ -1,14 +1,13 @@
-package env;
+package view;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
-import core.FrameTracker;
 import core.Logger;
-import core.Window;
-import env.Camera;
 import geo.Vector;
 import util.Pair;
 
@@ -21,29 +20,6 @@ public class Viewer {
     // -------------------------------------------------------------------------
 
     /**
-     * Logs a description of the controls that are accepted by Viewer objects.
-     */
-    public static void logControls() {
-        // The format of a line resembles the following:
-        //     Key 1      Key 2      Description
-        // ^   ^          ^          ^
-        // Where ^ represents a synchronization position.
-        String format = "%-11s    %-11s    %s";
-        String empty = "-";
- 
-        Logger.info("Controls:");
-        Logger.info(1, format, "Esc", empty, "Pause");
-        Logger.info(1, format, "W", "Up Arrow", "Move forward");
-        Logger.info(1, format, "S", "Down Arrow", "Move backward");
-        Logger.info(1, format, "A", "Left Arrow", "Strafe left");
-        Logger.info(1, format, "D", "Right Arrow", "Strafe right");
-        Logger.info(1, format, "Space", empty, "Ascend");
-        Logger.info(1, format, "Left Ctrl", "Right Ctrl", "Descend");
-        Logger.info(1, format, "Mouse", empty, "Look around");
-        Logger.info(1, format, "V", "-", "Toggles Vsync");
-    }
-
-    /**
      * Constructs a Viewer object using the given Window.
      * 
      * @param window The Window associated with this Viewer.
@@ -54,6 +30,17 @@ public class Viewer {
         this.cursor = null;
         this.paused = false;
         this.fpsQueue = new ArrayDeque<>();
+
+        this.controls = new ArrayList<>();
+        this.controls.add(new Control(GLFW_KEY_ESCAPE,       GLFW_KEY_P,             "Pause",         this::pauseCallback));
+        this.controls.add(new Control(GLFW_KEY_W,            GLFW_KEY_UP,            "Move forward",  this::moveCallback));
+        this.controls.add(new Control(GLFW_KEY_S,            GLFW_KEY_DOWN,          "Move backward", this::moveCallback));
+        this.controls.add(new Control(GLFW_KEY_A,            GLFW_KEY_LEFT,          "Strafe left",   this::moveCallback));
+        this.controls.add(new Control(GLFW_KEY_D,            GLFW_KEY_RIGHT,         "Strafe right",  this::moveCallback));
+        this.controls.add(new Control(GLFW_KEY_SPACE,        GLFW_KEY_UNKNOWN,       "Ascend",        this::moveCallback));
+        this.controls.add(new Control(GLFW_KEY_LEFT_CONTROL, GLFW_KEY_RIGHT_CONTROL, "Descend",       this::moveCallback));
+        this.controls.add(new Control(GLFW_MOUSE_BUTTON_1,   GLFW_KEY_UNKNOWN,       "Look around",   null));
+        this.controls.add(new Control(GLFW_KEY_V,            GLFW_KEY_UNKNOWN,       "Toggle Vsync",  this::vsyncCallback)); 
 
         // Set the initial rotation of the Viewer.
         this.pitch = 30f;
@@ -79,24 +66,11 @@ public class Viewer {
      * @param mods     The modifier bits for the key event.
      */
     public void keyCallback(long window, int key, int scancode, int action, int mods) {
-        switch (key) {
-            case GLFW_KEY_ESCAPE:
-                this.pauseCallback(window, action);
-                break;
-            case GLFW_KEY_V:
-                this.vsyncCallback(window, action);
-                break;
-            case GLFW_KEY_W:            case GLFW_KEY_UP:
-            case GLFW_KEY_S:            case GLFW_KEY_DOWN:
-            case GLFW_KEY_A:            case GLFW_KEY_LEFT:
-            case GLFW_KEY_D:            case GLFW_KEY_RIGHT:
-            case GLFW_KEY_SPACE:
-            case GLFW_KEY_LEFT_CONTROL: case GLFW_KEY_RIGHT_CONTROL:
-                this.moveCallback(key, action);
-                break;
-            default:
-                String name = glfwGetKeyName(key, scancode);
-                Logger.debug("The '%s' key does not have any registered callbacks.", name);
+        for (Control control : this.controls) {
+            boolean match = control.getPrimaryKey() == key || control.getSecondaryKey() == key;
+            if (match) {
+                control.getCallback().accept(key, action);
+            }
         }
     }
 
@@ -148,6 +122,16 @@ public class Viewer {
      */
     public boolean isPaused() {
         return this.paused;
+    }
+
+    /**
+     * Logs a description of the controls that are accepted by this Viewer object.
+     */
+    public void logControls() {
+        Logger.info("Controls:");
+        for (Control control : this.controls) {
+            Logger.info(1, control.toString());
+        }
     }
     
     /**
@@ -252,13 +236,20 @@ public class Viewer {
     private Queue<Integer> fpsQueue;
 
     /**
-     * Toggles the pause state of the given GLFW window if the Esc key is released.
+     * The list of Controls that apply to this Viewer.
+     */
+    private List<Control> controls;
+
+    /**
+     * Toggles the pause state of the given GLFW window if the given key is released.
      * 
-     * @param window The window to pause.
+     * @param key    The key associated with the key event.
      * @param action The action applied to the Esc key.
      */
-    private void pauseCallback(long window, int action) {
+    private void pauseCallback(int key, int action) {
         if (action == GLFW_RELEASE) {
+            long window = this.window.getHandle();
+
             this.paused = !this.paused;
             int cursorMode = this.paused ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
             glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
@@ -269,12 +260,12 @@ public class Viewer {
     }
 
     /**
-     * Toggles the Vsync state of the given GLFW window if the V key is released.
+     * Toggles the Vsync state of the given GLFW window if the given key is released.
      * 
-     * @param window The window to toggle Vsync.
+     * @param key    The key associated with the key event.
      * @param action The action applied to the V key.
      */
-    private void vsyncCallback(long window, int action) {
+    private void vsyncCallback(int key, int action) {
         if (action == GLFW_RELEASE) {
             boolean vsync = !this.window.getVsync();
             this.window.setVsync(vsync);

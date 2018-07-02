@@ -6,15 +6,17 @@ import static org.lwjgl.opengl.GL11.*;
 import bio.BioMap;
 import bio.BioMapFactory;
 import env.Backdrop;
-import env.Camera;
 import env.Colour;
 import env.Grid;
 import env.Light;
 import env.Overlay;
 import env.Platform;
-import env.Viewer;
 import env.World;
 import geo.Vertex;
+import view.Camera;
+import view.FrameTracker;
+import view.Viewer;
+import view.Window;
 
 /**
  * The Simulation class represents the Geoscape simulation.
@@ -81,7 +83,7 @@ public class Simulation {
     public void start() {
         Logger.info("Rendering %s.", this.world);
         // Ideally, the Geoscape controls should be displayed on the screen.  Oh well.
-        Viewer.logControls();
+        this.viewer.logControls();
         loop();
     }
 

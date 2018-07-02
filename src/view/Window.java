@@ -1,4 +1,4 @@
-package core;
+package view;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -18,6 +18,7 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 import core.Build;
+import core.Logger;
 import util.Pair;
 
 /**

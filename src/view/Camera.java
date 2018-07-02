@@ -1,4 +1,4 @@
-package env;
+package view;
 
 import static org.lwjgl.opengl.GL11.*;
 

@@ -3,8 +3,9 @@ package core;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 
-import env.Camera;
 import util.RNG;
+import view.Camera;
+import view.Window;
 
 /**
  * The Top class is the execution entry point.
