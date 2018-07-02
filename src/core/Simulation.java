@@ -25,12 +25,12 @@ public class Simulation {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Simulation object with the given Window handle.
+     * Constructs a Simulation object with the given Window.
      * 
-     * @param handle The handle to the GLFW Window that hosts this Simulation.
+     * @param window The Window that will display this Simulation.
      */
-    public Simulation(long handle) {
-        this.viewer = new Viewer(handle);
+    public Simulation(Window window) {
+        this.viewer = new Viewer(window);
 
         // Instantiate the World representing this Simulation.
         float minX = -0.8f;

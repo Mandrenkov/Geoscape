@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import core.Logger;
+import core.Window;
 import env.Camera;
 import geo.Vector;
 import util.Pair;
@@ -40,11 +41,12 @@ public class Viewer {
     }
 
     /**
-     * Constructs a Viewer object using the given Window handle.
+     * Constructs a Viewer object using the given Window.
      * 
-     * @param handle The handle of the GLFW Window associated with this Viewer.
+     * @param window The Window associated with this Viewer.
      */
-    public Viewer(long handle) {
+    public Viewer(Window window) {
+        this.window = window;
         this.velocity = new Vector(0, 0, 0);
         this.cursor = null;
         this.paused = false;
@@ -58,6 +60,7 @@ public class Viewer {
         Camera camera = Camera.getInstance();
         camera.translate(-2, -2, 1.5f);
 
+        long handle = window.getHandle();
         glfwSetKeyCallback(handle, this::keyCallback);
         glfwSetCursorPosCallback(handle, this::cursorCallback);
     }
@@ -187,6 +190,11 @@ public class Viewer {
     // -------------------------------------------------------------------------
 
     /**
+     * The Window associated with this Viewer.
+     */
+    private Window window;
+
+    /**
      * The current velocity of the Viewer.
      */
     private Vector velocity;
@@ -210,11 +218,6 @@ public class Viewer {
      * The pause state of this Viewer.
      */
     private boolean paused;
-
-    /**
-     * The Vsync state of this Viewer.
-     */
-    private boolean vsync;
 
     /**
      * Toggles the pause state of the given GLFW window if the Esc key is released.
@@ -241,11 +244,10 @@ public class Viewer {
      */
     private void vsyncCallback(long window, int action) {
         if (action == GLFW_RELEASE) {
-            this.vsync = !this.vsync;
-            int interval = this.vsync ? GL_TRUE : GL_FALSE;
-            glfwSwapInterval(interval);
+            boolean vsync = !this.window.getVsync();
+            this.window.setVsync(vsync);
 
-            String verb = this.vsync ? "enabled" : "disabled";
+            String verb = vsync ? "enabled" : "disabled";
             Logger.info("Vsync %s.", verb);
         }
     }

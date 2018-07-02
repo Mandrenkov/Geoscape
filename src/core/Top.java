@@ -29,12 +29,13 @@ public class Top {
             Window.getInstance();
             Camera.getInstance();
 
-            long handle = Window.getInstance().getHandle();
-
-            Simulation simulation = new Simulation(handle);
+            // Start a Simulation using the Window singleton.
+            Window window = Window.getInstance();
+            Simulation simulation = new Simulation(window);
             simulation.start();
 
             // Free the window callbacks and destroy the window.
+            long handle = window.getHandle();
             glfwFreeCallbacks(handle);
             glfwDestroyWindow(handle);
         } finally {

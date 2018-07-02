@@ -86,6 +86,15 @@ public class Window {
     }
 
     /**
+     * Returns the Vsync state of this Window.
+     * 
+     * @return The Vsync state.
+     */
+    public boolean getVsync() {
+        return this.vsync;
+    }
+
+    /**
      * Sets the title of this Window to the specified value.
      * 
      * @param title The new title of this Window.
@@ -93,6 +102,17 @@ public class Window {
     public void setTitle(String title) {
         this.title = title;
         glfwSetWindowTitle(this.handle, title);
+    }
+
+    /**
+     * Sets the Vsync state of this Window.
+     * 
+     * @param vsync The new Vsync state of this Window.
+     */
+    public void setVsync(boolean vsync) {
+        this.vsync = vsync;
+        int interval = vsync ? GL_TRUE : GL_FALSE;
+        glfwSwapInterval(interval);
     }
 
 
@@ -128,6 +148,11 @@ public class Window {
      * The current height of this Window.
      */
     private int height;
+
+    /**
+     * The Vsync state of this Window.
+     */
+    private boolean vsync;
 
     /**
      * Constructs a Window object.
@@ -177,8 +202,7 @@ public class Window {
         this.setIcon(iconPath);
 
         // By default, Vsync should be disabled.
-        int vsync = GL_FALSE;
-        glfwSwapInterval(vsync);
+        this.setVsync(false);
 
         glfwSetWindowSizeCallback(this.handle, this::windowSizeCallback);
 
