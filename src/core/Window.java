@@ -86,6 +86,15 @@ public class Window {
     }
 
     /**
+     * Returns the FrameTracker associated with this Window.
+     * 
+     * @return The FrameTracker.
+     */
+    public FrameTracker getFrameTracker() {
+        return this.fpsTracker;
+    }
+
+    /**
      * Returns the Vsync state of this Window.
      * 
      * @return The Vsync state.
@@ -155,11 +164,19 @@ public class Window {
     private boolean vsync;
 
     /**
+     * The FrameTracker tracker associated with this Window.
+     */
+    private FrameTracker fpsTracker;
+
+    /**
      * Constructs a Window object.
      */
     private Window() {
         initGLFW();
         initGL();
+
+        double interval = 0.5;
+        this.fpsTracker = new FrameTracker(this, interval);
     }
 
     /**

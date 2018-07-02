@@ -108,19 +108,18 @@ public class Simulation {
         Window window = Window.getInstance();
         Camera camera = Camera.getInstance();
 
-        long handle = window.getHandle();
-        FPS fps = new FPS(window, 0.5);
-
         Colour dark = new Colour(0, 0, 0, 0.5f);
         Overlay pauseOverlay = new Overlay(dark);
+
+        long handle = window.getHandle();
 
         while (!glfwWindowShouldClose(handle)) {
             // Clear the GL buffers.
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // Update the FPS counter.
-            double now = glfwGetTime();
-            fps.update(now);
+            FrameTracker fpsTracker = window.getFrameTracker();
+            fpsTracker.update();
 
             // Update the state of the Camera singleton.
             this.viewer.update();
@@ -133,6 +132,7 @@ public class Simulation {
             }
 
             // Update and draw the World.
+            double now = glfwGetTime();
             world.update(now);
             world.draw();
 

@@ -1,8 +1,11 @@
 package env;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
+import core.FrameTracker;
 import core.Logger;
 import core.Window;
 import env.Camera;
@@ -50,6 +53,7 @@ public class Viewer {
         this.velocity = new Vector(0, 0, 0);
         this.cursor = null;
         this.paused = false;
+        this.fpsQueue = new ArrayDeque<>();
 
         // Set the initial rotation of the Viewer.
         this.pitch = 30f;
@@ -173,11 +177,34 @@ public class Viewer {
         float dz = this.velocity.getZ();
         Vector displacement = new Vector(dx, dy, dz);
 
-        // Normalize the Vector according to the velocity of this Viewer.
-        float velocity = 0.01f;
+        // Add the current FPS to the tail of the FPS queue.
+        FrameTracker fpsTracker = this.window.getFrameTracker();
+        int currentFPS = fpsTracker.getFPS();
+        this.fpsQueue.add(currentFPS);
+
+        // Remove an element from the head of the FPS queue if necessary.
+        int capacity = 10;
+        if (this.fpsQueue.size() > capacity) {
+            this.fpsQueue.remove();
+        }
+
+        // The average FPS in the queue is rounded up to 1 to simplify the
+        // calculation of the velocity for this frame.
+        int averageFPS = (int) this.fpsQueue.stream()
+                                            .mapToInt(fps -> fps)
+                                            .average()
+                                            .orElse(1);
+        averageFPS = Math.max(averageFPS, 1);
+
+        // Determine the velocity that applies to the current frame.
+        float velocity = 0.3f;
+        float frameVelocity = velocity/averageFPS;
+
+        // Normalize the displacement Vector according to the current frame velocity.
         if (!displacement.isZero()) {
             float magnitude = displacement.magnitude();
-            displacement.scale(velocity/magnitude);
+            float scalar = frameVelocity/magnitude;
+            displacement.scale(scalar);
         }
         
         // Translate the Camera according to the computed displacement.
@@ -218,6 +245,11 @@ public class Viewer {
      * The pause state of this Viewer.
      */
     private boolean paused;
+
+    /**
+     * The queue holding previous FPS query results. 
+     */
+    private Queue<Integer> fpsQueue;
 
     /**
      * Toggles the pause state of the given GLFW window if the Esc key is released.
