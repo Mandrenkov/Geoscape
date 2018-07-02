@@ -1,6 +1,7 @@
 package env;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import core.Logger;
 import env.Camera;
@@ -35,6 +36,7 @@ public class Viewer {
         Logger.info(1, format, "Space", empty, "Ascend");
         Logger.info(1, format, "Left Ctrl", "Right Ctrl", "Descend");
         Logger.info(1, format, "Mouse", empty, "Look around");
+        Logger.info(1, format, "V", "-", "Toggles Vsync");
     }
 
     /**
@@ -72,7 +74,10 @@ public class Viewer {
     public void keyCallback(long window, int key, int scancode, int action, int mods) {
         switch (key) {
             case GLFW_KEY_ESCAPE:
-                this.escapeCallback(window, action);
+                this.pauseCallback(window, action);
+                break;
+            case GLFW_KEY_V:
+                this.vsyncCallback(window, action);
                 break;
             case GLFW_KEY_W:            case GLFW_KEY_UP:
             case GLFW_KEY_S:            case GLFW_KEY_DOWN:
@@ -207,16 +212,41 @@ public class Viewer {
     private boolean paused;
 
     /**
-     * Closes the given GLFW window if the ESCAPE key is released.
-     * 
-     * @param window The window to close.
-     * @param action The action applied to the ESCAPE key.
+     * The Vsync state of this Viewer.
      */
-    private void escapeCallback(long window, int action) {
+    private boolean vsync;
+
+    /**
+     * Toggles the pause state of the given GLFW window if the Esc key is released.
+     * 
+     * @param window The window to pause.
+     * @param action The action applied to the Esc key.
+     */
+    private void pauseCallback(long window, int action) {
         if (action == GLFW_RELEASE) {
             this.paused = !this.paused;
             int cursorMode = this.paused ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
             glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
+
+            String verb = this.paused ? "paused" : "unpaused";
+            Logger.info("Simulation %s.", verb);
+        }
+    }
+
+    /**
+     * Toggles the Vsync state of the given GLFW window if the V key is released.
+     * 
+     * @param window The window to toggle Vsync.
+     * @param action The action applied to the V key.
+     */
+    private void vsyncCallback(long window, int action) {
+        if (action == GLFW_RELEASE) {
+            this.vsync = !this.vsync;
+            int interval = this.vsync ? GL_TRUE : GL_FALSE;
+            glfwSwapInterval(interval);
+
+            String verb = this.vsync ? "enabled" : "disabled";
+            Logger.info("Vsync %s.", verb);
         }
     }
 
