@@ -300,7 +300,7 @@ public class Viewer {
             float magnitude = 0.1f;
             float acceleration = key == GLFW_KEY_KP_ADD ? magnitude : -magnitude;
             this.speed = Math.max(magnitude, this.speed + acceleration);
-            Logger.info("Velocity is %.2f u/s.", this.speed);
+            Logger.info("Speed is %.2f u/s.", this.speed);
         }
     }
 

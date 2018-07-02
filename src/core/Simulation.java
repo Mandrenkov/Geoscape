@@ -13,6 +13,7 @@ import env.Overlay;
 import env.Platform;
 import env.World;
 import geo.Vertex;
+import util.RNG;
 import view.Camera;
 import view.FrameTracker;
 import view.Viewer;
@@ -69,10 +70,17 @@ public class Simulation {
         }
 
         // Create a set of Lights to illuminate the World.
-        Light[] lights = new Light[]{
-            new Light(new Vertex(0f, -0.7f, 0.7f), new Colour(1f, 0.5f, 0))
-        };
-        this.world.addLights(lights);
+        {
+            Colour yellow = new Colour(1f, 0.5f, 0);
+
+            float x = RNG.random(-1.0f, 1.0f);
+            float y = RNG.random(-1.0f, 1.0f);
+            float z = RNG.random(0.6f, 0.8f);
+            Vertex location = new Vertex(x, y, z);
+
+            Light sun = new Light(location, yellow);
+            this.world.addLights(sun);
+        }
     }
 
     /**
