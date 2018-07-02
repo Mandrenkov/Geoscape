@@ -61,7 +61,7 @@ public class Build {
     /**
      * The minor version number of this Geoscape build.
      */
-    private static final int MINOR_VERSION = 4;
+    private static final int MINOR_VERSION = 5;
 
     /**
      * The date when this instance of Geoscape was launched.

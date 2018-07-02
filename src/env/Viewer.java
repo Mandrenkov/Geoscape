@@ -27,7 +27,7 @@ public class Viewer {
         String empty = "-";
  
         Logger.info("Controls:");
-        Logger.info(1, format, "Esc", empty, "Quit");
+        Logger.info(1, format, "Esc", empty, "Pause");
         Logger.info(1, format, "W", "Up Arrow", "Move forward");
         Logger.info(1, format, "S", "Down Arrow", "Move backward");
         Logger.info(1, format, "A", "Left Arrow", "Strafe left");
@@ -45,6 +45,7 @@ public class Viewer {
     public Viewer(long handle) {
         this.velocity = new Vector(0, 0, 0);
         this.cursor = null;
+        this.paused = false;
 
         // Set the initial rotation of the Viewer.
         this.pitch = 30f;
@@ -95,7 +96,10 @@ public class Viewer {
      * @param y        The current Y position of the cursor.
      */
     public void cursorCallback(long window, double x, double y) {
-        if (this.cursor == null) {
+        // The rotation state of this Viewer should not be updated if the Viewer
+        // is paused or the previous position of the cursor is not known.
+        boolean noRotation = this.paused || this.cursor == null;
+        if (noRotation) {
             this.cursor = new Pair<>(x, y);
             return;
         }
@@ -124,11 +128,25 @@ public class Viewer {
         // Update the internal position of the Cursor.
         this.cursor.set(x, y);
     }
+
+    /**
+     * Returns true if this Viewer is paused.
+     * 
+     * @return True if this Viewer is paused.
+     */
+    public boolean isPaused() {
+        return this.paused;
+    }
     
     /**
      * Adjusts the state of the Camera singleton according to the state of this Viewer.
      */
     public void update() {
+        // The Camera should not move if the Viewer is paused.
+        if (this.paused) {
+            return;
+        }
+
         // The forward velocity is encoded in the X-component of the velocity Vector.
         float angle = (float) Math.toRadians(-this.yaw);
         float forward = this.velocity.getX(); 
@@ -184,14 +202,22 @@ public class Viewer {
     private float yaw;
 
     /**
+     * The pause state of this Viewer.
+     */
+    private boolean paused;
+
+    /**
      * Closes the given GLFW window if the ESCAPE key is released.
      * 
      * @param window The window to close.
      * @param action The action applied to the ESCAPE key.
      */
     private void escapeCallback(long window, int action) {
-        boolean close = action == GLFW_RELEASE;
-        glfwSetWindowShouldClose(window, close);
+        if (action == GLFW_RELEASE) {
+            this.paused = !this.paused;
+            int cursorMode = this.paused ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+            glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
+        }
     }
 
     /**
@@ -238,6 +264,11 @@ public class Viewer {
      * pitch of this Viewer.
      */
     private void rotate() {
+        // The Camera should not rotate if the Viewer is paused.
+        if (this.paused) {
+            return;
+        }
+
         Camera camera = Camera.getInstance();
         camera.setRotation(-90 + this.pitch, 1, 0, 0);
         camera.rotate(this.yaw, 0, 0, -1);

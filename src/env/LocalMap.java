@@ -89,8 +89,9 @@ public class LocalMap {
      * @return The Colour.
      */
     public Colour getColour() {
-        // Returns the average value of the given Colour component.  The average
-        // is calculated with respect to the weights in the weighted average map.
+        // Returns the average value of the given Colour component accessor function.
+        // The average is calculated with respect to the weighted average map of
+        // this LocalMap instance.
         Function<Function<Colour, Float>, Float> average = (Function<Colour, Float> supplier) -> {
             float component = 0;
             for (BioVertex biotex : this.map.keySet()) {

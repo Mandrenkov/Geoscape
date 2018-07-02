@@ -3,7 +3,6 @@ package env;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import core.Logger;
@@ -51,14 +50,14 @@ public class Colour {
         }
 
         // Returns the average value of the given Colour component accessor function.
-        BiFunction<Colour[], Function<Colour, Float>, Float> average = (Colour[] clrs, Function<Colour, Float> supplier) -> {
-            return (float) Arrays.stream(clrs).mapToDouble(clr -> supplier.apply(clr)).sum()/clrs.length;
+        Function<Function<Colour, Float>, Float> average = (Function<Colour, Float> supplier) -> {
+            return (float) Arrays.stream(colours).mapToDouble(clr -> supplier.apply(clr)).sum()/colours.length;
         };
 
-        return new Colour(average.apply(colours, Colour::getRed),
-                          average.apply(colours, Colour::getGreen),
-                          average.apply(colours, Colour::getBlue),
-                          average.apply(colours, Colour::getAlpha));
+        return new Colour(average.apply(Colour::getRed),
+                          average.apply(Colour::getGreen),
+                          average.apply(Colour::getBlue),
+                          average.apply(Colour::getAlpha));
     }
 
     /**

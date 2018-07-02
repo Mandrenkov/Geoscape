@@ -10,6 +10,7 @@ import env.Camera;
 import env.Colour;
 import env.Grid;
 import env.Light;
+import env.Overlay;
 import env.Platform;
 import env.Viewer;
 import env.World;
@@ -110,6 +111,9 @@ public class Simulation {
         long handle = window.getHandle();
         FPS fps = new FPS(window, 0.5);
 
+        Colour dark = new Colour(0, 0, 0, 0.5f);
+        Overlay pauseOverlay = new Overlay(dark);
+
         while (!glfwWindowShouldClose(handle)) {
             // Clear the GL buffers.
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -131,6 +135,12 @@ public class Simulation {
             // Update and draw the World.
             world.update(now);
             world.draw();
+
+            // Draw the pause Overlay if the Viewer is paused.
+            boolean paused = viewer.isPaused();
+            if (paused) {
+                pauseOverlay.draw();
+            }
 
             // Prepare for the next frame.
             glfwSwapBuffers(handle);

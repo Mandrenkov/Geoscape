@@ -68,6 +68,24 @@ public class Window {
     }
 
     /**
+     * Returns the width of this Window.
+     * 
+     * @return The width.
+     */
+    public int getWidth() {
+        return this.width;
+    }
+
+    /**
+     * Returns the height of this Window.
+     * 
+     * @return The height.
+     */
+    public int getHeight() {
+        return this.height;
+    }
+
+    /**
      * Sets the title of this Window to the specified value.
      * 
      * @param title The new title of this Window.
@@ -94,12 +112,22 @@ public class Window {
     /**
      * The base title of this Window.
      */
-    private String baseTitle = String.format("Geoscape %d.%d", Build.getMajorVersion(), Build.getMinorVersion());
+    private String baseTitle;
 
     /**
      * The current title of this Window.
      */
-    private String title = baseTitle;
+    private String title;
+
+    /**
+     * The current width of this Window.
+     */
+    private int width;
+
+    /**
+     * The current height of this Window.
+     */
+    private int height;
 
     /**
      * Constructs a Window object.
@@ -131,7 +159,13 @@ public class Window {
             glfwWindowHint(hint.getFirst(), hint.getSecond());
         }
 
-        this.handle = glfwCreateWindow(1600, 900, this.title, NULL, NULL);
+        this.baseTitle = String.format("Geoscape %d.%d", Build.getMajorVersion(), Build.getMinorVersion());
+        this.title = this.baseTitle;
+
+        this.width = 1600;
+        this.height = 900;
+
+        this.handle = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if (this.handle == NULL) {
             throw new IllegalStateException("Failed to create GLFW window.");
         }
@@ -142,7 +176,8 @@ public class Window {
         String iconPath = "../assets/icon.png";
         this.setIcon(iconPath);
 
-        int vsync = GL_TRUE;
+        // By default, Vsync should be disabled.
+        int vsync = GL_FALSE;
         glfwSwapInterval(vsync);
 
         glfwSetWindowSizeCallback(this.handle, this::windowSizeCallback);
@@ -245,6 +280,8 @@ public class Window {
      * @param height The height of the window.
      */
     private void windowSizeCallback(long window, int width, int height) {
+        this.width = width;
+        this.height = height;
         glViewport(0, 0, width, height);
     }
 
