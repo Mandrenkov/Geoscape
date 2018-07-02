@@ -1,6 +1,8 @@
-# Geoscape
+<h1 align="left">
+  <img src="assets/icon.png" height="48" /> Geoscape
+</h1>
 
-<p> Geoscape is a Java application that renders psuedorandom landscapes using OpenGL.</p>
+Geoscape is a Java application that renders psuedorandom landscapes using OpenGL.
 
 ---
 
