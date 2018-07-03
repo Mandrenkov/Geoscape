@@ -3,6 +3,7 @@ package env;
 import static org.lwjgl.opengl.GL11.*;
 
 import core.Logger;
+import core.Top;
 import geo.Sphere;
 import geo.Vertex;
 
@@ -54,10 +55,12 @@ public class Light implements Drawable {
      * Draws this Light.
      */
     public void draw() {
-        // The surface of a Light should emit the Colour of the Light.
-        glMaterialfv(GL_FRONT, GL_EMISSION, this.colour.toArray());
-            this.sphere.draw();
-        glMaterialfv(GL_FRONT, GL_EMISSION, Colour.GL_BLACK);
+        if (Top.DEBUG) {
+            // The surface of a Light should emit the Colour of the Light.
+            glMaterialfv(GL_FRONT, GL_EMISSION, this.colour.toArray());
+                this.sphere.draw();
+            glMaterialfv(GL_FRONT, GL_EMISSION, Colour.GL_BLACK);
+        }
     }
 
     /**
