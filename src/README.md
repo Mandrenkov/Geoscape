@@ -34,8 +34,8 @@ Compilation is currently supported for Windows and Linux distributions.  However
 
 ### Makefile Targets
 Here is a list of supported **makefile** targets:
-1. `make clean`: Cleans the build directory.
 1. `make build`: Compiles the Java source files.
-1. `make run`:   Runs the application.
-1. `make jar`:   Creates an executable JAR file.
+1. `make clean`: Cleans the build directory.
 1. `make doc`:   Generates the Javadoc documentation.
+1. `make jar`:   Creates an executable JAR file.
+1. `make run`:   Runs the application.
