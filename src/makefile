@@ -12,9 +12,13 @@
 BUILDPATH = bin
 DELETE = rm -rf
 DOCPATH = doc
+JAR = Geoscape.jar
 LIBPATH = lib/native
 MAIN = core.Top
+MANIFEST = manifest.mf
 MKDIR = mkdir -p
+
+LIBJARS = $(wildcard lib/*.jar)
 SOURCES = $(wildcard */*.java)
 
 ifeq ($(OS), Windows_NT)
@@ -29,7 +33,7 @@ run: build
 	@echo "Running main class \"$(MAIN)\"."
 	@java -classpath $(CLASSPATH) $(MAIN)
 
-# Build the application.
+# Build the application class files.
 build: clean
 	@$(MKDIR) $(BUILDPATH)
 
@@ -37,12 +41,28 @@ build: clean
 	@javac -d $(BUILDPATH) -s $(BUILDPATH) -h $(BUILDPATH) -classpath $(CLASSPATH) $(SOURCES)
 	@echo "done."
 
+# Build the application JAR file.
+jar: build
+	@echo -n "Generating \"$(JAR)\"..."
+
+	@# Create a temporary JAR manifest file.
+	@echo "Manifest-Version: 1.0" > $(MANIFEST)
+	@echo "Class-Path: $(LIBJARS)" >> $(MANIFEST)
+	@echo "Main-Class: $(MAIN)" >> $(MANIFEST)
+
+	@# Run the Java archiver.
+	@jar cfm $(JAR) $(MANIFEST) -C $(BUILDPATH) .
+	@echo "done."
+
+	@# Clean the temporary manifest.
+	@$(DELETE) $(MANIFEST)
+
 # Generate the documentation.
 doc: FORCE
 	@$(MKDIR) $(DOCPATH)
 
 	@echo "Generating Javadoc documentation..."
-	@javadoc -private -classpath $(CLASSPATH) -d doc/ $(SOURCES)
+	@javadoc -private -classpath $(CLASSPATH) -d doc $(SOURCES)
 	@echo "The updated documentation is available in the $(DOCPATH)/ directory."
 
 # Delete the build directory.
