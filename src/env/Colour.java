@@ -224,7 +224,7 @@ public class Colour {
     /**
      * Multiplies the RGB components of this Colour by the given scalar.
      *
-     * @param scale The scalar to multiply.
+     * @param scalar The scalar to multiply.
      */
     public void scale(float scalar) {
         this.red   = Math.min(1f, scalar*this.red);

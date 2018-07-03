@@ -89,7 +89,12 @@ public class Camera {
     }
 
     /**
-     * Sets the rotation of this Camera.
+     * Sets the rotation angle of this Camera to the specified values.
+     * 
+     * @param rotation The degree of CCW rotation about the given axis.
+     * @param x        The X-component of the rotation axis.
+     * @param y        The Y-component of the rotation axis.
+     * @param z        The Z-component of the rotation axis.
      */
     public void setRotation(float rotation, float x, float y, float z) {
         glPushMatrix();

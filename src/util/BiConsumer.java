@@ -9,12 +9,12 @@ import java.util.Objects;
 @FunctionalInterface
 interface BiConsumer<T, U> {
     /**
-     * @see This function carries the same semantic spirit as {@link java.util.function.Consumer#accept(Object)}.
+     * This function carries the same semantic spirit as {@link java.util.function.Consumer#accept(Object)}.
      */
     void accept(T t, U u);
 
     /**
-     * @see This function carries the same semantic spirit as {@link java.util.function.Consumer#andThen(java.util.function.Consumer)}.
+     * This function carries the same semantic spirit as {@link java.util.function.Consumer#andThen(java.util.function.Consumer)}.
      */
     default BiConsumer<T, U> andThen(BiConsumer<? super T, ? super U> after) {
         Objects.requireNonNull(after);

@@ -55,9 +55,9 @@ public class World implements Drawable {
     }
 
     /**
-     * Adds the given Grid to this World.
+     * Adds the given Grids to this World.
      *
-     * @param grid The Grid to add.
+     * @param grids The Grids to add.
      */
     public void addGrids(Grid... grids) {
         this.grids.addAll(Arrays.asList(grids));
@@ -65,9 +65,9 @@ public class World implements Drawable {
     }
 
     /**
-     * Adds the given Light source to this World.
+     * Adds the given Light sources to this World.
      *
-     * @param light The Light to add.
+     * @param lights The Lights to add.
      */
     public void addLights(Light... lights) {
         this.lights.addAll(Arrays.asList(lights));

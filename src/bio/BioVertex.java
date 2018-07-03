@@ -31,9 +31,10 @@ public class BioVertex extends Vertex {
     /**
      * Constructs a BioVertex representing the given 3D coordinate.
      *
-     * @param x The X-coordinate of this BioVertex.
-     * @param y The Y-coordinate of this BioVertex.
-     * @param z The Z-coordinate of this BioVertex.
+     * @param biome The primary Biome associated with this BioVertex.
+     * @param x     The X-coordinate of this BioVertex.
+     * @param y     The Y-coordinate of this BioVertex.
+     * @param z     The Z-coordinate of this BioVertex.
      */
     public BioVertex(Biome biome, float x, float y, float z) {
         super(x, y, z);

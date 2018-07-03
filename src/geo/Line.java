@@ -11,11 +11,9 @@ public class Line extends Polygon {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a Line with the given Colour and start and end Vertexes.
+     * Constructs a Line with the given start and end Vertexes.
      *
-     * @param colour The Colour of this Line.
-     * @param start  The start Vertex of this Line.
-     * @param end    The end Vertex of this Line.
+     * @param vertexes The start and end Vertexes of this Line.
      */
     public Line(Vertex... vertexes) {
         super(vertexes, GL_LINES);

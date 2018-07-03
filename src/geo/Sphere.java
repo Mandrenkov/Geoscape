@@ -124,6 +124,8 @@ public class Sphere extends Shape {
 
     /**
      * Refines the faces of the Sphere to better approximate a round object.
+     * 
+     * @param faces The faces of the Sphere.
      *
      * @return The new list of Triangles representing the faces of the Sphere.
      */

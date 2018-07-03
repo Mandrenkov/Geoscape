@@ -34,6 +34,8 @@ public class BioMapFactory {
      * @param type The type of the BioMap.
      * @param rows The number of rows.
      * @param cols The number of columns.
+     * 
+     * @return The generated BioMap.
      */
     public static BioMap create(Type type, int rows, int cols) {
         switch (type) {
@@ -179,6 +181,8 @@ public class BioMapFactory {
      * @param bioRegions The list of candidate BioRegions.
      * @param row        The row of the cell.
      * @param col        The column of the cell.
+     * 
+     * @return The closest BioRegion.
      */
     private static BioRegion closestRegion(List<BioRegion> bioRegions, int row, int col) {
         Vertex cell = new Vertex(col, row, 0);
@@ -191,10 +195,11 @@ public class BioMapFactory {
      * height maps.  The centers of the BioRegions are randomly distributed
      * across the specified number rows and columns.
      * 
-     * @param moistMap  The moisture map.
-     * @param heightMap The elevation map.
-     * @param rows      The number of rows.
-     * @param cols      The number of columns.
+     * @param moistMap   The moisture map.
+     * @param heightMap  The elevation map.
+     * @param numRegions The number of BioRegions to generate.
+     * @param rows       The number of rows.
+     * @param cols       The number of columns.
      * 
      * @return The list of BioRegions.
      */

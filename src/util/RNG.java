@@ -33,7 +33,7 @@ public class RNG {
     }
 
     /**
-     * @see This function is an integer version of RNG#random(float).
+     * This function is an integer version of {@link RNG#random(float)}.
      */
     public static int random(int magnitude) {
         return RNG.random(-magnitude, magnitude);
@@ -53,7 +53,7 @@ public class RNG {
     }
 
     /**
-     * @see This function is an integer version of RNG#random(float, float).
+     * This function is an integer version of {@link RNG#random(float, float)}.
      */
     public static int random(int low, int high) {
         int range = high - low;

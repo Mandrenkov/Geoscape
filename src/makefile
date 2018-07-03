@@ -11,6 +11,7 @@
 
 BUILDPATH = bin
 DELETE = rm -rf
+DOCPATH = doc
 LIBPATH = lib/native
 MAIN = core.Top
 MKDIR = mkdir -p
@@ -36,6 +37,17 @@ build: clean
 	@javac -d $(BUILDPATH) -s $(BUILDPATH) -h $(BUILDPATH) -classpath $(CLASSPATH) $(SOURCES)
 	@echo "done."
 
+# Generate the documentation.
+doc: FORCE
+	@$(MKDIR) $(DOCPATH)
+
+	@echo "Generating Javadoc documentation..."
+	@javadoc -private -classpath $(CLASSPATH) -d doc/ $(SOURCES)
+	@echo "The updated documentation is now available in the $(DOCPATH)/ directory."
+
 # Delete the build directory.
-clean:
+clean: FORCE
 	@$(DELETE) $(BUILDPATH)
+
+# Nonexistent file target.
+FORCE:
