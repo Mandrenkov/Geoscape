@@ -43,7 +43,7 @@ doc: FORCE
 
 	@echo "Generating Javadoc documentation..."
 	@javadoc -private -classpath $(CLASSPATH) -d doc/ $(SOURCES)
-	@echo "The updated documentation is now available in the $(DOCPATH)/ directory."
+	@echo "The updated documentation is available in the $(DOCPATH)/ directory."
 
 # Delete the build directory.
 clean: FORCE
