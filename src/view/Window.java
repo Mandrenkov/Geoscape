@@ -203,7 +203,7 @@ public class Window {
         }
 
         this.baseTitle = String.format("Geoscape %d.%d", Build.getMajorVersion(), Build.getMinorVersion());
-        this.title = this.baseTitle;
+        this.title = this.baseTitle + " - Loading";
 
         this.width = 1600;
         this.height = 900;
